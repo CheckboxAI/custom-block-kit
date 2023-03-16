@@ -1,0 +1,36 @@
+{
+    "name": "checkbox-executor",
+    "version": "0.0.1",
+    "description": "",
+    "main": "dist/api.js",
+    "module": "dist/api.mjs",
+    "types": "dist/api.d.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsup index.ts --format cjs,esm --dts",
+        "lint": "tsc"
+    },
+    "author": "Checkbox (checkbox.ai)",
+    "license": "ISC",
+    "dependencies": {
+        "aws-sdk": "^2.1327.0",
+        "axios": "^0.27.2",
+        "fast-csv": "^4.3.6",
+        "googleapis": "^112.0.0",
+        "knex": "^2.4.2",
+        "ldapjs": "^3.0.0",
+        "lodash": "^4.17.21",
+        "soap": "^1.0.0",
+        "validator": "^13.9.0",
+        "xml2js": "^0.4.23"
+    },
+    "devDependencies": {
+        "@changesets/cli": "^2.26.0",
+        "@types/ldapjs": "^2.2.5",
+        "@types/lodash": "^4.14.191",
+        "@types/validator": "^13.7.13",
+        "@types/xml2js": "^0.4.11",
+        "tsup": "^6.6.3",
+        "typescript": "^4.9.5"
+    }
+}

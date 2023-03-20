@@ -1,5 +1,5 @@
 {
-    "name": "checkbox-executor",
+    "name": "cbk-packages",
     "version": "0.0.1",
     "description": "",
     "main": "dist/api.js",

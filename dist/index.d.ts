@@ -78,4 +78,16 @@ declare class SetVariable {
     schema: BaseSchema;
 }
 
-export { DateCalc, SetVariable };
+export {
+    BaseSchema,
+    ComponentOptionProps,
+    ComponentProps,
+    DateCalc,
+    Editor,
+    EditorField,
+    OutputProps,
+    SetVariable,
+    Stencil,
+    StudioShape,
+    ValidatorProps,
+};

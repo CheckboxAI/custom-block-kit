@@ -20,6 +20,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // index.ts
 var custom_block_kit_exports = {};
 __export(custom_block_kit_exports, {
+  BaseSchema: () => BaseSchema,
   DateCalc: () => DateCalc,
   SetVariable: () => SetVariable
 });
@@ -484,8 +485,13 @@ var SetVariable = class {
     };
   }
 };
+
+// blocks/base.ts
+var BaseSchema = class {
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  BaseSchema,
   DateCalc,
   SetVariable
 });

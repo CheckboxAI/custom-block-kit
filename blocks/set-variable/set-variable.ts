@@ -1,5 +1,7 @@
+import { BaseSchema } from "../base";
+
 export class SetVariable {
-    schema = {
+    schema: BaseSchema = {
         key: "SET_VARIABLE",
         name: "Set Var",
         color: "#753491",

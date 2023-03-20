@@ -1,5 +1,7 @@
+import { BaseSchema } from "../base";
+
 export class DateCalc {
-    schema = {
+    schema: BaseSchema = {
         key: "DATE_CALC",
         name: "Date Calc",
         color: "#753491",

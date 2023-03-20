@@ -457,12 +457,7 @@ var SetVariable = class {
     };
   }
 };
-
-// blocks/base.ts
-var BaseSchema = class {
-};
 export {
-  BaseSchema,
   DateCalc,
   SetVariable
 };

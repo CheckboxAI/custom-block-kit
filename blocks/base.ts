@@ -1,22 +1,14 @@
 import { FIELD_TYPES } from "./constants/constant";
 
-export class BaseSchema {
+export interface BaseSchema {
     key?: string;
-
     name?: string;
-
     color?: string;
-
     toggleName?: string;
-
     icon?: string;
-
     stencil?: Stencil;
-
     studioShape?: StudioShape;
-
     editor?: Editor;
-
     runtime?: string;
 }
 

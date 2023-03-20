@@ -20,7 +20,7 @@ declare const FIELD_TYPES: {
     DOCUSIGN_STATUS: string;
 };
 
-declare class BaseSchema {
+interface BaseSchema {
     key?: string;
     name?: string;
     color?: string;
@@ -78,16 +78,4 @@ declare class SetVariable {
     schema: BaseSchema;
 }
 
-export {
-    BaseSchema,
-    ComponentOptionProps,
-    ComponentProps,
-    DateCalc,
-    Editor,
-    EditorField,
-    OutputProps,
-    SetVariable,
-    Stencil,
-    StudioShape,
-    ValidatorProps,
-};
+export { BaseSchema, ComponentOptionProps, ComponentProps, DateCalc, Editor, EditorField, OutputProps, SetVariable, Stencil, StudioShape, ValidatorProps };

@@ -1,6 +1,4 @@
-import { BaseSchema } from "../base";
-
-export class SetVariable extends BaseSchema {
+export class SetVariable {
     schema = {
         key: "SET_VARIABLE",
         name: "Set Var",

@@ -25,14 +25,9 @@ __export(custom_block_kit_exports, {
 });
 module.exports = __toCommonJS(custom_block_kit_exports);
 
-// blocks/base.ts
-var BaseSchema = class {
-};
-
 // blocks/date-calc/date-calc.ts
-var DateCalc = class extends BaseSchema {
+var DateCalc = class {
   constructor() {
-    super(...arguments);
     this.schema = {
       key: "DATE_CALC",
       name: "Date Calc",
@@ -316,9 +311,8 @@ var DateCalc = class extends BaseSchema {
 };
 
 // blocks/set-variable/set-variable.ts
-var SetVariable = class extends BaseSchema {
+var SetVariable = class {
   constructor() {
-    super(...arguments);
     this.schema = {
       key: "SET_VARIABLE",
       name: "Set Var",

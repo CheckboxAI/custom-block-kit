@@ -1,5 +1,5 @@
 {
-    "name": "cbk-packages",
+    "name": "cbk-packages-module",
     "version": "0.0.1",
     "description": "",
     "main": "dist/api.js",

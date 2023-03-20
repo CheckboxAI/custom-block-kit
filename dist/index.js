@@ -245,11 +245,17 @@ var DateCalc = class extends BaseSchema {
                       label: "Select unit of time",
                       placeholder: "Select unit of time",
                       options: [
-                        { label: "Minutes", value: "minutes" },
+                        {
+                          label: "Minutes",
+                          value: "minutes"
+                        },
                         { label: "Hours", value: "hours" },
                         { label: "Days", value: "days" },
                         { label: "Weeks", value: "weeks" },
-                        { label: "Months", value: "months" }
+                        {
+                          label: "Months",
+                          value: "months"
+                        }
                       ]
                     }
                   },
@@ -277,34 +283,34 @@ var DateCalc = class extends BaseSchema {
         ]
       },
       runtime: `
-      const { moment } = cbk.library;
-      const fn = cbk.getElementValue('fn_selector');
-      const fnTypes = {
-        add: 'periodUnit',
-        subtract: 'periodUnit',
-        difference: 'difference'
-      };
+        const { moment } = cbk.library;
+        const fn = cbk.getElementValue('fn_selector');
+        const fnTypes = {
+            add: 'periodUnit',
+            subtract: 'periodUnit',
+            difference: 'difference'
+        };
 
-      switch (fnTypes[fn]) {
-        case 'periodUnit':
-          const newDateVarName = cbk.getElementValue('new_datetime_variable');
-          const fromDate = cbk.getVariable(cbk.getElementValue('to_date_variable'));
-          const date = moment(fromDate);
-          const unit = cbk.getElementValue('unit');
-          const period = cbk.getElementValue('time_period');
-          const toDate = date[fn](period, unit).format()
-          cbk.setOutput(newDateVarName, toDate);
-          break;
-        case 'difference':
-          const newDiffVarName = cbk.getElementValue('new_diff_variable');
-          const dateA = cbk.getVariable(cbk.getElementValue('diff_date_a'));
-          const dateB = cbk.getVariable(cbk.getElementValue('diff_date_b'));
-          const diffUnit = cbk.getElementValue('diff_time_unit');
-          const difference = moment(dateA).diff(moment(dateB), diffUnit);
-          cbk.setOutput(newDiffVarName, difference);
-          break;
-      }
-    `
+        switch (fnTypes[fn]) {
+            case 'periodUnit':
+                const newDateVarName = cbk.getElementValue('new_datetime_variable');
+                const fromDate = cbk.getVariable(cbk.getElementValue('to_date_variable'));
+                const date = moment(fromDate);
+                const unit = cbk.getElementValue('unit');
+                const period = cbk.getElementValue('time_period');
+                const toDate = date[fn](period, unit).format()
+                cbk.setOutput(newDateVarName, toDate);
+                break;
+            case 'difference':
+                const newDiffVarName = cbk.getElementValue('new_diff_variable');
+                const dateA = cbk.getVariable(cbk.getElementValue('diff_date_a'));
+                const dateB = cbk.getVariable(cbk.getElementValue('diff_date_b'));
+                const diffUnit = cbk.getElementValue('diff_time_unit');
+                const difference = moment(dateA).diff(moment(dateB), diffUnit);
+                cbk.setOutput(newDiffVarName, difference);
+                break;
+        }
+        `
     };
   }
 };
@@ -340,7 +346,10 @@ var SetVariable = class extends BaseSchema {
               placeholder: "Select function",
               options: [
                 { label: "Create new variable", value: "create" },
-                { label: "Update existing variable", value: "update" }
+                {
+                  label: "Update existing variable",
+                  value: "update"
+                }
               ]
             }
           },
@@ -389,9 +398,27 @@ var SetVariable = class extends BaseSchema {
                 }
               },
               {
+                ref: "datetimeSelection",
+                component: "SelectInput",
+                componentProps: {
+                  label: "Variable Type",
+                  placeholder: "Select variable type",
+                  options: [
+                    {
+                      label: "Current Date",
+                      value: "currentDate"
+                    },
+                    {
+                      label: "Custom Date",
+                      value: "customDate"
+                    }
+                  ]
+                }
+              },
+              {
                 ref: "datetimeVariableValue",
                 component: "DateTimeInput",
-                showIf: 'variableType == "datetime"',
+                showIf: 'datetimeSelection == "customDate"',
                 componentProps: {
                   label: "Variable Value",
                   placeholder: "Enter variable value"
@@ -427,7 +454,39 @@ var SetVariable = class extends BaseSchema {
             ]
           }
         ]
-      }
+      },
+      runtime: `
+        const { moment } = cbk.library;
+        const fn = cbk.getElementValue('fn_selector');
+        const fnTypes = {
+            create: 'create',
+            update: 'update',
+        };
+
+        switch (fnTypes[fn]) {
+            case 'create':
+                const variableName = cbk.getElementValue('variableName');
+                const variableType = cbk.getElementValue('variableType'); 
+                const datetimeSelection = cbk.getElementValue('datetimeSelection');
+                let value = ''
+
+                if (variableType === 'datetime') {
+                    value = datetimeSelection === 'currentDate' 
+                    ? moment.now() 
+                    : cbk.getElementValue('datetimeVariableValue');
+                } else {
+                    value = cbk.getElementValue('variableValue');
+                }
+
+                cbk.setOutput(variableName, value);
+                break;
+            case 'update':
+                const variableName = cbk.getElementValue('variableName');
+                const variableValue = cbk.getElementValue('variableValue');
+
+                cbk.setOutput(variableName, variableValue);
+                break;
+        `
     };
   }
 };

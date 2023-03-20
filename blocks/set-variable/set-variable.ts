@@ -80,9 +80,27 @@ export class SetVariable extends BaseSchema {
                             },
                         },
                         {
+                            ref: "datetimeSelection",
+                            component: "SelectInput",
+                            componentProps: {
+                                label: "Variable Type",
+                                placeholder: "Select variable type",
+                                options: [
+                                    {
+                                        label: "Current Date",
+                                        value: "currentDate",
+                                    },
+                                    {
+                                        label: "Custom Date",
+                                        value: "customDate",
+                                    },
+                                ],
+                            },
+                        },
+                        {
                             ref: "datetimeVariableValue",
                             component: "DateTimeInput",
-                            showIf: 'variableType == "datetime"',
+                            showIf: 'datetimeSelection == "customDate"',
                             componentProps: {
                                 label: "Variable Value",
                                 placeholder: "Enter variable value",
@@ -119,5 +137,37 @@ export class SetVariable extends BaseSchema {
                 },
             ],
         },
+        runtime: `
+        const { moment } = cbk.library;
+        const fn = cbk.getElementValue('fn_selector');
+        const fnTypes = {
+            create: 'create',
+            update: 'update',
+        };
+
+        switch (fnTypes[fn]) {
+            case 'create':
+                const variableName = cbk.getElementValue('variableName');
+                const variableType = cbk.getElementValue('variableType'); 
+                const datetimeSelection = cbk.getElementValue('datetimeSelection');
+                let value = ''
+
+                if (variableType === 'datetime') {
+                    value = datetimeSelection === 'currentDate' 
+                    ? moment.now() 
+                    : cbk.getElementValue('datetimeVariableValue');
+                } else {
+                    value = cbk.getElementValue('variableValue');
+                }
+
+                cbk.setOutput(variableName, value);
+                break;
+            case 'update':
+                const variableName = cbk.getElementValue('variableName');
+                const variableValue = cbk.getElementValue('variableValue');
+
+                cbk.setOutput(variableName, variableValue);
+                break;
+        `,
     };
 }

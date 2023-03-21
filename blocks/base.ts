@@ -1,4 +1,4 @@
-import { FIELD_TYPES } from "./constants/constant";
+import type { FIELD_TYPES } from "./constants/constant";
 
 export interface BaseSchema {
     key?: string;

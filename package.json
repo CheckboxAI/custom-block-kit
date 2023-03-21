@@ -2,9 +2,9 @@
     "name": "cbk-packages-module",
     "version": "0.0.1",
     "description": "",
-    "main": "dist/api.js",
-    "module": "dist/api.mjs",
-    "types": "dist/api.d.ts",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "tsup index.ts --format cjs,esm --dts",

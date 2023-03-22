@@ -147,27 +147,28 @@ export class SetVariable {
 
         switch (fnTypes[fn]) {
             case 'create':
-                const variableName = cbk.getElementValue('variableName');
+                const createVariable = cbk.getElementValue('variableName');
                 const variableType = cbk.getElementValue('variableType'); 
                 const datetimeSelection = cbk.getElementValue('datetimeSelection');
                 let value = ''
 
                 if (variableType === 'datetime') {
                     value = datetimeSelection === 'currentDate' 
-                    ? moment.now() 
-                    : cbk.getElementValue('datetimeVariableValue');
+                        ? moment.now().toDate()
+                        : cbk.getElementValue('datetimeVariableValue');
                 } else {
                     value = cbk.getElementValue('variableValue');
                 }
 
-                cbk.setOutput(variableName, value);
+                cbk.setOutput(createVariable, value);
                 break;
             case 'update':
-                const variableName = cbk.getElementValue('variableName');
+                const updateVariable = cbk.getElementValue('variableName');
                 const variableValue = cbk.getElementValue('variableValue');
 
-                cbk.setOutput(variableName, variableValue);
+                cbk.setOutput(updateVariable, variableValue);
                 break;
+            }
         `,
     };
 }

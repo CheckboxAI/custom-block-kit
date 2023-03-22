@@ -154,7 +154,7 @@ export class SetVariable {
 
                 if (variableType === 'datetime') {
                     value = datetimeSelection === 'currentDate' 
-                        ? moment.now().toDate()
+                        ? moment.now()
                         : cbk.getElementValue('datetimeVariableValue');
                 } else {
                     value = cbk.getElementValue('variableValue');

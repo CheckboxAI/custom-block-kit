@@ -1,4 +1,4 @@
-// blocks/base.ts
+// base/base.ts
 var BaseSchema = class {
 };
 
@@ -45,7 +45,10 @@ var DateCalc = class extends BaseSchema {
               ]
             },
             validators: [
-              { method: "required", message: "This must select a date function" }
+              {
+                method: "required",
+                message: "This must select a date function"
+              }
             ]
           },
           {
@@ -243,11 +246,17 @@ var DateCalc = class extends BaseSchema {
                       label: "Select unit of time",
                       placeholder: "Select unit of time",
                       options: [
-                        { label: "Minutes", value: "minutes" },
+                        {
+                          label: "Minutes",
+                          value: "minutes"
+                        },
                         { label: "Hours", value: "hours" },
                         { label: "Days", value: "days" },
                         { label: "Weeks", value: "weeks" },
-                        { label: "Months", value: "months" }
+                        {
+                          label: "Months",
+                          value: "months"
+                        }
                       ]
                     }
                   },
@@ -328,7 +337,7 @@ var SetVariable = class {
         elements: [
           {
             ref: "block_description",
-            component: "InterpolationInput",
+            component: "BlockDescription",
             componentProps: {
               label: "Block Description"
             }

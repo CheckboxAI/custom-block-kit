@@ -1,4 +1,4 @@
-import type { BaseSchema } from "../base";
+import type { BaseSchema } from "../../base/base";
 
 export class SetVariable {
     schema: BaseSchema = {
@@ -15,7 +15,7 @@ export class SetVariable {
             elements: [
                 {
                     ref: "block_description",
-                    component: "InterpolationInput",
+                    component: "BlockDescription",
                     componentProps: {
                         label: "Block Description",
                     },

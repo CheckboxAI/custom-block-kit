@@ -55,10 +55,12 @@ export interface BackendCBK {
     log(...message: string[]): void;
 }
 
+type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables"
+
 export interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | string;
+    options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | CustomOptionString;
     isSearchable?: boolean;
 }
 

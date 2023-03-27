@@ -17,7 +17,7 @@ export class Sharepoint {
       elements: [
         {
           ref: "block_description",
-          component: "InterpolationInput",
+          component: "BlockDescription",
           componentProps: {
             label: "Block Description",
           },
@@ -29,16 +29,16 @@ export class Sharepoint {
             label: "Select Function",
             placeholder: "Select function",
             options: [
-              { label: "Create Folder", value: "create" },
+              { label: "Create Folder", value: "create_folder" },
               {
                 label: "Upload file to folder",
-                value: "upload",
+                value: "upload_file",
               },
             ],
           },
         },
         {
-          ref: "siteId",
+          ref: "site_id",
           component: "SelectInput",
           componentProps: {
             label: "Select Site",
@@ -57,8 +57,8 @@ export class Sharepoint {
           },
         },
         {
-          ref: "driveId",
-          showIf: "!!siteId",
+          ref: "drive_id",
+          showIf: "!!site_id",
           component: "SelectInput",
           componentProps: {
             label: "Select Drive",
@@ -68,7 +68,7 @@ export class Sharepoint {
               const response = await cbk.api.get<SharepointData[]>(
                 "/public/integrations/msgraph/sharepoint/drives",
                 {
-                  siteId: cbk.getElementValue("siteId"),
+                  siteId: cbk.getElementValue("site_id"),
                 }
               );
               return response
@@ -80,8 +80,8 @@ export class Sharepoint {
           },
         },
         {
-          ref: "folderId",
-          showIf: "!!siteId && !!driveId",
+          ref: "folder_id",
+          showIf: "!!site_id && !!drive_id",
           component: "SelectInput",
           componentProps: {
             label: "Select Folder",
@@ -91,8 +91,8 @@ export class Sharepoint {
               const response = await cbk.api.get<SharepointData[]>(
                 "/public/integrations/msgraph/sharepoint/folders",
                 {
-                  siteId: cbk.getElementValue("siteId"),
-                  driveId: cbk.getElementValue("driveId"),
+                  siteId: cbk.getElementValue("site_id"),
+                  driveId: cbk.getElementValue("drive_id"),
                 }
               );
               return response
@@ -102,6 +102,32 @@ export class Sharepoint {
                 : [];
             },
           },
+        },
+        {
+          ref: "folder_name",
+          showIf: "fn_selector === 'create_folder'",
+          component: "TextInput",
+          componentProps: {
+            label: "Folder name"
+          }
+        },
+        {
+          ref: "file",
+          showIf: "fn_selector === 'upload_file'",
+          component: "SelectInput",
+          componentProps: {
+            label: "File to upload",
+            placeholder: "Select file",
+            options: "getFileVariables",
+          }
+        },
+        {
+          ref: "file_name",
+          showIf: "fn_selector === 'upload_file'",
+          component: "TextInput",
+          componentProps: {
+            label: "File name"
+          }
         },
       ],
     },

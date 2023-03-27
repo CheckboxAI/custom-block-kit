@@ -16,12 +16,33 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
 
 // index.ts
 var custom_block_kit_exports = {};
 __export(custom_block_kit_exports, {
   DateCalc: () => DateCalc,
-  SetVariable: () => SetVariable
+  SetVariable: () => SetVariable,
+  Sharepoint: () => Sharepoint
 });
 module.exports = __toCommonJS(custom_block_kit_exports);
 
@@ -121,7 +142,7 @@ var DateCalc = class {
                 componentProps: {
                   label: "To date variable",
                   placeholder: "Select date variable",
-                  optionsFn: "getDateVariables"
+                  options: "getDateVariables"
                 }
               },
               {
@@ -192,7 +213,7 @@ var DateCalc = class {
                 componentProps: {
                   label: "To date variable",
                   placeholder: "Select date variable",
-                  optionsFn: "getDateVariables"
+                  options: "getDateVariables"
                 }
               },
               {
@@ -242,7 +263,7 @@ var DateCalc = class {
                 componentProps: {
                   label: "Date A",
                   placeholder: "Text here",
-                  optionsFn: "getDateVariables"
+                  options: "getDateVariables"
                 }
               },
               {
@@ -251,7 +272,7 @@ var DateCalc = class {
                 componentProps: {
                   label: "Date B",
                   placeholder: "Text here",
-                  optionsFn: "getDateVariables"
+                  options: "getDateVariables"
                 }
               },
               {
@@ -484,7 +505,7 @@ var SetVariable = class {
                 componentProps: {
                   label: "Variable Name",
                   placeholder: "Select variable name",
-                  optionsFn: "getExistingVariables"
+                  options: "getExistingVariables"
                 }
               },
               {
@@ -510,12 +531,12 @@ var SetVariable = class {
         switch (fnTypes[fn]) {
             case 'create':
                 const createVariable = cbk.getElementValue('variableName');
-                const variableType = cbk.getElementValue('variableType'); 
+                const variableType = cbk.getElementValue('variableType');
                 const datetimeSelection = cbk.getElementValue('datetimeSelection');
                 let value = ''
 
                 if (variableType === 'datetime') {
-                    value = datetimeSelection === 'currentDate' 
+                    value = datetimeSelection === 'currentDate'
                         ? moment().format('YYYY-MM-DD')
                         : moment(cbk.getElementValue('datetimeVariableValue')).format('YYYY-MM-DD')
                 } else if (variableType === 'number') {
@@ -537,8 +558,121 @@ var SetVariable = class {
     };
   }
 };
+
+// blocks/sharepoint/utils.ts
+var sortOptions = (a, b) => {
+  const la = a.label.toLowerCase(), lb = b.label.toLowerCase();
+  if (la < lb) {
+    return -1;
+  }
+  if (la > lb) {
+    return 1;
+  }
+  return 0;
+};
+
+// blocks/sharepoint/sharepoint.ts
+var Sharepoint = class {
+  constructor() {
+    this.schema = {
+      key: "SHAREPOINT",
+      name: "Sharepoint",
+      color: "#753491",
+      toggleName: "feature.cbk.sharepoint",
+      icon: "M10 2H2C1.445 2 1 2.45 1 3V9C1 9.55 1.445 10 2 10H10C10.55 10 11 9.55 11 9V3C11 2.45 10.555 2 10 2ZM10 9H2V4H10V9ZM9 8.5H6V7.5H9V8.5ZM3.75 8.5 3.045 7.795 4.335 6.5 3.04 5.205 3.75 4.5 5.75 6.5 3.75 8.5Z",
+      stencil: {
+        group: "CBK",
+        fontSize: 12
+      },
+      editor: {
+        elements: [
+          {
+            ref: "block_description",
+            component: "InterpolationInput",
+            componentProps: {
+              label: "Block Description"
+            }
+          },
+          {
+            ref: "fn_selector",
+            component: "SelectInput",
+            componentProps: {
+              label: "Select Function",
+              placeholder: "Select function",
+              options: [
+                { label: "Create Folder", value: "create" },
+                {
+                  label: "Upload file to folder",
+                  value: "upload"
+                }
+              ]
+            }
+          },
+          {
+            ref: "siteId",
+            component: "SelectInput",
+            componentProps: {
+              label: "Select Site",
+              placeholder: "Select site",
+              isSearchable: true,
+              options: (cbk) => __async(this, null, function* () {
+                const response = yield cbk.api.get(
+                  "/public/integrations/msgraph/sharepoint/sites"
+                );
+                return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
+              })
+            }
+          },
+          {
+            ref: "driveId",
+            showIf: "!!siteId",
+            component: "SelectInput",
+            componentProps: {
+              label: "Select Drive",
+              placeholder: "Select drive",
+              isSearchable: true,
+              options: (cbk) => __async(this, null, function* () {
+                const response = yield cbk.api.get(
+                  "/public/integrations/msgraph/sharepoint/drives",
+                  {
+                    siteId: cbk.getElementValue("siteId")
+                  }
+                );
+                return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
+              })
+            }
+          },
+          {
+            ref: "folderId",
+            showIf: "!!siteId && !!driveId",
+            component: "SelectInput",
+            componentProps: {
+              label: "Select Folder",
+              placeholder: "Select folder",
+              isSearchable: true,
+              options: (cbk) => __async(this, null, function* () {
+                const response = yield cbk.api.get(
+                  "/public/integrations/msgraph/sharepoint/folders",
+                  {
+                    siteId: cbk.getElementValue("siteId"),
+                    driveId: cbk.getElementValue("driveId")
+                  }
+                );
+                return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
+              })
+            }
+          }
+        ]
+      },
+      runtime: `
+        console.log('lalala')
+    `
+    };
+  }
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   DateCalc,
-  SetVariable
+  SetVariable,
+  Sharepoint
 });

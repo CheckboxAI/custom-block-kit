@@ -1,0 +1,1 @@
+export { Sharepoint } from './sharepoint';

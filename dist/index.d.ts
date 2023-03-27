@@ -54,11 +54,17 @@ interface EditorField {
     children?: EditorField[];
     output?: OutputProps;
 }
+interface CBK {
+    api: {
+        get: <T extends object>(url: string, params?: Record<string, unknown>) => Promise<T>;
+    };
+    getElementValue(ref: string): string;
+}
 interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[];
-    optionsFn?: string;
+    options?: ComponentOptionProps[] | ((cbk: CBK) => Promise<ComponentOptionProps[]>) | string;
+    isSearchable?: boolean;
 }
 interface ComponentOptionProps {
     label: string;
@@ -78,4 +84,8 @@ declare class SetVariable {
     schema: BaseSchema;
 }
 
-export { DateCalc, SetVariable };
+declare class Sharepoint {
+    schema: BaseSchema;
+}
+
+export { DateCalc, SetVariable, Sharepoint };

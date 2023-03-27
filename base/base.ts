@@ -40,11 +40,18 @@ export interface EditorField {
     output?: OutputProps;
 }
 
+export interface CBK {
+    api: {
+        get: <T extends object>(url: string, params?: Record<string, unknown>) => Promise<T>;
+    },
+    getElementValue(ref: string): string;
+}
+
 export interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[];
-    optionsFn?: string;
+    options?: ComponentOptionProps[] | ((cbk: CBK) => Promise<ComponentOptionProps[]>) | string;
+    isSearchable?: boolean;
 }
 
 export interface ComponentOptionProps {

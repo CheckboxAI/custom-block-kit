@@ -140,7 +140,7 @@ export class SetVariable {
                             componentProps: {
                                 label: "Variable Name",
                                 placeholder: "Select variable name",
-                                optionsFn: "getExistingVariables",
+                                options: "getExistingVariables",
                             },
                         },
                         {
@@ -166,12 +166,12 @@ export class SetVariable {
         switch (fnTypes[fn]) {
             case 'create':
                 const createVariable = cbk.getElementValue('variableName');
-                const variableType = cbk.getElementValue('variableType'); 
+                const variableType = cbk.getElementValue('variableType');
                 const datetimeSelection = cbk.getElementValue('datetimeSelection');
                 let value = ''
 
                 if (variableType === 'datetime') {
-                    value = datetimeSelection === 'currentDate' 
+                    value = datetimeSelection === 'currentDate'
                         ? moment().format('YYYY-MM-DD')
                         : moment(cbk.getElementValue('datetimeVariableValue')).format('YYYY-MM-DD')
                 } else if (variableType === 'number') {

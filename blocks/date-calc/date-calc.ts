@@ -94,7 +94,7 @@ export class DateCalc {
                             componentProps: {
                                 label: "To date variable",
                                 placeholder: "Select date variable",
-                                optionsFn: "getDateVariables",
+                                options: "getDateVariables",
                             },
                         },
                         {
@@ -166,7 +166,7 @@ export class DateCalc {
                             componentProps: {
                                 label: "To date variable",
                                 placeholder: "Select date variable",
-                                optionsFn: "getDateVariables",
+                                options: "getDateVariables",
                             },
                         },
                         {
@@ -218,7 +218,7 @@ export class DateCalc {
                             componentProps: {
                                 label: "Date A",
                                 placeholder: "Text here",
-                                optionsFn: "getDateVariables",
+                                options: "getDateVariables",
                             },
                         },
                         {
@@ -227,7 +227,7 @@ export class DateCalc {
                             componentProps: {
                                 label: "Date B",
                                 placeholder: "Text here",
-                                optionsFn: "getDateVariables",
+                                options: "getDateVariables",
                             },
                         },
                         {

@@ -20,7 +20,7 @@ declare const FIELD_TYPES: {
     DOCUSIGN_STATUS: string;
 };
 
-interface BaseSchema {
+declare class BaseSchema {
     key?: string;
     name?: string;
     color?: string;
@@ -70,7 +70,7 @@ interface ValidatorProps {
     message: string;
 }
 
-declare class DateCalc {
+declare class DateCalc extends BaseSchema {
     schema: BaseSchema;
 }
 

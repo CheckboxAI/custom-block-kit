@@ -1,59 +1,67 @@
-import type { FIELD_TYPES } from "./constants/constant";
+import type { FIELD_TYPES } from './constants/constant'
 
-export interface BaseSchema {
-    key?: string;
-    name?: string;
-    color?: string;
-    toggleName?: string;
-    icon?: string;
-    stencil?: Stencil;
-    studioShape?: StudioShape;
-    editor?: Editor;
-    runtime?: string;
+export class BaseSchema {
+  key?: string;
+
+  name?: string;
+
+  color?: string;
+
+  toggleName?: string;
+
+  icon?: string;
+
+  stencil?: Stencil;
+
+  studioShape?: StudioShape;
+
+  editor?: Editor;
+
+  runtime?: string;
 }
 
 export interface Stencil {
-    group: string;
-    fontSize: number;
+  group: string;
+  fontSize: number;
 }
 
 export interface StudioShape {
-    fontSize: number;
+  fontSize: number;
 }
 
 export interface Editor {
-    elements: EditorField[];
+  elements: EditorField[];
 }
 
 export interface OutputProps {
-    as: keyof typeof FIELD_TYPES;
+  as: keyof typeof FIELD_TYPES;
 }
 
 export interface EditorField {
-    ref: string;
-    label?: string;
-    component: string;
-    componentProps: ComponentProps;
-    showIf?: string;
-    validators?: ValidatorProps[];
-    children?: EditorField[];
-    output?: OutputProps;
+  ref: string;
+  label?: string;
+  component: string;
+  componentProps: ComponentProps;
+  showIf?: string;
+  validators?: ValidatorProps[];
+  children?: EditorField[];
+  output?: OutputProps;
 }
 
 export interface ComponentProps {
-    label?: string;
-    placeholder?: string;
-    options?: ComponentOptionProps[];
-    optionsFn?: string;
+  label?: string;
+  placeholder?: string;
+  options?: ComponentOptionProps[];
+  optionsFn?: string;
 }
 
 export interface ComponentOptionProps {
-    label: string;
-    value: string;
+  label: string;
+  value: string;
 }
 
 export interface ValidatorProps {
-    method: string;
-    value?: string;
-    message: string;
+  method: string;
+  value?: string;
+  message: string;
 }

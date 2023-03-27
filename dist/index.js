@@ -20,14 +20,20 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // index.ts
 var custom_block_kit_exports = {};
 __export(custom_block_kit_exports, {
+  BaseSchema: () => BaseSchema,
   DateCalc: () => DateCalc,
   SetVariable: () => SetVariable
 });
 module.exports = __toCommonJS(custom_block_kit_exports);
 
+// blocks/base.ts
+var BaseSchema = class {
+};
+
 // blocks/date-calc/date-calc.ts
-var DateCalc = class {
+var DateCalc = class extends BaseSchema {
   constructor() {
+    super(...arguments);
     this.schema = {
       key: "DATE_CALC",
       name: "Date Calc",
@@ -42,10 +48,10 @@ var DateCalc = class {
         elements: [
           {
             ref: "block_description",
-            component: "InterpolationInput",
+            component: "BlockDescription",
             componentProps: {
               label: "Block Description",
-              placeholder: "Input hint | Blank"
+              placeholder: "Enter a description for this block"
             }
           },
           {
@@ -65,7 +71,10 @@ var DateCalc = class {
                   value: "difference"
                 }
               ]
-            }
+            },
+            validators: [
+              { method: "required", message: "This must select a date function" }
+            ]
           },
           {
             ref: "datecalc_add_group",
@@ -81,7 +90,18 @@ var DateCalc = class {
                 componentProps: {
                   label: "Add time period of",
                   placeholder: "Insert number"
-                }
+                },
+                validators: [
+                  {
+                    method: "required",
+                    message: "Please insert a number"
+                  },
+                  {
+                    method: "min",
+                    value: "0",
+                    message: "This must be a positive number"
+                  }
+                ]
               },
               {
                 ref: "unit",
@@ -146,7 +166,13 @@ var DateCalc = class {
                 componentProps: {
                   label: "Subtract time period of",
                   placeholder: "Insert number"
-                }
+                },
+                validators: [
+                  {
+                    method: "required",
+                    message: "Please insert a number"
+                  }
+                ]
               },
               {
                 ref: "unit",
@@ -190,6 +216,11 @@ var DateCalc = class {
                       {
                         method: "isVariableUnique",
                         message: "This variable already exists!"
+                      },
+                      {
+                        method: "max",
+                        value: "50",
+                        message: "This must be less than 50 characters"
                       }
                     ],
                     output: {
@@ -240,17 +271,11 @@ var DateCalc = class {
                       label: "Select unit of time",
                       placeholder: "Select unit of time",
                       options: [
-                        {
-                          label: "Minutes",
-                          value: "minutes"
-                        },
+                        { label: "Minutes", value: "minutes" },
                         { label: "Hours", value: "hours" },
                         { label: "Days", value: "days" },
                         { label: "Weeks", value: "weeks" },
-                        {
-                          label: "Months",
-                          value: "months"
-                        }
+                        { label: "Months", value: "months" }
                       ]
                     }
                   },
@@ -265,6 +290,10 @@ var DateCalc = class {
                       {
                         method: "isVariableUnique",
                         message: "This variable already exists!"
+                      },
+                      {
+                        method: "required",
+                        message: "Please insert a variable name"
                       }
                     ],
                     output: {
@@ -278,34 +307,34 @@ var DateCalc = class {
         ]
       },
       runtime: `
-        const { moment } = cbk.library;
-        const fn = cbk.getElementValue('fn_selector');
-        const fnTypes = {
-            add: 'periodUnit',
-            subtract: 'periodUnit',
-            difference: 'difference'
-        };
+      const { moment } = cbk.library;
+      const fn = cbk.getElementValue('fn_selector');
+      const fnTypes = {
+        add: 'periodUnit',
+        subtract: 'periodUnit',
+        difference: 'difference'
+      };
 
-        switch (fnTypes[fn]) {
-            case 'periodUnit':
-                const newDateVarName = cbk.getElementValue('new_datetime_variable');
-                const fromDate = cbk.getVariable(cbk.getElementValue('to_date_variable'));
-                const date = moment(fromDate);
-                const unit = cbk.getElementValue('unit');
-                const period = cbk.getElementValue('time_period');
-                const toDate = date[fn](period, unit).format()
-                cbk.setOutput(newDateVarName, toDate);
-                break;
-            case 'difference':
-                const newDiffVarName = cbk.getElementValue('new_diff_variable');
-                const dateA = cbk.getVariable(cbk.getElementValue('diff_date_a'));
-                const dateB = cbk.getVariable(cbk.getElementValue('diff_date_b'));
-                const diffUnit = cbk.getElementValue('diff_time_unit');
-                const difference = moment(dateA).diff(moment(dateB), diffUnit);
-                cbk.setOutput(newDiffVarName, difference);
-                break;
-        }
-        `
+      switch (fnTypes[fn]) {
+        case 'periodUnit':
+          const newDateVarName = cbk.getElementValue('new_datetime_variable');
+          const fromDate = cbk.getVariable(cbk.getElementValue('to_date_variable'));
+          const date = moment(fromDate);
+          const unit = cbk.getElementValue('unit');
+          const period = cbk.getElementValue('time_period');
+          const toDate = date[fn](period, unit).format()
+          cbk.setOutput(newDateVarName, toDate);
+          break;
+        case 'difference':
+          const newDiffVarName = cbk.getElementValue('new_diff_variable');
+          const dateA = cbk.getVariable(cbk.getElementValue('diff_date_a'));
+          const dateB = cbk.getVariable(cbk.getElementValue('diff_date_b'));
+          const diffUnit = cbk.getElementValue('diff_time_unit');
+          const difference = moment(dateA).diff(moment(dateB), diffUnit);
+          cbk.setOutput(newDiffVarName, difference);
+          break;
+      }
+    `
     };
   }
 };
@@ -487,6 +516,7 @@ var SetVariable = class {
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  BaseSchema,
   DateCalc,
   SetVariable
 });

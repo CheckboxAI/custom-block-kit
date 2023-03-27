@@ -287,34 +287,34 @@ export class DateCalc {
                 },
             ],
         },
-        runtime: `
-      const { moment } = cbk.library;
-      const fn = cbk.getElementValue('fn_selector');
-      const fnTypes = {
-        add: 'periodUnit',
-        subtract: 'periodUnit',
-        difference: 'difference'
-      };
+        runtime: async (cbk) => {
+            const { moment } = cbk.library;
+            const fnTypes = {
+                add: 'periodUnit',
+                subtract: 'periodUnit',
+                difference: 'difference'
+            };
+            const fn = cbk.getElementValue('fn_selector') as keyof typeof fnTypes;
 
-      switch (fnTypes[fn]) {
-        case 'periodUnit':
-          const newDateVarName = cbk.getElementValue('new_datetime_variable');
-          const fromDate = cbk.getVariable(cbk.getElementValue('to_date_variable'));
-          const date = moment(fromDate);
-          const unit = cbk.getElementValue('unit');
-          const period = cbk.getElementValue('time_period');
-          const toDate = date[fn](period, unit).format()
-          cbk.setOutput(newDateVarName, toDate);
-          break;
-        case 'difference':
-          const newDiffVarName = cbk.getElementValue('new_diff_variable');
-          const dateA = cbk.getVariable(cbk.getElementValue('diff_date_a'));
-          const dateB = cbk.getVariable(cbk.getElementValue('diff_date_b'));
-          const diffUnit = cbk.getElementValue('diff_time_unit');
-          const difference = moment(dateA).diff(moment(dateB), diffUnit);
-          cbk.setOutput(newDiffVarName, difference);
-          break;
-      }
-    `,
+            switch (fnTypes[fn]) {
+                case 'periodUnit':
+                    const newDateVarName = cbk.getElementValue('new_datetime_variable');
+                    const fromDate = cbk.getVariable(cbk.getElementValue('to_date_variable'));
+                    const date = moment(fromDate);
+                    const unit = cbk.getElementValue('unit');
+                    const period = cbk.getElementValue('time_period');
+                    const toDate = date[fn](period, unit).format()
+                    cbk.setOutput(newDateVarName, toDate);
+                    break;
+                case 'difference':
+                    const newDiffVarName = cbk.getElementValue('new_diff_variable');
+                    const dateA = cbk.getVariable(cbk.getElementValue('diff_date_a'));
+                    const dateB = cbk.getVariable(cbk.getElementValue('diff_date_b'));
+                    const diffUnit = cbk.getElementValue('diff_time_unit');
+                    const difference = moment(dateA).diff(moment(dateB), diffUnit);
+                    cbk.setOutput(newDiffVarName, difference);
+                    break;
+            }
+        },
     };
 }

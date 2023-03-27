@@ -29,7 +29,7 @@ interface BaseSchema {
     stencil?: Stencil;
     studioShape?: StudioShape;
     editor?: Editor;
-    runtime?: string;
+    runtime?: (cbk: BackendCBK) => Promise<void>;
 }
 interface Stencil {
     group: string;
@@ -54,16 +54,23 @@ interface EditorField {
     children?: EditorField[];
     output?: OutputProps;
 }
-interface CBK {
+interface FrontendCBK {
     api: {
         get: <T extends object>(url: string, params?: Record<string, unknown>) => Promise<T>;
     };
     getElementValue(ref: string): string;
 }
+interface BackendCBK {
+    library: any;
+    getElementValue(ref: string): string;
+    getVariable(name: string): any;
+    setOutput(name: string, value: any): void;
+    log(...message: string[]): void;
+}
 interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[] | ((cbk: CBK) => Promise<ComponentOptionProps[]>) | string;
+    options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | string;
     isSearchable?: boolean;
 }
 interface ComponentOptionProps {

@@ -1,6 +1,6 @@
-import { BaseSchema } from "../../base/base";
+import type { BaseSchema } from "../../base";
 
-export class DateCalc extends BaseSchema {
+export class DateCalc {
     schema: BaseSchema = {
         key: "DATE_CALC",
         name: "Date Calc",

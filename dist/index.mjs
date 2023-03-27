@@ -1,11 +1,6 @@
-// base/base.ts
-var BaseSchema = class {
-};
-
 // blocks/date-calc/date-calc.ts
-var DateCalc = class extends BaseSchema {
+var DateCalc = class {
   constructor() {
-    super(...arguments);
     this.schema = {
       key: "DATE_CALC",
       name: "Date Calc",
@@ -496,7 +491,6 @@ var SetVariable = class {
   }
 };
 export {
-  BaseSchema,
   DateCalc,
   SetVariable
 };

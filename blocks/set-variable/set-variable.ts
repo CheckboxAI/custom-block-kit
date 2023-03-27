@@ -18,6 +18,7 @@ export class SetVariable {
                     component: "BlockDescription",
                     componentProps: {
                         label: "Block Description",
+                        placeholder: "Enter a description for this block",
                     },
                 },
                 {
@@ -73,15 +74,32 @@ export class SetVariable {
                         {
                             ref: "variableValue",
                             component: "TextInput",
-                            showIf: 'variableType != "datetime"',
+                            showIf: 'variableType == "text"',
                             componentProps: {
                                 label: "Variable Value",
                                 placeholder: "Enter variable value",
                             },
                         },
                         {
+                            ref: "numVariableValue",
+                            component: "NumberInput",
+                            showIf: 'variableType == "number"',
+                            componentProps: {
+                                label: "Variable Value",
+                                placeholder: "Enter variable value",
+                            },
+                            validators: [
+                                {
+                                    method: "min",
+                                    value: "0",
+                                    message: "This must be a positive number",
+                                },
+                            ],
+                        },
+                        {
                             ref: "datetimeSelection",
                             component: "SelectInput",
+                            showIf: 'variableType == "datetime"',
                             componentProps: {
                                 label: "Variable Type",
                                 placeholder: "Select variable type",
@@ -100,7 +118,7 @@ export class SetVariable {
                         {
                             ref: "datetimeVariableValue",
                             component: "DateTimeInput",
-                            showIf: 'datetimeSelection == "customDate"',
+                            showIf: 'datetimeSelection == "customDate" && variableType == "datetime"',
                             componentProps: {
                                 label: "Variable Value",
                                 placeholder: "Enter variable value",
@@ -117,7 +135,7 @@ export class SetVariable {
                     showIf: 'fn_selector == "update"',
                     children: [
                         {
-                            ref: "variableName",
+                            ref: "updateVariableName",
                             component: "SelectInput",
                             componentProps: {
                                 label: "Variable Name",
@@ -154,8 +172,10 @@ export class SetVariable {
 
                 if (variableType === 'datetime') {
                     value = datetimeSelection === 'currentDate' 
-                        ? moment.now()
-                        : cbk.getElementValue('datetimeVariableValue');
+                        ? moment().format('YYYY-MM-DD')
+                        : moment(cbk.getElementValue('datetimeVariableValue')).format('YYYY-MM-DD')
+                } else if (variableType === 'number') {
+                    value = cbk.getElementValue('numVariableValue');
                 } else {
                     value = cbk.getElementValue('variableValue');
                 }
@@ -163,7 +183,7 @@ export class SetVariable {
                 cbk.setOutput(createVariable, value);
                 break;
             case 'update':
-                const updateVariable = cbk.getElementValue('variableName');
+                const updateVariable = cbk.getElementValue('updateVariableName');
                 const variableValue = cbk.getElementValue('variableValue');
 
                 cbk.setOutput(updateVariable, variableValue);

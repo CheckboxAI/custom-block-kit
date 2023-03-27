@@ -361,7 +361,8 @@ var SetVariable = class {
             ref: "block_description",
             component: "BlockDescription",
             componentProps: {
-              label: "Block Description"
+              label: "Block Description",
+              placeholder: "Enter a description for this block"
             }
           },
           {
@@ -417,15 +418,32 @@ var SetVariable = class {
               {
                 ref: "variableValue",
                 component: "TextInput",
-                showIf: 'variableType != "datetime"',
+                showIf: 'variableType == "text"',
                 componentProps: {
                   label: "Variable Value",
                   placeholder: "Enter variable value"
                 }
               },
               {
+                ref: "numVariableValue",
+                component: "NumberInput",
+                showIf: 'variableType == "number"',
+                componentProps: {
+                  label: "Variable Value",
+                  placeholder: "Enter variable value"
+                },
+                validators: [
+                  {
+                    method: "min",
+                    value: "0",
+                    message: "This must be a positive number"
+                  }
+                ]
+              },
+              {
                 ref: "datetimeSelection",
                 component: "SelectInput",
+                showIf: 'variableType == "datetime"',
                 componentProps: {
                   label: "Variable Type",
                   placeholder: "Select variable type",
@@ -444,7 +462,7 @@ var SetVariable = class {
               {
                 ref: "datetimeVariableValue",
                 component: "DateTimeInput",
-                showIf: 'datetimeSelection == "customDate"',
+                showIf: 'datetimeSelection == "customDate" && variableType == "datetime"',
                 componentProps: {
                   label: "Variable Value",
                   placeholder: "Enter variable value"
@@ -461,7 +479,7 @@ var SetVariable = class {
             showIf: 'fn_selector == "update"',
             children: [
               {
-                ref: "variableName",
+                ref: "updateVariableName",
                 component: "SelectInput",
                 componentProps: {
                   label: "Variable Name",
@@ -498,8 +516,10 @@ var SetVariable = class {
 
                 if (variableType === 'datetime') {
                     value = datetimeSelection === 'currentDate' 
-                        ? moment.now()
-                        : cbk.getElementValue('datetimeVariableValue');
+                        ? moment().format('YYYY-MM-DD')
+                        : moment(cbk.getElementValue('datetimeVariableValue')).format('YYYY-MM-DD')
+                } else if (variableType === 'number') {
+                    value = cbk.getElementValue('numVariableValue');
                 } else {
                     value = cbk.getElementValue('variableValue');
                 }
@@ -507,7 +527,7 @@ var SetVariable = class {
                 cbk.setOutput(createVariable, value);
                 break;
             case 'update':
-                const updateVariable = cbk.getElementValue('variableName');
+                const updateVariable = cbk.getElementValue('updateVariableName');
                 const variableValue = cbk.getElementValue('variableValue');
 
                 cbk.setOutput(updateVariable, variableValue);

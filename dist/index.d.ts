@@ -1,3 +1,5 @@
+import { Client } from '@microsoft/microsoft-graph-client';
+
 declare const FIELD_TYPES: {
     BUTTON: string;
     DROPDOWN: string;
@@ -62,15 +64,20 @@ interface FrontendCBK {
 }
 interface BackendCBK {
     library: any;
+    apiClient: {
+        msgraph: Client;
+    };
     getElementValue(ref: string): string;
     getVariable(name: string): any;
     setOutput(name: string, value: any): void;
-    log(...message: string[]): void;
+    downloadFile(fileKey: string): Promise<any>;
+    log(...message: any[]): void;
 }
+type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables";
 interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | string;
+    options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | CustomOptionString;
     isSearchable?: boolean;
 }
 interface ComponentOptionProps {

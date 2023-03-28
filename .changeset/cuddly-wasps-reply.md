@@ -2,4 +2,4 @@
 "custom-block-kit": patch
 ---
 
-test for changeset
+updated changset configs

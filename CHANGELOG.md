@@ -1,5 +1,17 @@
 # custom-block-kit
 
+## 1.0.0
+
+### Major Changes
+
+- 8266c90: publish the first version of the custom block kit package
+
+  **What breaking changes:**
+  None
+
+  **Why the change was made**
+  publishing the first package
+
 ## 0.0.3
 
 ### Patch Changes

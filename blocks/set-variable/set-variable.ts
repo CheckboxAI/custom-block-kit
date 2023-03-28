@@ -140,7 +140,7 @@ export class SetVariable {
                             componentProps: {
                                 label: "Variable Name",
                                 placeholder: "Select variable name",
-                                optionsFn: "getExistingVariables",
+                                options: "getExistingVariables",
                             },
                         },
                         {
@@ -155,40 +155,37 @@ export class SetVariable {
                 },
             ],
         },
-        runtime: `
-        const { moment } = cbk.library;
-        const fn = cbk.getElementValue('fn_selector');
-        const fnTypes = {
-            create: 'create',
-            update: 'update',
-        };
+        runtime: async (cbk) => {
+            const { moment } = cbk.library;
+            const fnTypes = {
+                create: 'create',
+                update: 'update',
+            };
+            const fn = cbk.getElementValue('fn_selector') as keyof typeof fnTypes;
 
-        switch (fnTypes[fn]) {
-            case 'create':
-                const createVariable = cbk.getElementValue('variableName');
-                const variableType = cbk.getElementValue('variableType'); 
-                const datetimeSelection = cbk.getElementValue('datetimeSelection');
-                let value = ''
-
-                if (variableType === 'datetime') {
-                    value = datetimeSelection === 'currentDate' 
-                        ? moment().format('YYYY-MM-DD')
-                        : moment(cbk.getElementValue('datetimeVariableValue')).format('YYYY-MM-DD')
-                } else if (variableType === 'number') {
-                    value = cbk.getElementValue('numVariableValue');
-                } else {
-                    value = cbk.getElementValue('variableValue');
+            switch (fnTypes[fn]) {
+                case 'create':
+                    const createVariable = cbk.getElementValue('variableName');
+                    const variableType = cbk.getElementValue('variableType');
+                    const datetimeSelection = cbk.getElementValue('datetimeSelection');
+                    let value = ''
+                    if (variableType === 'datetime') {
+                        value = datetimeSelection === 'currentDate'
+                            ? moment().format('YYYY-MM-DD')
+                            : moment(cbk.getElementValue('datetimeVariableValue')).format('YYYY-MM-DD')
+                    } else if (variableType === 'number') {
+                        value = cbk.getElementValue('numVariableValue');
+                    } else {
+                        value = cbk.getElementValue('variableValue');
+                    }
+                    cbk.setOutput(createVariable, value);
+                    break;
+                case 'update':
+                    const updateVariable = cbk.getElementValue('updateVariableName');
+                    const variableValue = cbk.getElementValue('variableValue');
+                    cbk.setOutput(updateVariable, variableValue);
+                    break;
                 }
-
-                cbk.setOutput(createVariable, value);
-                break;
-            case 'update':
-                const updateVariable = cbk.getElementValue('updateVariableName');
-                const variableValue = cbk.getElementValue('variableValue');
-
-                cbk.setOutput(updateVariable, variableValue);
-                break;
-            }
-        `,
+        },
     };
 }

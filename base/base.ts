@@ -9,7 +9,7 @@ export interface BaseSchema {
     stencil?: Stencil;
     studioShape?: StudioShape;
     editor?: Editor;
-    runtime?: string;
+    runtime?: (cbk: BackendCBK) => Promise<void>;
 }
 
 export interface Stencil {
@@ -40,11 +40,28 @@ export interface EditorField {
     output?: OutputProps;
 }
 
+export interface FrontendCBK {
+    api: {
+        get: <T extends object>(url: string, params?: Record<string, unknown>) => Promise<T>;
+    },
+    getElementValue(ref: string): string;
+}
+
+export interface BackendCBK {
+    library: any, // TODO: proper type using CheckboxAI/CheckboxAPI
+    getElementValue(ref: string): string;
+    getVariable(name: string): any;
+    setOutput(name: string, value: any): void;
+    log(...message: string[]): void;
+}
+
+type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables"
+
 export interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[];
-    optionsFn?: string;
+    options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | CustomOptionString;
+    isSearchable?: boolean;
 }
 
 export interface ComponentOptionProps {

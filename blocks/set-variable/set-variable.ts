@@ -51,9 +51,9 @@ export class SetVariable {
                                 label: "Variable Type",
                                 placeholder: "Select variable type",
                                 options: [
-                                    { label: "Text", value: "text" },
-                                    { label: "Number", value: "number" },
-                                    { label: "Datetime", value: "datetime" },
+                                    { label: "Text", value: "TEXT" },
+                                    { label: "Number", value: "NUMBER" },
+                                    { label: "Datetime", value: "DATE" },
                                 ],
                             },
                         },
@@ -70,20 +70,40 @@ export class SetVariable {
                                     message: "Variable name already exists",
                                 },
                             ],
+                            output: {
+                                ref: "variableType",
+                            },
                         },
                         {
                             ref: "variableValue",
                             component: "TextInput",
-                            showIf: 'variableType == "text"',
+                            showIf: 'variableType == "TEXT"',
                             componentProps: {
                                 label: "Variable Value",
                                 placeholder: "Enter variable value",
                             },
+                            validators: [
+                                {
+                                    method: "isVariableUnique",
+                                    message: "Variable name already exists",
+                                },
+                                {
+                                    method: "max",
+                                    value: "50",
+                                    message:
+                                        "This must be less than 50 characters",
+                                },
+                                {
+                                    method: "matches",
+                                    value: /^[a-zA-Z0-9_]+$/,
+                                    message: "",
+                                },
+                            ],
                         },
                         {
                             ref: "numVariableValue",
                             component: "NumberInput",
-                            showIf: 'variableType == "number"',
+                            showIf: 'variableType == "NUMBER"',
                             componentProps: {
                                 label: "Variable Value",
                                 placeholder: "Enter variable value",
@@ -99,10 +119,10 @@ export class SetVariable {
                         {
                             ref: "datetimeSelection",
                             component: "SelectInput",
-                            showIf: 'variableType == "datetime"',
+                            showIf: 'variableType == "DATE"',
                             componentProps: {
-                                label: "Variable Type",
-                                placeholder: "Select variable type",
+                                label: "Select date option",
+                                placeholder: "Select date option",
                                 options: [
                                     {
                                         label: "Current Date",
@@ -118,7 +138,7 @@ export class SetVariable {
                         {
                             ref: "datetimeVariableValue",
                             component: "DateTimeInput",
-                            showIf: 'datetimeSelection == "customDate" && variableType == "datetime"',
+                            showIf: 'datetimeSelection == "customDate" && variableType == "DATE"',
                             componentProps: {
                                 label: "Variable Value",
                                 placeholder: "Enter variable value",
@@ -158,34 +178,44 @@ export class SetVariable {
         runtime: async (cbk) => {
             const { moment } = cbk.library;
             const fnTypes = {
-                create: 'create',
-                update: 'update',
+                create: "create",
+                update: "update",
             };
-            const fn = cbk.getElementValue('fn_selector') as keyof typeof fnTypes;
+            const fn = cbk.getElementValue(
+                "fn_selector"
+            ) as keyof typeof fnTypes;
 
             switch (fnTypes[fn]) {
-                case 'create':
-                    const createVariable = cbk.getElementValue('variableName');
-                    const variableType = cbk.getElementValue('variableType');
-                    const datetimeSelection = cbk.getElementValue('datetimeSelection');
-                    let value = ''
-                    if (variableType === 'datetime') {
-                        value = datetimeSelection === 'currentDate'
-                            ? moment().format('YYYY-MM-DD')
-                            : moment(cbk.getElementValue('datetimeVariableValue')).format('YYYY-MM-DD')
-                    } else if (variableType === 'number') {
-                        value = cbk.getElementValue('numVariableValue');
+                case "create":
+                    const createVariable = cbk.getElementValue("variableName");
+                    const variableType = cbk.getElementValue("variableType");
+                    const datetimeSelection =
+                        cbk.getElementValue("datetimeSelection");
+                    let value = "";
+
+                    if (variableType === "DATE") {
+                        value =
+                            datetimeSelection === "currentDate"
+                                ? moment().format("YYYY-MM-DD")
+                                : moment(
+                                      cbk.getElementValue(
+                                          "datetimeVariableValue"
+                                      )
+                                  ).format("YYYY-MM-DD");
+                    } else if (variableType === "NUMBER") {
+                        value = cbk.getElementValue("numVariableValue");
                     } else {
-                        value = cbk.getElementValue('variableValue');
+                        value = cbk.getElementValue("variableValue");
                     }
                     cbk.setOutput(createVariable, value);
                     break;
-                case 'update':
-                    const updateVariable = cbk.getElementValue('updateVariableName');
-                    const variableValue = cbk.getElementValue('variableValue');
+                case "update":
+                    const updateVariable =
+                        cbk.getElementValue("updateVariableName");
+                    const variableValue = cbk.getElementValue("variableValue");
                     cbk.setOutput(updateVariable, variableValue);
                     break;
-                }
+            }
         },
     };
 }

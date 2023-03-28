@@ -27,7 +27,8 @@ export interface Editor {
 }
 
 export interface OutputProps {
-    as: keyof typeof FIELD_TYPES;
+    as?: keyof typeof FIELD_TYPES; // Assign this when want to set directly
+    ref?: string; // Assign a custom function
 }
 
 export interface EditorField {
@@ -76,6 +77,6 @@ export interface ComponentOptionProps {
 
 export interface ValidatorProps {
     method: string;
-    value?: string;
+    value?: string | RegExp;
     message: string;
 }

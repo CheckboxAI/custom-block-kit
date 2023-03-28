@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 0.0.3
+
+### Patch Changes
+
+- 7a709c0: test new version
+
 ## 0.0.2
 
 ### Patch Changes

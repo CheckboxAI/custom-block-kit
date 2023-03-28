@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.1
+
+### Patch Changes
+
+- 8561652: Add max 50 character validation to variable input
+
 ## 1.0.0
 
 ### Major Changes

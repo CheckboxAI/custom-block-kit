@@ -117,6 +117,12 @@ export class DateCalc {
                                             message:
                                                 "This variable already exists!",
                                         },
+                                        {
+                                            method: "max",
+                                            value: "50",
+                                            message:
+                                                "This must be less than 50 characters",
+                                        },
                                     ],
                                 },
                             ],
@@ -275,6 +281,12 @@ export class DateCalc {
                                             method: "required",
                                             message:
                                                 "Please insert a variable name",
+                                        },
+                                        {
+                                            method: "max",
+                                            value: "50",
+                                            message:
+                                                "This must be less than 50 characters",
                                         },
                                     ],
                                     output: {

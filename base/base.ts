@@ -1,5 +1,5 @@
 import type { FIELD_TYPES } from "../blocks/constants/constant";
-import type { Client } from '@microsoft/microsoft-graph-client';
+import type { Client } from "@microsoft/microsoft-graph-client";
 
 export interface BaseSchema {
     key?: string;
@@ -44,8 +44,11 @@ export interface EditorField {
 
 export interface FrontendCBK {
     api: {
-        get: <T extends object>(url: string, params?: Record<string, unknown>) => Promise<T>;
-    },
+        get: <T extends object>(
+            url: string,
+            params?: Record<string, unknown>
+        ) => Promise<T>;
+    };
     getElementValue(ref: string): string;
 }
 
@@ -61,12 +64,18 @@ export interface BackendCBK {
     log(...message: any[]): void;
 }
 
-type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables"
+type CustomOptionString =
+    | "getDateVariables"
+    | "getExistingVariables"
+    | "getFileVariables";
 
 export interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | CustomOptionString;
+    options?:
+        | ComponentOptionProps[]
+        | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>)
+        | CustomOptionString;
     isSearchable?: boolean;
 }
 
@@ -77,6 +86,6 @@ export interface ComponentOptionProps {
 
 export interface ValidatorProps {
     method: string;
-    value?: string | RegExp;
+    value?: string;
     message: string;
 }

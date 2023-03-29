@@ -44,7 +44,8 @@ interface Editor {
     elements: EditorField[];
 }
 interface OutputProps {
-    as: keyof typeof FIELD_TYPES;
+    as?: keyof typeof FIELD_TYPES;
+    ref?: string;
 }
 interface EditorField {
     ref: string;
@@ -86,7 +87,7 @@ interface ComponentOptionProps {
 }
 interface ValidatorProps {
     method: string;
-    value?: string;
+    value?: string | RegExp;
     message: string;
 }
 

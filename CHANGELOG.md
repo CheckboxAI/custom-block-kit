@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.4
+
+### Patch Changes
+
+- 2ff571e: Moved msgraph from dev dep to dep
+
 ## 1.0.2
 
 ### Patch Changes

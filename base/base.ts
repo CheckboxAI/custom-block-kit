@@ -1,4 +1,5 @@
 import type { FIELD_TYPES } from "../blocks/constants/constant";
+import type { Client } from '@microsoft/microsoft-graph-client';
 
 export interface BaseSchema {
     key?: string;
@@ -48,11 +49,15 @@ export interface FrontendCBK {
 }
 
 export interface BackendCBK {
-    library: any, // TODO: proper type using CheckboxAI/CheckboxAPI
+    library: any; // TODO: proper type using CheckboxAI/CheckboxAPI
+    apiClient: {
+        msgraph: Client;
+    };
     getElementValue(ref: string): string;
     getVariable(name: string): any;
     setOutput(name: string, value: any): void;
-    log(...message: string[]): void;
+    downloadFile(fileKey: string): Promise<any>;
+    log(...message: any[]): void;
 }
 
 type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables"

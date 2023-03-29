@@ -136,6 +136,11 @@ var DateCalc = class {
                       {
                         method: "isVariableUnique",
                         message: "This variable already exists!"
+                      },
+                      {
+                        method: "max",
+                        value: "50",
+                        message: "This must be less than 50 characters"
                       }
                     ]
                   }
@@ -291,6 +296,11 @@ var DateCalc = class {
                       {
                         method: "required",
                         message: "Please insert a variable name"
+                      },
+                      {
+                        method: "max",
+                        value: "50",
+                        message: "This must be less than 50 characters"
                       }
                     ],
                     output: {
@@ -554,7 +564,7 @@ var Sharepoint = class {
         elements: [
           {
             ref: "block_description",
-            component: "InterpolationInput",
+            component: "BlockDescription",
             componentProps: {
               label: "Block Description"
             }
@@ -566,16 +576,16 @@ var Sharepoint = class {
               label: "Select Function",
               placeholder: "Select function",
               options: [
-                { label: "Create Folder", value: "create" },
+                { label: "Create Folder", value: "create_folder" },
                 {
                   label: "Upload file to folder",
-                  value: "upload"
+                  value: "upload_file"
                 }
               ]
             }
           },
           {
-            ref: "siteId",
+            ref: "site_id",
             component: "SelectInput",
             componentProps: {
               label: "Select Site",
@@ -590,8 +600,8 @@ var Sharepoint = class {
             }
           },
           {
-            ref: "driveId",
-            showIf: "!!siteId",
+            ref: "drive_id",
+            showIf: "!!site_id",
             component: "SelectInput",
             componentProps: {
               label: "Select Drive",
@@ -601,7 +611,7 @@ var Sharepoint = class {
                 const response = yield cbk.api.get(
                   "/public/integrations/msgraph/sharepoint/drives",
                   {
-                    siteId: cbk.getElementValue("siteId")
+                    siteId: cbk.getElementValue("site_id")
                   }
                 );
                 return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
@@ -609,8 +619,8 @@ var Sharepoint = class {
             }
           },
           {
-            ref: "folderId",
-            showIf: "!!siteId && !!driveId",
+            ref: "folder_id",
+            showIf: "!!site_id && !!drive_id",
             component: "SelectInput",
             componentProps: {
               label: "Select Folder",
@@ -620,18 +630,72 @@ var Sharepoint = class {
                 const response = yield cbk.api.get(
                   "/public/integrations/msgraph/sharepoint/folders",
                   {
-                    siteId: cbk.getElementValue("siteId"),
-                    driveId: cbk.getElementValue("driveId")
+                    siteId: cbk.getElementValue("site_id"),
+                    driveId: cbk.getElementValue("drive_id")
                   }
                 );
                 return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
               })
             }
+          },
+          {
+            ref: "folder_name",
+            showIf: 'fn_selector == "create_folder"',
+            component: "TextInput",
+            componentProps: {
+              label: "Folder name"
+            }
+          },
+          {
+            ref: "file",
+            showIf: 'fn_selector == "upload_file"',
+            component: "SelectInput",
+            componentProps: {
+              label: "File to upload",
+              placeholder: "Select file",
+              options: "getFileVariables"
+            }
+          },
+          {
+            ref: "file_name",
+            showIf: 'fn_selector == "upload_file"',
+            component: "TextInput",
+            componentProps: {
+              label: "File name"
+            }
           }
         ]
       },
       runtime: (cbk) => __async(this, null, function* () {
-        cbk.log("heyyy");
+        const fn = cbk.getElementValue("fn_selector");
+        if (fn === "upload_file") {
+          const siteId = cbk.getElementValue("site_id");
+          const driveId = cbk.getElementValue("drive_id");
+          const folderId = cbk.getElementValue("folder_id");
+          const originalName = cbk.getElementValue("file_name");
+          const fileVar = cbk.getElementValue("file");
+          const fileName = encodeURIComponent(originalName);
+          const files = cbk.getVariable(fileVar);
+          const [file] = JSON.parse(files);
+          const buffer = yield cbk.downloadFile(file.fileKey);
+          const size = Buffer.byteLength(buffer);
+          const { FileUpload, OneDriveLargeFileUploadTask } = cbk.library.msgraph;
+          const msgraphClient = cbk.apiClient.msgraph;
+          const { id, parentReference } = yield msgraphClient.api(`/sites/${siteId}/lists/${driveId}/items/${folderId}/driveItem`).get();
+          const fileObject = new FileUpload(buffer, fileName, size);
+          const options = {
+            fileName,
+            rangeSize: 1024 * 1024,
+            uploadSessionURL: `/drives/${parentReference.driveId}/items/${id}:/${fileName}:/createUploadSession`
+          };
+          const uploadTask = yield OneDriveLargeFileUploadTask.createTaskWithFileObject(
+            msgraphClient,
+            fileObject,
+            options
+          );
+          const up = yield uploadTask.upload();
+          cbk.log("DONE=====>", up);
+        }
       })
     };
   }

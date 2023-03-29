@@ -105,7 +105,7 @@ export class Sharepoint {
         },
         {
           ref: "folder_name",
-          showIf: "fn_selector === 'create_folder'",
+          showIf: 'fn_selector == "create_folder"',
           component: "TextInput",
           componentProps: {
             label: "Folder name"
@@ -113,7 +113,7 @@ export class Sharepoint {
         },
         {
           ref: "file",
-          showIf: "fn_selector === 'upload_file'",
+          showIf: 'fn_selector == "upload_file"',
           component: "SelectInput",
           componentProps: {
             label: "File to upload",
@@ -123,7 +123,7 @@ export class Sharepoint {
         },
         {
           ref: "file_name",
-          showIf: "fn_selector === 'upload_file'",
+          showIf: 'fn_selector == "upload_file"',
           component: "TextInput",
           componentProps: {
             label: "File name"
@@ -132,7 +132,40 @@ export class Sharepoint {
       ],
     },
     runtime: async (cbk) => {
-      cbk.log('heyyy')
+      const fn = cbk.getElementValue("fn_selector");
+
+      if (fn === "upload_file") {
+        const siteId = cbk.getElementValue("site_id");
+        const driveId = cbk.getElementValue("drive_id");
+        const folderId = cbk.getElementValue("folder_id");
+        const originalName = cbk.getElementValue("file_name");
+        const fileVar = cbk.getElementValue("file");
+        const fileName = encodeURIComponent(originalName);
+        const files = cbk.getVariable(fileVar);
+        const [file] = JSON.parse(files);
+        const buffer = await cbk.downloadFile(file.fileKey);
+        const size = Buffer.byteLength(buffer);
+
+        const { FileUpload, OneDriveLargeFileUploadTask } = cbk.library.msgraph;
+        const msgraphClient = cbk.apiClient.msgraph;
+        const { id, parentReference } = await msgraphClient.api(`/sites/${siteId}/lists/${driveId}/items/${folderId}/driveItem`).get()
+        const fileObject = new FileUpload(buffer, fileName, size);
+        const options = {
+          fileName,
+          rangeSize: 1024 * 1024,
+          uploadSessionURL: `/drives/${parentReference.driveId}/items/${id}:/${fileName}:/createUploadSession`,
+        };
+
+        const uploadTask =
+          await OneDriveLargeFileUploadTask.createTaskWithFileObject(
+            msgraphClient,
+            fileObject,
+            options,
+          );
+
+        const up = await uploadTask.upload();
+        cbk.log("DONE=====>", up);
+      }
     }
   };
 }

@@ -87,7 +87,7 @@ interface ComponentOptionProps {
 }
 interface ValidatorProps {
     method: string;
-    value?: string | RegExp;
+    value?: string;
     message: string;
 }
 

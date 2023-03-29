@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.2
+
+### Patch Changes
+
+- c70bdb4: Added upload file function to sharepoint
+
 ## 1.0.1
 
 ### Patch Changes

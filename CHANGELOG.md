@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.5
+
+### Patch Changes
+
+- 5544d32: Implement create folder for sharepoint block
+
 ## 1.0.4
 
 ### Patch Changes

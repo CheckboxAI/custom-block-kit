@@ -634,7 +634,13 @@ var Sharepoint = class {
                   value: "upload_file"
                 }
               ]
-            }
+            },
+            validators: [
+              {
+                method: "required",
+                message: "Please select a function"
+              }
+            ]
           },
           {
             ref: "site_id",
@@ -649,7 +655,13 @@ var Sharepoint = class {
                 );
                 return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
               })
-            }
+            },
+            validators: [
+              {
+                method: "required",
+                message: "Please select a site"
+              }
+            ]
           },
           {
             ref: "drive_id",
@@ -668,7 +680,13 @@ var Sharepoint = class {
                 );
                 return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
               })
-            }
+            },
+            validators: [
+              {
+                method: "required",
+                message: "Please select a drive"
+              }
+            ]
           },
           {
             ref: "folder_id",
@@ -686,7 +704,11 @@ var Sharepoint = class {
                     driveId: cbk.getElementValue("drive_id")
                   }
                 );
-                return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
+                if (!response)
+                  return [];
+                const initialOptions = [{ value: "", label: "/" }];
+                const options = response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions);
+                return initialOptions.concat(options);
               })
             }
           },
@@ -696,7 +718,13 @@ var Sharepoint = class {
             component: "TextInput",
             componentProps: {
               label: "Folder name"
-            }
+            },
+            validators: [
+              {
+                method: "required",
+                message: "Please enter the folder name"
+              }
+            ]
           },
           {
             ref: "file",
@@ -720,25 +748,48 @@ var Sharepoint = class {
       },
       runtime: (cbk) => __async(this, null, function* () {
         const fn = cbk.getElementValue("fn_selector");
+        function getFolderDriveItem(siteId, listId, folderId) {
+          return __async(this, null, function* () {
+            return yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`).get();
+          });
+        }
+        function getDriveId(siteId, listId) {
+          return __async(this, null, function* () {
+            const { id } = yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/drive`).get();
+            return id;
+          });
+        }
         if (fn === "upload_file") {
           const siteId = cbk.getElementValue("site_id");
           const driveId = cbk.getElementValue("drive_id");
           const folderId = cbk.getElementValue("folder_id");
           const originalName = cbk.getElementValue("file_name");
           const fileVar = cbk.getElementValue("file");
-          const fileName = encodeURIComponent(originalName);
           const files = cbk.getVariable(fileVar);
           const [file] = JSON.parse(files);
+          const fileName = encodeURIComponent(originalName || file.fileName);
           const buffer = yield cbk.downloadFile(file.fileKey);
           const size = Buffer.byteLength(buffer);
           const { FileUpload, OneDriveLargeFileUploadTask } = cbk.library.msgraph;
-          const msgraphClient = cbk.apiClient.msgraph;
-          const { id, parentReference } = yield msgraphClient.api(`/sites/${siteId}/lists/${driveId}/items/${folderId}/driveItem`).get();
           const fileObject = new FileUpload(buffer, fileName, size);
+          const msgraphClient = cbk.apiClient.msgraph;
+          let uploadSessionURL;
+          if (folderId) {
+            const { id, parentReference } = yield getFolderDriveItem(
+              siteId,
+              driveId,
+              folderId
+            );
+            uploadSessionURL = `/drives/${parentReference.driveId}/items/${id}:/${fileName}:/createUploadSession`;
+          } else {
+            const id = yield getDriveId(siteId, driveId);
+            uploadSessionURL = `/drives/${id}/root/children:/${fileName}:/createUploadSession`;
+          }
           const options = {
             fileName,
             rangeSize: 1024 * 1024,
-            uploadSessionURL: `/drives/${parentReference.driveId}/items/${id}:/${fileName}:/createUploadSession`
+            uploadSessionURL,
+            conflictBehavior: "rename"
           };
           const uploadTask = yield OneDriveLargeFileUploadTask.createTaskWithFileObject(
             msgraphClient,
@@ -746,7 +797,30 @@ var Sharepoint = class {
             options
           );
           const up = yield uploadTask.upload();
-          cbk.log("DONE=====>", up);
+          cbk.log("msgraph: DONE upload file to one drive", up);
+        } else if (fn === "create_folder") {
+          const siteId = cbk.getElementValue("site_id");
+          const driveId = cbk.getElementValue("drive_id");
+          const folderId = cbk.getElementValue("folder_id");
+          const folderName = cbk.getElementValue("folder_name");
+          let dirUrl;
+          if (folderId) {
+            const { id, parentReference } = yield getFolderDriveItem(
+              siteId,
+              driveId,
+              folderId
+            );
+            dirUrl = `/drives/${parentReference.driveId}/items/${id}/children`;
+          } else {
+            const id = yield getDriveId(siteId, driveId);
+            dirUrl = `/drives/${id}/root/children`;
+          }
+          const response = yield cbk.apiClient.msgraph.api(dirUrl).post({
+            name: folderName,
+            folder: {},
+            "@microsoft.graph.conflictBehavior": "replace"
+          });
+          cbk.log("msgraph: DONE create folder", response);
         }
       })
     };

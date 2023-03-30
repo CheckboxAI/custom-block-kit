@@ -36,6 +36,12 @@ export class Sharepoint {
               },
             ],
           },
+          validators: [
+            {
+              method: "required",
+              message: "Please select a function",
+            },
+          ],
         },
         {
           ref: "site_id",
@@ -55,6 +61,12 @@ export class Sharepoint {
                 : [];
             },
           },
+          validators: [
+            {
+              method: "required",
+              message: "Please select a site",
+            },
+          ],
         },
         {
           ref: "drive_id",
@@ -78,6 +90,12 @@ export class Sharepoint {
                 : [];
             },
           },
+          validators: [
+            {
+              method: "required",
+              message: "Please select a drive",
+            },
+          ],
         },
         {
           ref: "folder_id",
@@ -95,11 +113,16 @@ export class Sharepoint {
                   driveId: cbk.getElementValue("drive_id"),
                 }
               );
-              return response
-                ? response
-                    .map(({ id, name }) => ({ value: id, label: name }))
-                    .sort(sortOptions)
-                : [];
+
+              if (!response) return [];
+
+              const initialOptions = [{ value: "", label: "/" }];
+
+              const options = response
+                .map(({ id, name }) => ({ value: id, label: name }))
+                .sort(sortOptions);
+
+              return initialOptions.concat(options);
             },
           },
         },
@@ -108,8 +131,14 @@ export class Sharepoint {
           showIf: 'fn_selector == "create_folder"',
           component: "TextInput",
           componentProps: {
-            label: "Folder name"
-          }
+            label: "Folder name",
+          },
+          validators: [
+            {
+              method: "required",
+              message: "Please enter the folder name",
+            },
+          ],
         },
         {
           ref: "file",
@@ -119,20 +148,37 @@ export class Sharepoint {
             label: "File to upload",
             placeholder: "Select file",
             options: "getFileVariables",
-          }
+          },
         },
         {
           ref: "file_name",
           showIf: 'fn_selector == "upload_file"',
           component: "TextInput",
           componentProps: {
-            label: "File name"
-          }
+            label: "File name",
+          },
         },
       ],
     },
     runtime: async (cbk) => {
       const fn = cbk.getElementValue("fn_selector");
+
+      async function getFolderDriveItem(
+        siteId: string,
+        listId: string,
+        folderId: string
+      ) {
+        return await cbk.apiClient.msgraph
+          .api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`)
+          .get();
+      }
+
+      async function getDriveId(siteId: string, listId: string) {
+        const { id } = await cbk.apiClient.msgraph
+          .api(`/sites/${siteId}/lists/${listId}/drive`)
+          .get();
+        return id;
+      }
 
       if (fn === "upload_file") {
         const siteId = cbk.getElementValue("site_id");
@@ -140,32 +186,72 @@ export class Sharepoint {
         const folderId = cbk.getElementValue("folder_id");
         const originalName = cbk.getElementValue("file_name");
         const fileVar = cbk.getElementValue("file");
-        const fileName = encodeURIComponent(originalName);
         const files = cbk.getVariable(fileVar);
         const [file] = JSON.parse(files);
+        const fileName = encodeURIComponent(originalName || file.fileName);
         const buffer = await cbk.downloadFile(file.fileKey);
         const size = Buffer.byteLength(buffer);
 
         const { FileUpload, OneDriveLargeFileUploadTask } = cbk.library.msgraph;
-        const msgraphClient = cbk.apiClient.msgraph;
-        const { id, parentReference } = await msgraphClient.api(`/sites/${siteId}/lists/${driveId}/items/${folderId}/driveItem`).get()
         const fileObject = new FileUpload(buffer, fileName, size);
+        const msgraphClient = cbk.apiClient.msgraph;
+
+        let uploadSessionURL;
+        if (folderId) {
+          const { id, parentReference } = await getFolderDriveItem(
+            siteId,
+            driveId,
+            folderId
+          );
+          uploadSessionURL = `/drives/${parentReference.driveId}/items/${id}:/${fileName}:/createUploadSession`;
+        } else {
+          const id = await getDriveId(siteId, driveId);
+          uploadSessionURL = `/drives/${id}/root/children:/${fileName}:/createUploadSession`;
+        }
+
         const options = {
           fileName,
           rangeSize: 1024 * 1024,
-          uploadSessionURL: `/drives/${parentReference.driveId}/items/${id}:/${fileName}:/createUploadSession`,
+          uploadSessionURL,
+          conflictBehavior: "rename",
         };
 
         const uploadTask =
           await OneDriveLargeFileUploadTask.createTaskWithFileObject(
             msgraphClient,
             fileObject,
-            options,
+            options
           );
 
         const up = await uploadTask.upload();
-        cbk.log("DONE=====>", up);
+        cbk.log("msgraph: DONE upload file to one drive", up);
+      } else if (fn === "create_folder") {
+        const siteId = cbk.getElementValue("site_id");
+        const driveId = cbk.getElementValue("drive_id");
+        const folderId = cbk.getElementValue("folder_id");
+        const folderName = cbk.getElementValue("folder_name");
+
+        let dirUrl;
+        if (folderId) {
+          const { id, parentReference } = await getFolderDriveItem(
+            siteId,
+            driveId,
+            folderId
+          );
+          dirUrl = `/drives/${parentReference.driveId}/items/${id}/children`;
+        } else {
+          const id = await getDriveId(siteId, driveId);
+          dirUrl = `/drives/${id}/root/children`;
+        }
+
+        const response = await cbk.apiClient.msgraph.api(dirUrl).post({
+          name: folderName,
+          folder: {},
+          "@microsoft.graph.conflictBehavior": "replace",
+        });
+
+        cbk.log("msgraph: DONE create folder", response);
       }
-    }
+    },
   };
 }

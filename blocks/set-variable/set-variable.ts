@@ -197,7 +197,7 @@ export class SetVariable {
 
             switch (fnTypes[fn]) {
                 case "create":
-                    const createVariable = cbk.getElementValue("variableName"); // FILE12
+                    const createVariable = cbk.getElementValue("variableName");
                     const variableType = cbk.getElementValue("variableType");
                     const datetimeSelection =
                         cbk.getElementValue("datetimeSelection");
@@ -215,7 +215,7 @@ export class SetVariable {
                     } else if (variableType === "NUMBER") {
                         value = cbk.getElementValue("numVariableValue");
                     } else if (variableType === "FILE") {
-                        value = cbk.getElementValue("fileVariableValue"); // [...file]
+                        value = cbk.getElementValue("fileVariableValue");
                     } else {
                         value = cbk.getElementValue("variableValue");
                     }

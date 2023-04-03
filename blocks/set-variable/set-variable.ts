@@ -54,6 +54,7 @@ export class SetVariable {
                                     { label: "Text", value: "TEXT" },
                                     { label: "Number", value: "NUMBER" },
                                     { label: "Datetime", value: "DATE" },
+                                    { label: "File", value: "FILE" },
                                 ],
                             },
                         },
@@ -144,6 +145,15 @@ export class SetVariable {
                                 placeholder: "Enter variable value",
                             },
                         },
+                        {
+                            ref: "fileVariableValue",
+                            component: "FileInput",
+                            showIf: 'variableType == "FILE"',
+                            componentProps: {
+                                label: "Variable Value",
+                                placeholder: "Enter variable value",
+                            },
+                        },
                     ],
                 },
                 {
@@ -187,7 +197,7 @@ export class SetVariable {
 
             switch (fnTypes[fn]) {
                 case "create":
-                    const createVariable = cbk.getElementValue("variableName");
+                    const createVariable = cbk.getElementValue("variableName"); // FILE12
                     const variableType = cbk.getElementValue("variableType");
                     const datetimeSelection =
                         cbk.getElementValue("datetimeSelection");
@@ -204,9 +214,12 @@ export class SetVariable {
                                   ).format("YYYY-MM-DD");
                     } else if (variableType === "NUMBER") {
                         value = cbk.getElementValue("numVariableValue");
+                    } else if (variableType === "FILE") {
+                        value = cbk.getElementValue("fileVariableValue"); // [...file]
                     } else {
                         value = cbk.getElementValue("variableValue");
                     }
+
                     cbk.setOutput(createVariable, value);
                     break;
                 case "update":

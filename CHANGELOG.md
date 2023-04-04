@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.6
+
+### Patch Changes
+
+- bfd3f72: This is to include an option for FileInput
+
 ## 1.0.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.7
+
+### Patch Changes
+
+- 5273eed: Updated the sharepoint code to interpolation input and to use the display name
+
 ## 1.0.6
 
 ### Patch Changes

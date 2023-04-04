@@ -400,7 +400,8 @@ var SetVariable = class {
                   options: [
                     { label: "Text", value: "TEXT" },
                     { label: "Number", value: "NUMBER" },
-                    { label: "Datetime", value: "DATE" }
+                    { label: "Datetime", value: "DATE" },
+                    { label: "File", value: "FILE" }
                   ]
                 }
               },
@@ -489,6 +490,15 @@ var SetVariable = class {
                   label: "Variable Value",
                   placeholder: "Enter variable value"
                 }
+              },
+              {
+                ref: "fileVariableValue",
+                component: "FileInput",
+                showIf: 'variableType == "FILE"',
+                componentProps: {
+                  label: "Variable Value",
+                  placeholder: "Enter variable value"
+                }
               }
             ]
           },
@@ -544,6 +554,8 @@ var SetVariable = class {
               ).format("YYYY-MM-DD");
             } else if (variableType === "NUMBER") {
               value = cbk.getElementValue("numVariableValue");
+            } else if (variableType === "FILE") {
+              value = cbk.getElementValue("fileVariableValue");
             } else {
               value = cbk.getElementValue("variableValue");
             }

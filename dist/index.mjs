@@ -635,10 +635,11 @@ var Sharepoint = class {
               placeholder: "Select site",
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get(
-                  "/public/integrations/msgraph/sharepoint/sites"
-                );
-                return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
+                const response = yield cbk.api.get("/public/integrations/msgraph/sharepoint/sites");
+                return response ? response.map(({ id, displayName }) => ({
+                  value: id,
+                  label: displayName
+                })).sort(sortOptions) : [];
               })
             },
             validators: [
@@ -663,7 +664,10 @@ var Sharepoint = class {
                     siteId: cbk.getElementValue("site_id")
                   }
                 );
-                return response ? response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions) : [];
+                return response ? response.map(({ id, name }) => ({
+                  value: id,
+                  label: name
+                })).sort(sortOptions) : [];
               })
             },
             validators: [
@@ -692,7 +696,10 @@ var Sharepoint = class {
                 if (!response)
                   return [];
                 const initialOptions = [{ value: "", label: "/" }];
-                const options = response.map(({ id, name }) => ({ value: id, label: name })).sort(sortOptions);
+                const options = response.map(({ id, name }) => ({
+                  value: id,
+                  label: name
+                })).sort(sortOptions);
                 return initialOptions.concat(options);
               })
             }
@@ -700,7 +707,7 @@ var Sharepoint = class {
           {
             ref: "folder_name",
             showIf: 'fn_selector == "create_folder"',
-            component: "TextInput",
+            component: "InterpolationInput",
             componentProps: {
               label: "Folder name"
             },
@@ -724,7 +731,7 @@ var Sharepoint = class {
           {
             ref: "file_name",
             showIf: 'fn_selector == "upload_file"',
-            component: "TextInput",
+            component: "InterpolationInput",
             componentProps: {
               label: "File name"
             }
@@ -735,7 +742,9 @@ var Sharepoint = class {
         const fn = cbk.getElementValue("fn_selector");
         function getFolderDriveItem(siteId, listId, folderId) {
           return __async(this, null, function* () {
-            return yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`).get();
+            return yield cbk.apiClient.msgraph.api(
+              `/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`
+            ).get();
           });
         }
         function getDriveId(siteId, listId) {
@@ -752,7 +761,9 @@ var Sharepoint = class {
           const fileVar = cbk.getElementValue("file");
           const files = cbk.getVariable(fileVar);
           const [file] = JSON.parse(files);
-          const fileName = encodeURIComponent(originalName || file.fileName);
+          const fileName = encodeURIComponent(
+            originalName || file.fileName
+          );
           const buffer = yield cbk.downloadFile(file.fileKey);
           const size = Buffer.byteLength(buffer);
           const { FileUpload, OneDriveLargeFileUploadTask } = cbk.library.msgraph;

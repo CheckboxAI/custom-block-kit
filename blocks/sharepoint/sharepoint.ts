@@ -53,7 +53,7 @@ export class Sharepoint {
                         options: async (cbk) => {
                             const response = await cbk.api.get<
                                 SharepointData[]
-                            >("/public/integrations/msgraph/sharepoint/sites");
+                            >("/public/integrations/sharepoint/sites");
                             return response
                                 ? response
                                       .map(({ id, displayName }) => ({
@@ -83,7 +83,7 @@ export class Sharepoint {
                             const response = await cbk.api.get<
                                 SharepointData[]
                             >(
-                                "/public/integrations/msgraph/sharepoint/drives",
+                                "/public/integrations/sharepoint/drives",
                                 {
                                     siteId: cbk.getElementValue("site_id"),
                                 }
@@ -117,7 +117,7 @@ export class Sharepoint {
                             const response = await cbk.api.get<
                                 SharepointData[]
                             >(
-                                "/public/integrations/msgraph/sharepoint/folders",
+                                "/public/integrations/sharepoint/folders",
                                 {
                                     siteId: cbk.getElementValue("site_id"),
                                     driveId: cbk.getElementValue("drive_id"),

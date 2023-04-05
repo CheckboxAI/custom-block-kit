@@ -662,7 +662,7 @@ var Sharepoint = class {
               placeholder: "Select site",
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get("/public/integrations/msgraph/sharepoint/sites");
+                const response = yield cbk.api.get("/public/integrations/sharepoint/sites");
                 return response ? response.map(({ id, displayName }) => ({
                   value: id,
                   label: displayName
@@ -686,7 +686,7 @@ var Sharepoint = class {
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
                 const response = yield cbk.api.get(
-                  "/public/integrations/msgraph/sharepoint/drives",
+                  "/public/integrations/sharepoint/drives",
                   {
                     siteId: cbk.getElementValue("site_id")
                   }
@@ -714,7 +714,7 @@ var Sharepoint = class {
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
                 const response = yield cbk.api.get(
-                  "/public/integrations/msgraph/sharepoint/folders",
+                  "/public/integrations/sharepoint/folders",
                   {
                     siteId: cbk.getElementValue("site_id"),
                     driveId: cbk.getElementValue("drive_id")

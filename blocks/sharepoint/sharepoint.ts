@@ -195,19 +195,18 @@ export class Sharepoint {
                 return id;
             }
 
-            if (fn === "upload_file") {
-                const siteId = cbk.getElementValue("site_id");
-                const driveId = cbk.getElementValue("drive_id");
-                const folderId = cbk.getElementValue("folder_id");
-                const originalName = cbk.getElementValue("file_name");
-                const fileVar = cbk.getElementValue("file");
-                const files = cbk.getVariable(fileVar);
-                const [file] = JSON.parse(files);
-                const fileName = encodeURIComponent(
-                    originalName || file.fileName
-                );
-                const buffer = await cbk.downloadFile(file.fileKey);
-                const size = Buffer.byteLength(buffer);
+      if (fn === "upload_file") {
+        const siteId = cbk.getElementValue("site_id");
+        const driveId = cbk.getElementValue("drive_id");
+        const folderId = cbk.getElementValue("folder_id");
+        const originalName = cbk.getElementValue("file_name");
+        const fileVar = cbk.getElementValue("file");
+        const files = cbk.getVariable(fileVar);
+        const [file] = JSON.parse(files);
+        const fileExtension = file.fileName.slice((file.fileName.lastIndexOf(".") - 1 >>> 0) + 2);
+        const fileName = encodeURIComponent(`${originalName}${fileExtension ? "." + fileExtension : ""}` || file.fileName);
+        const buffer = await cbk.downloadFile(file.fileKey);
+        const size = Buffer.byteLength(buffer);
 
                 const { FileUpload, OneDriveLargeFileUploadTask } =
                     cbk.library.msgraph;

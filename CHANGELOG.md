@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.8
+
+### Patch Changes
+
+- 7a4895c: updated sharepoint to added file extension
+
 ## 1.0.7
 
 ### Patch Changes

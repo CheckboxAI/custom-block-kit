@@ -94,11 +94,6 @@ export class SetVariable {
                                     message:
                                         "This must be less than 50 characters",
                                 },
-                                {
-                                    method: "matches",
-                                    value: "/^[a-zA-Z0-9_]+$/",
-                                    message: "",
-                                },
                             ],
                         },
                         {

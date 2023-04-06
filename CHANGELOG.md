@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.0
+
+### Minor Changes
+
+- c98fce0: added block types
+
 ## 1.0.10
 
 ### Patch Changes

@@ -27,6 +27,7 @@ interface BaseSchema {
     name?: string;
     color?: string;
     toggleName?: string;
+    blockType?: blockType;
     icon?: string;
     stencil?: Stencil;
     studioShape?: StudioShape;
@@ -90,6 +91,7 @@ interface ValidatorProps {
     value?: string;
     message: string;
 }
+type blockType = 'functional' | 'frontend';
 
 declare class DateCalc {
     schema: BaseSchema;

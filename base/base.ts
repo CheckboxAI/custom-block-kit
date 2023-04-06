@@ -5,7 +5,8 @@ export interface BaseSchema {
     key?: string;
     name?: string;
     color?: string;
-    toggleName?: string;
+    toggleName?: string
+    blockType: blockType;
     icon?: string;
     stencil?: Stencil;
     studioShape?: StudioShape;
@@ -89,3 +90,6 @@ export interface ValidatorProps {
     value?: string;
     message: string;
 }
+
+//A functional block type is one that does not have any user interaction during the assessment runtime (e.g. some calculation). A frontend block requires assesment interaction with the block (e.g. form block). 
+type blockType = 'functional' | 'frontend'

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.9
+
+### Patch Changes
+
+- 06282c5: Rename MSGraph to Sharepoint
+
 ## 1.0.8
 
 ### Patch Changes

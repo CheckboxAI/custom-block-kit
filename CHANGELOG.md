@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.0.10
+
+### Patch Changes
+
+- 1d41e54: Just removing an unnecessary regex
+
 ## 1.0.9
 
 ### Patch Changes

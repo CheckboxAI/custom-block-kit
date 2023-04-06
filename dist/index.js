@@ -466,11 +466,6 @@ var SetVariable = class {
                     method: "max",
                     value: "50",
                     message: "This must be less than 50 characters"
-                  },
-                  {
-                    method: "matches",
-                    value: "/^[a-zA-Z0-9_]+$/",
-                    message: ""
                   }
                 ]
               },

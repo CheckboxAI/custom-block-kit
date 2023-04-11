@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.2
+
+### Patch Changes
+
+- 82b381f: Fixed periodUnit fn to apply date manipulation to preserve timezone
+
 ## 1.1.1
 
 ### Patch Changes

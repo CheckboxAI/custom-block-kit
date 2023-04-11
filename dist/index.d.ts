@@ -27,7 +27,7 @@ interface BaseSchema {
     name?: string;
     color?: string;
     toggleName?: string;
-    blockType?: blockType;
+    blockType: blockType;
     icon?: string;
     stencil?: Stencil;
     studioShape?: StudioShape;

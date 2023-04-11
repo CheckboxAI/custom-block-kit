@@ -218,6 +218,10 @@ var DateCalc = class {
                         method: "max",
                         value: "50",
                         message: "This must be less than 50 characters"
+                      },
+                      {
+                        method: "required",
+                        message: "Must enter a variable name"
                       }
                     ],
                     output: {
@@ -232,7 +236,7 @@ var DateCalc = class {
             ref: "datecalc_difference_group",
             component: "Group",
             componentProps: {
-              label: "Find the difference between two dates (A - B)"
+              label: "Find the difference between two dates (B - A)"
             },
             showIf: 'fn_selector == "difference"',
             children: [
@@ -280,7 +284,13 @@ var DateCalc = class {
                           value: "months"
                         }
                       ]
-                    }
+                    },
+                    validators: [
+                      {
+                        method: "required",
+                        message: "Please select a unit of time"
+                      }
+                    ]
                   },
                   {
                     ref: "new_diff_variable",
@@ -325,8 +335,11 @@ var DateCalc = class {
         switch (fnTypes[fn]) {
           case "periodUnit":
             const newDateVarName = cbk.getElementValue("new_datetime_variable");
-            const fromDate = cbk.getVariable(cbk.getElementValue("to_date_variable"));
-            const date = moment(fromDate);
+            const fromDate = cbk.getVariable(
+              cbk.getElementValue("to_date_variable")
+            );
+            const utc = moment(fromDate).parseZone().utcOffset();
+            const date = moment(fromDate).utcOffset(utc);
             const unit = cbk.getElementValue("unit");
             const period = cbk.getElementValue("time_period");
             const toDate = date[fn](period, unit).format();
@@ -337,7 +350,7 @@ var DateCalc = class {
             const dateA = cbk.getVariable(cbk.getElementValue("diff_date_a"));
             const dateB = cbk.getVariable(cbk.getElementValue("diff_date_b"));
             const diffUnit = cbk.getElementValue("diff_time_unit");
-            const difference = moment(dateA).diff(moment(dateB), diffUnit);
+            const difference = moment.utc(dateB).diff(moment.utc(dateA), diffUnit);
             cbk.setOutput(newDiffVarName, difference);
             break;
         }
@@ -633,7 +646,9 @@ var Sharepoint = class {
               placeholder: "Select site",
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get("/public/integrations/sharepoint/sites");
+                const response = yield cbk.api.get(
+                  "/public/integrations/sharepoint/sites"
+                );
                 return response ? response.map(({ id, displayName }) => ({
                   value: id,
                   label: displayName
@@ -740,9 +755,7 @@ var Sharepoint = class {
         const fn = cbk.getElementValue("fn_selector");
         function getFolderDriveItem(siteId, listId, folderId) {
           return __async(this, null, function* () {
-            return yield cbk.apiClient.msgraph.api(
-              `/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`
-            ).get();
+            return yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`).get();
           });
         }
         function getDriveId(siteId, listId) {
@@ -759,8 +772,12 @@ var Sharepoint = class {
           const fileVar = cbk.getElementValue("file");
           const files = cbk.getVariable(fileVar);
           const [file] = JSON.parse(files);
-          const fileExtension = file.fileName.slice((file.fileName.lastIndexOf(".") - 1 >>> 0) + 2);
-          const fileName = encodeURIComponent(`${originalName}${fileExtension ? "." + fileExtension : ""}` || file.fileName);
+          const fileExtension = file.fileName.slice(
+            (file.fileName.lastIndexOf(".") - 1 >>> 0) + 2
+          );
+          const fileName = encodeURIComponent(
+            originalName ? `${originalName}${fileExtension ? "." + fileExtension : ""}` : file.fileName
+          );
           const buffer = yield cbk.downloadFile(file.fileKey);
           const size = Buffer.byteLength(buffer);
           const { FileUpload, OneDriveLargeFileUploadTask } = cbk.library.msgraph;

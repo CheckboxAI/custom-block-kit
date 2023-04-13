@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.4
+
+### Patch Changes
+
+- 4e31dc9: Added missing dates
+
 ## 1.1.3
 
 ### Patch Changes

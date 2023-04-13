@@ -78,6 +78,7 @@ export interface ComponentProps {
         | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>)
         | CustomOptionString;
     isSearchable?: boolean;
+    format?: string;
 }
 
 export interface ComponentOptionProps {

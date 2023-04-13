@@ -3,6 +3,7 @@ export const dateOptions = [
   { label: "MM/DD/YYYY", value: "MM/DD/YYYY" },
   { label: "YYYY/MM/DD", value: "YYYY/MM/DD" },
   { label: "D MMMM YYYY", value: "D MMMM YYYY" },
+  { label: "D MMM YYYY", value: "D MMM YYYY" },
   { label: "MMMM D, YYYY", value: "MMMM D, YYYY" },
   { label: "MMM D, YYYY", value: "MMM D, YYYY" },
   { label: "DD/MM/YYYY HH:mm", value: "DD/MM/YYYY HH:mm" },
@@ -11,4 +12,5 @@ export const dateOptions = [
   { label: "D MMMM YYYY HH:mm", value: "D MMMM YYYY HH:mm" },
   { label: "MMMM D, YYYY HH:mm", value: "MMMM D, YYYY HH:mm" },
   { label: "MMM D, YYYY HH:mm", value: "MMM D, YYYY HH:mm" },
+  { label: "D MMM YYYY HH:mm", value: "D MMM YYYY HH:mm" },
 ];

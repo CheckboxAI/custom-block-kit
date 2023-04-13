@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.3
+
+### Patch Changes
+
+- 18b69a2: Added date formatting + date options
+
 ## 1.1.2
 
 ### Patch Changes

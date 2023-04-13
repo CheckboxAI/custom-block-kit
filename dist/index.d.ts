@@ -81,6 +81,7 @@ interface ComponentProps {
     placeholder?: string;
     options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | CustomOptionString;
     isSearchable?: boolean;
+    format?: string;
 }
 interface ComponentOptionProps {
     label: string;

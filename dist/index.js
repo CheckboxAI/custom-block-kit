@@ -46,6 +46,22 @@ __export(custom_block_kit_exports, {
 });
 module.exports = __toCommonJS(custom_block_kit_exports);
 
+// blocks/date-calc/date-options.ts
+var dateOptions = [
+  { label: "DD/MM/YYYY", value: "DD/MM/YYYY" },
+  { label: "MM/DD/YYYY", value: "MM/DD/YYYY" },
+  { label: "YYYY/MM/DD", value: "YYYY/MM/DD" },
+  { label: "D MMMM YYYY", value: "D MMMM YYYY" },
+  { label: "MMMM D, YYYY", value: "MMMM D, YYYY" },
+  { label: "MMM D, YYYY", value: "MMM D, YYYY" },
+  { label: "DD/MM/YYYY HH:mm", value: "DD/MM/YYYY HH:mm" },
+  { label: "YYYY/MM/DD HH:mm", value: "YYYY/MM/DD HH:mm" },
+  { label: "MM/DD/YYYY HH:mm", value: "MM/DD/YYYY HH:mm" },
+  { label: "D MMMM YYYY HH:mm", value: "D MMMM YYYY HH:mm" },
+  { label: "MMMM D, YYYY HH:mm", value: "MMMM D, YYYY HH:mm" },
+  { label: "MMM D, YYYY HH:mm", value: "MMM D, YYYY HH:mm" }
+];
+
 // blocks/date-calc/date-calc.ts
 var DateCalc = class {
   constructor() {
@@ -158,7 +174,8 @@ var DateCalc = class {
                     component: "TextInput",
                     componentProps: {
                       label: "Name of the new DATE variable",
-                      placeholder: "Variable name"
+                      placeholder: "Variable name",
+                      format: "format_date_add"
                     },
                     validators: [
                       {
@@ -171,6 +188,15 @@ var DateCalc = class {
                         message: "This must be less than 50 characters"
                       }
                     ]
+                  },
+                  {
+                    ref: "format_date_add",
+                    component: "SelectInput",
+                    componentProps: {
+                      label: "Format Date as",
+                      placeholder: "YYYY/MM/DD",
+                      options: dateOptions
+                    }
                   }
                 ]
               }
@@ -234,7 +260,8 @@ var DateCalc = class {
                     component: "TextInput",
                     componentProps: {
                       label: "Name of the new DATE variable",
-                      placeholder: "Variable name"
+                      placeholder: "Variable name",
+                      format: "format_date_sub"
                     },
                     validators: [
                       {
@@ -253,6 +280,15 @@ var DateCalc = class {
                     ],
                     output: {
                       as: "DATE"
+                    }
+                  },
+                  {
+                    ref: "format_date_sub",
+                    component: "SelectInput",
+                    componentProps: {
+                      label: "Format Date as",
+                      placeholder: "YYYY/MM/DD",
+                      options: dateOptions
                     }
                   }
                 ]

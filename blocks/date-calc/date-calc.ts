@@ -1,4 +1,5 @@
 import type { BaseSchema } from "../../base";
+import { dateOptions } from "./date-options";
 
 export class DateCalc {
   schema: BaseSchema = {
@@ -111,6 +112,7 @@ export class DateCalc {
                   componentProps: {
                     label: "Name of the new DATE variable",
                     placeholder: "Variable name",
+                    format: "format_date_add"
                   },
                   validators: [
                     {
@@ -123,6 +125,15 @@ export class DateCalc {
                       message: "This must be less than 50 characters",
                     },
                   ],
+                },
+                {
+                  ref: "format_date_add",
+                  component: "SelectInput",
+                  componentProps: {
+                    label: "Format Date as",
+                    placeholder: "YYYY/MM/DD",
+                    options: dateOptions,
+                  },
                 },
               ],
             },
@@ -187,6 +198,7 @@ export class DateCalc {
                   componentProps: {
                     label: "Name of the new DATE variable",
                     placeholder: "Variable name",
+                    format: "format_date_sub"
                   },
                   validators: [
                     {
@@ -205,6 +217,15 @@ export class DateCalc {
                   ],
                   output: {
                     as: "DATE",
+                  },
+                },
+                {
+                  ref: "format_date_sub",
+                  component: "SelectInput",
+                  componentProps: {
+                    label: "Format Date as",
+                    placeholder: "YYYY/MM/DD",
+                    options: dateOptions,
                   },
                 },
               ],

@@ -25,6 +25,7 @@ var dateOptions = [
   { label: "MM/DD/YYYY", value: "MM/DD/YYYY" },
   { label: "YYYY/MM/DD", value: "YYYY/MM/DD" },
   { label: "D MMMM YYYY", value: "D MMMM YYYY" },
+  { label: "D MMM YYYY", value: "D MMM YYYY" },
   { label: "MMMM D, YYYY", value: "MMMM D, YYYY" },
   { label: "MMM D, YYYY", value: "MMM D, YYYY" },
   { label: "DD/MM/YYYY HH:mm", value: "DD/MM/YYYY HH:mm" },
@@ -32,7 +33,8 @@ var dateOptions = [
   { label: "MM/DD/YYYY HH:mm", value: "MM/DD/YYYY HH:mm" },
   { label: "D MMMM YYYY HH:mm", value: "D MMMM YYYY HH:mm" },
   { label: "MMMM D, YYYY HH:mm", value: "MMMM D, YYYY HH:mm" },
-  { label: "MMM D, YYYY HH:mm", value: "MMM D, YYYY HH:mm" }
+  { label: "MMM D, YYYY HH:mm", value: "MMM D, YYYY HH:mm" },
+  { label: "D MMM YYYY HH:mm", value: "D MMM YYYY HH:mm" }
 ];
 
 // blocks/date-calc/date-calc.ts
@@ -452,7 +454,8 @@ var SetVariable = class {
                     { label: "Text", value: "TEXT" },
                     { label: "Number", value: "NUMBER" },
                     { label: "Datetime", value: "DATE" },
-                    { label: "File", value: "FILE" }
+                    { label: "File", value: "FILE" },
+                    { label: "Doc", value: "DOC" }
                   ]
                 }
               },
@@ -545,6 +548,15 @@ var SetVariable = class {
                   label: "Variable Value",
                   placeholder: "Enter variable value"
                 }
+              },
+              {
+                ref: "docVariableValue",
+                component: "FileInput",
+                showIf: 'variableType == "DOC"',
+                componentProps: {
+                  label: "Document Value",
+                  placeholder: "Enter document value"
+                }
               }
             ]
           },
@@ -602,6 +614,8 @@ var SetVariable = class {
               value = cbk.getElementValue("numVariableValue");
             } else if (variableType === "FILE") {
               value = cbk.getElementValue("fileVariableValue");
+            } else if (variableType === "DOC") {
+              value = cbk.getElementValue("docVariableValue");
             } else {
               value = cbk.getElementValue("variableValue");
             }

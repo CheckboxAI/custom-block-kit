@@ -56,6 +56,7 @@ export class SetVariable {
                                     { label: "Number", value: "NUMBER" },
                                     { label: "Datetime", value: "DATE" },
                                     { label: "File", value: "FILE" },
+                                    { label: "Doc", value: "DOC" },
                                 ],
                             },
                         },
@@ -150,6 +151,15 @@ export class SetVariable {
                                 placeholder: "Enter variable value",
                             },
                         },
+                        {
+                            ref: "docVariableValue",
+                            component: "FileInput",
+                            showIf: 'variableType == "DOC"',
+                            componentProps: {
+                                label: "Document Value",
+                                placeholder: "Enter document value",
+                            },
+                        },
                     ],
                 },
                 {
@@ -212,6 +222,8 @@ export class SetVariable {
                         value = cbk.getElementValue("numVariableValue");
                     } else if (variableType === "FILE") {
                         value = cbk.getElementValue("fileVariableValue");
+                    } else if (variableType === "DOC") {
+                        value = cbk.getElementValue("docVariableValue");
                     } else {
                         value = cbk.getElementValue("variableValue");
                     }

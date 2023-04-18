@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.5
+
+### Patch Changes
+
+- 2cf5dcc: Update the set variable to include doc type"
+
 ## 1.1.4
 
 ### Patch Changes

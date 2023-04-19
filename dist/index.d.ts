@@ -106,4 +106,8 @@ declare class Sharepoint {
     schema: BaseSchema;
 }
 
-export { DateCalc, SetVariable, Sharepoint };
+declare class BruhAI {
+    schema: BaseSchema;
+}
+
+export { BruhAI, DateCalc, SetVariable, Sharepoint };

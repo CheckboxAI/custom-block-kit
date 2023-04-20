@@ -66,14 +66,16 @@ export class BruhAI {
       cbk.log(file);
       const response = await cbk.library.makeRequest({
         method: "post",
-        url: "http://194.233.67.16:8080/answer_question",
+        url: "http://194.233.67.16:8111/answer_question",
         data: {
           question: prompt,
         },
       });
-      cbk.log(`${prompt}. Context: ${file.fileKey}_${file.fileName} only`);
+      cbk.log(prompt);
+      cbk.log(response);
       const variableName = cbk.getElementValue("variableName");
       cbk.setOutput(variableName, response.data.answer);
+      cbk.log("set output", variableName, response.data.answer);
     },
   };
 }

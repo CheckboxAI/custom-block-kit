@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.6
+
+### Patch Changes
+
+- e36e00f: Update different types in set variable
+
 ## 1.1.5
 
 ### Patch Changes

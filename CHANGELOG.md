@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.7
+
+### Patch Changes
+
+- 455ccd7: added a UTC parse in the diff to make sure both dates are in the same timezone
+
 ## 1.1.6
 
 ### Patch Changes

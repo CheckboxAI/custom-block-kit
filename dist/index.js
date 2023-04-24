@@ -40,6 +40,7 @@ var __async = (__this, __arguments, generator) => {
 // index.ts
 var custom_block_kit_exports = {};
 __export(custom_block_kit_exports, {
+  Chat: () => Chat,
   DateCalc: () => DateCalc,
   SetVariable: () => SetVariable,
   Sharepoint: () => Sharepoint
@@ -913,8 +914,46 @@ var Sharepoint = class {
     };
   }
 };
+
+// blocks/chat/chat.ts
+var Chat = class {
+  constructor() {
+    this.schema = {
+      key: "CHAT",
+      name: "Chat",
+      color: "#10A37F",
+      blockType: "functional",
+      toggleName: "feature.cbk.chat",
+      icon: "M 10.800781 0.398438 L 1.199219 0.398438 C 0.550781 0.398438 0 0.949219 0 1.601562 L 0 8.199219 C 0 8.851562 0.550781 9.398438 1.199219 9.398438 L 6.910156 9.398438 L 8.851562 11.535156 C 8.890625 11.578125 8.945312 11.601562 9 11.601562 C 9.023438 11.601562 9.046875 11.59375 9.070312 11.585938 C 9.148438 11.558594 9.199219 11.484375 9.199219 11.398438 L 9.199219 9.398438 L 10.800781 9.398438 C 11.449219 9.398438 12 8.851562 12 8.199219 L 12 1.601562 C 12 0.949219 11.449219 0.398438 10.800781 0.398438 Z M 2.398438 3 L 5.398438 3 C 5.511719 3 5.601562 3.089844 5.601562 3.199219 C 5.601562 3.308594 5.511719 3.398438 5.398438 3.398438 L 2.398438 3.398438 C 2.289062 3.398438 2.199219 3.308594 2.199219 3.199219 C 2.199219 3.089844 2.289062 3 2.398438 3 Z M 9.199219 6.601562 L 2.398438 6.601562 C 2.289062 6.601562 2.199219 6.511719 2.199219 6.398438 C 2.199219 6.289062 2.289062 6.199219 2.398438 6.199219 L 9.199219 6.199219 C 9.3125 6.199219 9.398438 6.289062 9.398438 6.398438 C 9.398438 6.511719 9.3125 6.601562 9.199219 6.601562 Z M 9.199219 5 L 2.398438 5 C 2.289062 5 2.199219 4.910156 2.199219 4.800781 C 2.199219 4.691406 2.289062 4.601562 2.398438 4.601562 L 9.199219 4.601562 C 9.3125 4.601562 9.398438 4.691406 9.398438 4.800781 C 9.398438 4.910156 9.3125 5 9.199219 5 Z M 9.199219 5",
+      stencil: {
+        group: "CBK",
+        fontSize: 12
+      },
+      editor: {
+        elements: [
+          {
+            ref: "block_description",
+            component: "BlockDescription",
+            componentProps: {
+              label: "Block Description",
+              placeholder: "Enter a description for this block"
+            }
+          },
+          {
+            ref: "Chat section",
+            component: "ChatGPT",
+            componentProps: {
+              label: "Config Chat"
+            }
+          }
+        ]
+      }
+    };
+  }
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  Chat,
   DateCalc,
   SetVariable,
   Sharepoint

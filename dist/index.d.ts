@@ -106,4 +106,8 @@ declare class Sharepoint {
     schema: BaseSchema;
 }
 
-export { DateCalc, SetVariable, Sharepoint };
+declare class Chat {
+    schema: BaseSchema;
+}
+
+export { Chat, DateCalc, SetVariable, Sharepoint };

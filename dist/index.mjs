@@ -551,7 +551,7 @@ var SetVariable = class {
               },
               {
                 ref: "docVariableValue",
-                component: "FileInput",
+                component: "DocInput",
                 showIf: 'variableType == "DOC"',
                 componentProps: {
                   label: "Document Value",
@@ -569,7 +569,7 @@ var SetVariable = class {
             showIf: 'fn_selector == "update"',
             children: [
               {
-                ref: "updateVariableName",
+                ref: "update_variable_name",
                 component: "SelectInput",
                 componentProps: {
                   label: "Variable Name",
@@ -578,11 +578,66 @@ var SetVariable = class {
                 }
               },
               {
-                ref: "variableValue",
+                ref: "update_value",
                 component: "TextInput",
+                showIf: '(GET(VARS,update_variable_name)).fieldInputType == "TXT"',
                 componentProps: {
                   label: "Variable Value",
                   placeholder: "Enter variable value"
+                },
+                validators: [
+                  {
+                    method: "isVariableUnique",
+                    message: "Variable name already exists"
+                  },
+                  {
+                    method: "max",
+                    value: "50",
+                    message: "This must be less than 50 characters"
+                  }
+                ]
+              },
+              {
+                ref: "update_num",
+                component: "NumberInput",
+                showIf: '(GET(VARS,update_variable_name)).fieldInputType == "NUM"',
+                componentProps: {
+                  label: "Variable Value",
+                  placeholder: "Enter variable value"
+                },
+                validators: [
+                  {
+                    method: "min",
+                    value: "0",
+                    message: "This must be a positive number"
+                  }
+                ]
+              },
+              {
+                ref: "update_date",
+                component: "DateTimeInput",
+                showIf: '(GET(VARS,update_variable_name)).fieldInputType == "DATE"',
+                componentProps: {
+                  label: "Variable Value",
+                  placeholder: "Enter variable value"
+                }
+              },
+              {
+                ref: "update_file",
+                component: "FileInput",
+                showIf: '(GET(VARS,update_variable_name)).fieldInputType == "FILE"',
+                componentProps: {
+                  label: "Variable Value",
+                  placeholder: "Enter variable value"
+                }
+              },
+              {
+                ref: "update_doc",
+                component: "DocInput",
+                showIf: '(GET(VARS,update_variable_name)).fieldInputType == "DOC"',
+                componentProps: {
+                  label: "Document Value",
+                  placeholder: "Enter document value"
                 }
               }
             ]
@@ -595,9 +650,7 @@ var SetVariable = class {
           create: "create",
           update: "update"
         };
-        const fn = cbk.getElementValue(
-          "fn_selector"
-        );
+        const fn = cbk.getElementValue("fn_selector");
         switch (fnTypes[fn]) {
           case "create":
             const createVariable = cbk.getElementValue("variableName");
@@ -605,11 +658,9 @@ var SetVariable = class {
             const datetimeSelection = cbk.getElementValue("datetimeSelection");
             let value = "";
             if (variableType === "DATE") {
-              value = datetimeSelection === "currentDate" ? moment().format("YYYY-MM-DD") : moment(
-                cbk.getElementValue(
-                  "datetimeVariableValue"
-                )
-              ).format("YYYY-MM-DD");
+              value = datetimeSelection === "currentDate" ? moment().format("YYYY-MM-DD") : moment(cbk.getElementValue("datetimeVariableValue")).format(
+                "YYYY-MM-DD"
+              );
             } else if (variableType === "NUMBER") {
               value = cbk.getElementValue("numVariableValue");
             } else if (variableType === "FILE") {
@@ -622,9 +673,26 @@ var SetVariable = class {
             cbk.setOutput(createVariable, value);
             break;
           case "update":
-            const updateVariable = cbk.getElementValue("updateVariableName");
-            const variableValue = cbk.getElementValue("variableValue");
-            cbk.setOutput(updateVariable, variableValue);
+            const updateVariable = cbk.getElementValue("update_variable_name");
+            const updateVarType = cbk.getVariableType(updateVariable);
+            let updated = "";
+            cbk.log("UPDATE VAR NAME", updateVariable);
+            cbk.log("UPDATE VAR TYPE", updateVarType);
+            if (updateVarType === "DATE") {
+              updated = moment(cbk.getElementValue("update_date")).format(
+                "YYYY-MM-DD"
+              );
+            } else if (updateVarType === "NUM" || updateVarType === "NUMBER") {
+              updated = cbk.getElementValue("update_num");
+            } else if (updateVarType === "FILE") {
+              updated = cbk.getElementValue("update_file");
+            } else if (updateVarType === "DOC") {
+              updated = cbk.getElementValue("update_doc");
+            } else {
+              updated = cbk.getElementValue("update_value");
+            }
+            cbk.log("UPDATE VAR VALUE", updated);
+            cbk.setOutput(updateVariable, updated);
             break;
         }
       })

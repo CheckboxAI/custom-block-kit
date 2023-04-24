@@ -350,8 +350,9 @@ export class DateCalc {
           const newDiffVarName = cbk.getElementValue("new_diff_variable");
           const dateA = cbk.getVariable(cbk.getElementValue("diff_date_a"));
           const dateB = cbk.getVariable(cbk.getElementValue("diff_date_b"));
+          const timez = moment(dateA).parseZone().utcOffset();
           const diffUnit = cbk.getElementValue("diff_time_unit");
-          const difference = moment.utc(dateB).diff(moment.utc(dateA), diffUnit);
+          const difference = moment(dateB).utcOffset(timez).diff(moment(dateA).utcOffset(timez), diffUnit);
           cbk.setOutput(newDiffVarName, difference);
           break;
       }

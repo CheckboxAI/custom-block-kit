@@ -63,6 +63,7 @@ export interface BackendCBK {
     setOutput(name: string, value: any): void;
     downloadFile(fileKey: string): Promise<any>;
     log(...message: any[]): void;
+    getVariableType(name: string): string;
 }
 
 type CustomOptionString =

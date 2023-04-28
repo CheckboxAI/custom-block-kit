@@ -799,7 +799,7 @@ var Sharepoint = class {
                   label: name
                 })).sort(sortOptions) : [];
               }),
-              whenChanged: (cbk, value) => {
+              whenChanged: (cbk) => {
                 cbk.setElementValue("folder_id", void 0);
               }
             },

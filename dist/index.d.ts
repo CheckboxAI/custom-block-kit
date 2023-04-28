@@ -81,7 +81,7 @@ type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFile
 interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | CustomOptionString;
+    options?: ComponentOptionProps[] | ((cbk: FrontendCBK, searchTerm?: string) => Promise<ComponentOptionProps[]>) | CustomOptionString;
     isSearchable?: boolean;
     format?: string;
     whenChanged?: ((cbk: FrontendCBK, value?: any) => void | string);
@@ -95,7 +95,7 @@ interface ValidatorProps {
     value?: string;
     message: string;
 }
-type blockType = 'functional' | 'frontend';
+type blockType = "functional" | "frontend";
 
 declare class DateCalc {
     schema: BaseSchema;

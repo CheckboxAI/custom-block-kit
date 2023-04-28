@@ -792,9 +792,7 @@ var Sharepoint = class {
               placeholder: "Select site",
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get(
-                  "/public/integrations/sharepoint/sites"
-                );
+                const response = yield cbk.api.get("/public/integrations/sharepoint/sites");
                 return response ? response.map(({ id, displayName }) => ({
                   value: id,
                   label: displayName
@@ -820,18 +818,15 @@ var Sharepoint = class {
               placeholder: "Select drive",
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get(
-                  "/public/integrations/sharepoint/drives",
-                  {
-                    siteId: cbk.getElementValue("site_id")
-                  }
-                );
+                const response = yield cbk.api.get("/public/integrations/sharepoint/drives", {
+                  siteId: cbk.getElementValue("site_id")
+                });
                 return response ? response.map(({ id, name }) => ({
                   value: id,
                   label: name
                 })).sort(sortOptions) : [];
               }),
-              whenChanged: (cbk, value) => {
+              whenChanged: (cbk) => {
                 cbk.setElementValue("folder_id", void 0);
               }
             },
@@ -850,14 +845,12 @@ var Sharepoint = class {
               label: "Select Folder",
               placeholder: "Select folder",
               isSearchable: true,
-              options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get(
-                  "/public/integrations/sharepoint/folders",
-                  {
-                    siteId: cbk.getElementValue("site_id"),
-                    driveId: cbk.getElementValue("drive_id")
-                  }
-                );
+              options: (cbk, searchTerm) => __async(this, null, function* () {
+                const response = yield cbk.api.get("/public/integrations/sharepoint/folders", {
+                  siteId: cbk.getElementValue("site_id"),
+                  driveId: cbk.getElementValue("drive_id"),
+                  searchTerm
+                });
                 if (!response)
                   return [];
                 const initialOptions = [{ value: "", label: "/" }];
@@ -907,7 +900,9 @@ var Sharepoint = class {
         const fn = cbk.getElementValue("fn_selector");
         function getFolderDriveItem(siteId, listId, folderId) {
           return __async(this, null, function* () {
-            return yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`).get();
+            return yield cbk.apiClient.msgraph.api(
+              `/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`
+            ).get();
           });
         }
         function getDriveId(siteId, listId) {
@@ -923,6 +918,7 @@ var Sharepoint = class {
           const originalName = cbk.getElementValue("file_name");
           const fileVar = cbk.getElementValue("file");
           const files = cbk.getVariable(fileVar);
+          cbk.log("files", files);
           const [file] = JSON.parse(files);
           const fileExtension = file.fileName.slice(
             (file.fileName.lastIndexOf(".") - 1 >>> 0) + 2

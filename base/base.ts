@@ -5,7 +5,7 @@ export interface BaseSchema {
     key?: string;
     name?: string;
     color?: string;
-    toggleName?: string
+    toggleName?: string;
     blockType: blockType;
     icon?: string;
     stencil?: Stencil;
@@ -77,7 +77,10 @@ export interface ComponentProps {
     placeholder?: string;
     options?:
         | ComponentOptionProps[]
-        | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>)
+        | ((
+              cbk: FrontendCBK,
+              searchTerm?: string
+          ) => Promise<ComponentOptionProps[]>)
         | CustomOptionString;
     isSearchable?: boolean;
     format?: string;
@@ -95,5 +98,5 @@ export interface ValidatorProps {
     message: string;
 }
 
-//A functional block type is one that does not have any user interaction during the assessment runtime (e.g. some calculation). A frontend block requires assesment interaction with the block (e.g. form block). 
-type blockType = 'functional' | 'frontend'
+//A functional block type is one that does not have any user interaction during the assessment runtime (e.g. some calculation). A frontend block requires assesment interaction with the block (e.g. form block).
+type blockType = "functional" | "frontend";

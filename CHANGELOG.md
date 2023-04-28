@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.9
+
+### Patch Changes
+
+- ecc957a: This is to update the options api of sharepoint get folder
+
 ## 1.1.8
 
 ### Patch Changes

@@ -799,7 +799,10 @@ var Sharepoint = class {
                   value: id,
                   label: displayName
                 })).sort(sortOptions) : [];
-              })
+              }),
+              whenChanged: (cbk, value) => {
+                cbk.setElementValue("drive_id", void 0);
+              }
             },
             validators: [
               {
@@ -827,7 +830,10 @@ var Sharepoint = class {
                   value: id,
                   label: name
                 })).sort(sortOptions) : [];
-              })
+              }),
+              whenChanged: (cbk, value) => {
+                cbk.setElementValue("folder_id", void 0);
+              }
             },
             validators: [
               {

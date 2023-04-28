@@ -51,6 +51,7 @@ export interface FrontendCBK {
         ) => Promise<T>;
     };
     getElementValue(ref: string): string;
+    setElementValue(ref: string, value: string | undefined): void;
 }
 
 export interface BackendCBK {
@@ -80,6 +81,7 @@ export interface ComponentProps {
         | CustomOptionString;
     isSearchable?: boolean;
     format?: string;
+    whenChanged?: ((cbk: FrontendCBK, value?: any) => void | string);
 }
 
 export interface ComponentOptionProps {

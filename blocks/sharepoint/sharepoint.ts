@@ -64,6 +64,9 @@ export class Sharepoint {
                     .sort(sortOptions)
                 : [];
             },
+            whenChanged: (cbk, value) => {
+              cbk.setElementValue("drive_id", undefined);
+            }
           },
           validators: [
             {
@@ -95,6 +98,9 @@ export class Sharepoint {
                     }))
                     .sort(sortOptions)
                 : [];
+            },
+            whenChanged: (cbk) => {
+              cbk.setElementValue("folder_id", undefined);
             },
           },
           validators: [

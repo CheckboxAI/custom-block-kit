@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.8
+
+### Patch Changes
+
+- f5eb68b: added whenchanged functionality to CBK schema
+
 ## 1.1.7
 
 ### Patch Changes

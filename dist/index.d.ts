@@ -63,6 +63,7 @@ interface FrontendCBK {
         get: <T extends object>(url: string, params?: Record<string, unknown>) => Promise<T>;
     };
     getElementValue(ref: string): string;
+    setElementValue(ref: string, value: string | undefined): void;
 }
 interface BackendCBK {
     library: any;
@@ -83,6 +84,7 @@ interface ComponentProps {
     options?: ComponentOptionProps[] | ((cbk: FrontendCBK) => Promise<ComponentOptionProps[]>) | CustomOptionString;
     isSearchable?: boolean;
     format?: string;
+    whenChanged?: ((cbk: FrontendCBK, value?: any) => void | string);
 }
 interface ComponentOptionProps {
     label: string;

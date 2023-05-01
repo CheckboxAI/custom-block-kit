@@ -99,44 +99,6 @@ export class DateCalc {
                 options: "getDateVariables",
               },
             },
-            {
-              ref: "datecalc_save_group",
-              component: "Group",
-              componentProps: {
-                label: "Save resulting new datetime variable as",
-              },
-              children: [
-                {
-                  ref: "new_datetime_variable",
-                  component: "TextInput",
-                  componentProps: {
-                    label: "Name of the new DATE variable",
-                    placeholder: "Variable name",
-                    format: "format_date_add"
-                  },
-                  validators: [
-                    {
-                      method: "isVariableUnique",
-                      message: "This variable already exists!",
-                    },
-                    {
-                      method: "max",
-                      value: "50",
-                      message: "This must be less than 50 characters",
-                    },
-                  ],
-                },
-                {
-                  ref: "format_date_add",
-                  component: "SelectInput",
-                  componentProps: {
-                    label: "Format Date as",
-                    placeholder: "YYYY/MM/DD",
-                    options: dateOptions,
-                  },
-                },
-              ],
-            },
           ],
         },
         {
@@ -185,50 +147,51 @@ export class DateCalc {
                 options: "getDateVariables",
               },
             },
+          ],
+        },
+        {
+          ref: "datecalc_save_add_sub",
+          component: "Group",
+          componentProps: {
+            label: "Save resulting new datetime variable as",
+          },
+          showIf: "fn_selector == 'subtract' || fn_selector == 'add'",
+          children: [
             {
-              ref: "datecalc_save_group",
-              component: "Group",
+              ref: "new_datetime_variable",
+              component: "TextInput",
               componentProps: {
-                label: "Save resulting new datetime variable as",
+                label: "Name of the new DATE variable",
+                placeholder: "Variable name",
+                format: "format_date",
               },
-              children: [
+              validators: [
                 {
-                  ref: "new_datetime_variable",
-                  component: "TextInput",
-                  componentProps: {
-                    label: "Name of the new DATE variable",
-                    placeholder: "Variable name",
-                    format: "format_date_sub"
-                  },
-                  validators: [
-                    {
-                      method: "isVariableUnique",
-                      message: "This variable already exists!",
-                    },
-                    {
-                      method: "max",
-                      value: "50",
-                      message: "This must be less than 50 characters",
-                    },
-                    {
-                        method: "required",
-                        message: "Must enter a variable name",
-                    }
-                  ],
-                  output: {
-                    as: "DATE",
-                  },
+                  method: "isVariableUnique",
+                  message: "This variable already exists!",
                 },
                 {
-                  ref: "format_date_sub",
-                  component: "SelectInput",
-                  componentProps: {
-                    label: "Format Date as",
-                    placeholder: "YYYY/MM/DD",
-                    options: dateOptions,
-                  },
+                  method: "max",
+                  value: "50",
+                  message: "This must be less than 50 characters",
+                },
+                {
+                  method: "required",
+                  message: "Must enter a variable name",
                 },
               ],
+              output: {
+                as: "DATE",
+              },
+            },
+            {
+              ref: "format_date",
+              component: "SelectInput",
+              componentProps: {
+                label: "Format Date as",
+                placeholder: "YYYY/MM/DD",
+                options: dateOptions,
+              },
             },
           ],
         },
@@ -352,7 +315,9 @@ export class DateCalc {
           const dateB = cbk.getVariable(cbk.getElementValue("diff_date_b"));
           const timez = moment(dateA).parseZone().utcOffset();
           const diffUnit = cbk.getElementValue("diff_time_unit");
-          const difference = moment(dateB).utcOffset(timez).diff(moment(dateA).utcOffset(timez), diffUnit);
+          const difference = moment(dateB)
+            .utcOffset(timez)
+            .diff(moment(dateA).utcOffset(timez), diffUnit);
           cbk.setOutput(newDiffVarName, difference);
           break;
       }

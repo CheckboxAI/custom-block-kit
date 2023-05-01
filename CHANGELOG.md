@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.1.10
+
+### Patch Changes
+
+- b2b3ed4: Moved new variable for add/sub date calc out of children as it was causing variable unique conflicts
+
 ## 1.1.9
 
 ### Patch Changes

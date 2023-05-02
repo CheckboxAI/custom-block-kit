@@ -19,4 +19,6 @@ export const FIELD_TYPES = {
     DOC: "DOC",
     USERPICKER: "USER",
     DOCUSIGN_STATUS: "DOCUSIGN_STATUS",
+    TXT: "TXT",
+    NUM: "NUM",
 };

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.0
+
+### Minor Changes
+
+- 10e1cf4: Add triage block
+
 ## 1.1.10
 
 ### Patch Changes

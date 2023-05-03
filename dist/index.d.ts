@@ -69,6 +69,7 @@ interface BackendCBK {
     library: any;
     apiClient: {
         msgraph: Client;
+        openai: any;
     };
     getElementValue(ref: string): string;
     getVariable(name: string): any;
@@ -109,4 +110,8 @@ declare class Sharepoint {
     schema: BaseSchema;
 }
 
-export { DateCalc, SetVariable, Sharepoint };
+declare class Triage {
+    schema: BaseSchema;
+}
+
+export { DateCalc, SetVariable, Sharepoint, Triage };

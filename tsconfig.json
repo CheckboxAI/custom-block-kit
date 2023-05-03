@@ -7,7 +7,7 @@
         "moduleResolution": "node",
         "skipLibCheck": true,
         "noUncheckedIndexedAccess": true,
-        "verbatimModuleSyntax": true,
+        "importsNotUsedAsValues": "error",
         "strict": true,
         "sourceMap": true,
         "noEmit": true,

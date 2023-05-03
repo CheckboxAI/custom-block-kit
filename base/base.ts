@@ -57,7 +57,8 @@ export interface FrontendCBK {
 export interface BackendCBK {
     library: any; // TODO: proper type using CheckboxAI/CheckboxAPI
     apiClient: {
-        msgraph: Client;
+        msgraph: Client
+        openai: any; // TODO type when CheckboxAI/CheckboxAPI is added
     };
     getElementValue(ref: string): string;
     getVariable(name: string): any;

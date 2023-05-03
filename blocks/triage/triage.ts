@@ -29,19 +29,6 @@ export class Triage {
             },
           ],
         },
-        // {
-        //   ref: "categories",
-        //   label: "Categories",
-        //   component: "KeyValueInput", // TODO
-        //   componentProps: {
-        //     label: "Categories",
-        //     placeholder: "Enter categories",
-        //     options: [
-        //       { label: "Category names", value: "enter categories" },
-        //       { label: "Category description", value: "enter categories" },
-        //     ],
-        //   },
-        // },
         {
           ref: "categories",
           component: "KeyValueInput",
@@ -103,7 +90,6 @@ export class Triage {
       ],
     },
     runtime: async (cbk) => {
-      // Implement the runtime logic here using the values from the editor fields
       const formCategories = cbk.getElementValue("categories") || "[{}]";
       const input = cbk.library.getVariable(
         cbk.getElementValue("inputVariable")
@@ -112,22 +98,11 @@ export class Triage {
         parseFloat(cbk.getElementValue("likelihoodThreshold")) || 0.5;
       const outputVariableName = cbk.getElementValue("outputVariableName");
 
-      // TODO delete
-      cbk.log("*********");
-      cbk.log("cbk_input");
-      cbk.log(input);
-      cbk.log("cbk_categories");
-      cbk.log(formCategories);
-      cbk.log("cbk_likelihoodThreshold");
-      cbk.log(likelihoodThreshold);
-      cbk.log("*********");
-
+      // Transform formCategories keys from {id: "id", value: "value"} to  Category[]
       type Category = {
         label: string;
         description: string;
       };
-
-      // Transform formCategories keys from {id: "id", value: "value"} to  Category[]
       const stringified = JSON.stringify(formCategories);
       const categories: Category[] = JSON.parse(stringified).map(
         (category: { id: string; value: string }) => {
@@ -138,15 +113,13 @@ export class Triage {
         }
       );
 
-      // TODO delete
-      console.log("categories", categories);
       const result = await categorizeInput(
         cbk,
         categories,
         input,
         likelihoodThreshold
       );
-      cbk.log(result);
+
       const formatResult = result?.category;
       cbk.setOutput(outputVariableName, formatResult);
     },

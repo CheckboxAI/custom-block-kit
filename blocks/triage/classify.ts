@@ -1,8 +1,4 @@
-// make request to openai
 import { BackendCBK } from "../../base";
-
-// TODO get from validator (?)
-const OPEN_AI_KEY = "";
 
 export async function categorizeInput(
   cbk: BackendCBK,
@@ -10,8 +6,6 @@ export async function categorizeInput(
   input: string,
   likelihoodThreshold: number
 ) {
-  cbk.log("cbk_input categorizeInput called");
-  console.log("categorizeInput called");
   const categoriesFormatted = categories
     .map((category) => {
       return `- "${category.label}": ${category.description}`;
@@ -44,15 +38,9 @@ export async function categorizeInput(
         },
       ],
     };
-    const response = await cbk.library.makeRequest({
-      method: "post",
-      url: "https://api.openai.com/v1/chat/completions",
-      data,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${OPEN_AI_KEY}`,
-      },
-    });
+
+    // This is called from apiClient so we have rate limiting and so openai key is not exposed
+    const response = await cbk.apiClient.openai.completions(data);
 
     const responseJson = response.data;
     const output = responseJson.choices[0].message.content;
@@ -75,8 +63,6 @@ export async function categorizeInput(
         highestLikelihoodCategory.reason = category.reason;
       }
     }
-    console.log({ highestLikelihoodCategory });
-    cbk.log("cbk_input highestLikelihoodCategory", highestLikelihoodCategory);
 
     // const outputCategory = highestLikelihoodCategory.category;
     // const outputReason = highestLikelihoodCategory.reason;

@@ -58,6 +58,7 @@ export interface BackendCBK {
     library: any; // TODO: proper type using CheckboxAI/CheckboxAPI
     apiClient: {
         msgraph: Client;
+        openai: any; // TODO: proper type when we have CheckboxAI/CheckboxAPI
     };
     getElementValue(ref: string): string;
     getVariable(name: string): any;

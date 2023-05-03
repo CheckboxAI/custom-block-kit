@@ -294,7 +294,7 @@ var DateCalc = class {
                     ]
                   },
                   {
-                    ref: "new_diff_variable_sub",
+                    ref: "new_diff_variable",
                     component: "TextInput",
                     componentProps: {
                       label: "Name of the new DATE variable",
@@ -920,8 +920,201 @@ var Sharepoint = class {
     };
   }
 };
+
+// blocks/triage/classify.ts
+function categorizeInput(cbk, categories, input, likelihoodThreshold) {
+  return __async(this, null, function* () {
+    const categoriesFormatted = categories.map((category) => {
+      return `- "${category.label}": ${category.description}`;
+    }).join("\n");
+    const prompt = `
+    You are an AI that triages inbound requests. To get to the right outcome, you think through step by step the likelihood that a request falls within each of the provided categories and include your reasoning in your response. You only respond in the following JSON format - your response includes likelihoods for all categories provided below. Your response should be a single JSON array.
+
+    {
+
+    category:string,
+
+    likelihood:float, // 2 dp
+
+    reason: string // up to 200 characters
+
+    }[]
+
+    
+
+    Categories (in format "label": description):
+
+    ${categoriesFormatted}
+    
+
+
+    Request: "${input}"
+    `;
+    try {
+      const data = {
+        model: "gpt-3.5-turbo",
+        temperature: 0,
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
+      };
+      const response = yield cbk.apiClient.openai.completions(data);
+      const responseJson = response.data;
+      const output = responseJson.choices[0].message.content;
+      const outputJson = JSON.parse(output);
+      let highestLikelihoodCategory = {
+        category: "",
+        likelihood: 0,
+        reason: ""
+      };
+      for (let i = 0; i < outputJson.length; i++) {
+        const category = outputJson[i];
+        if (category.likelihood > highestLikelihoodCategory.likelihood && category.likelihood > likelihoodThreshold) {
+          highestLikelihoodCategory.likelihood = category.likelihood;
+          highestLikelihoodCategory.category = category.category;
+          highestLikelihoodCategory.reason = category.reason;
+        }
+      }
+      var outputCategory = highestLikelihoodCategory;
+      if (highestLikelihoodCategory.category === "") {
+        outputCategory = {
+          category: "Catchall",
+          likelihood: 0,
+          reason: "No category met the likelihood threshold"
+        };
+      }
+      return outputCategory;
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  });
+}
+
+// blocks/triage/triage.ts
+var Triage = class {
+  constructor() {
+    this.schema = {
+      key: "TRIAGE",
+      name: "Triage",
+      color: "#EAAB46",
+      blockType: "functional",
+      icon: "M 4.5 9.375 L 7 11.875 C 7.070312 11.945312 7.164062 11.984375 7.265625 11.984375 C 7.3125 11.984375 7.363281 11.976562 7.410156 11.953125 C 7.546875 11.894531 7.636719 11.761719 7.640625 11.609375 L 7.640625 4.90625 L 11.890625 0.640625 C 11.996094 0.535156 12.027344 0.371094 11.96875 0.234375 C 11.914062 0.09375 11.777344 0 11.625 0 L 0.375 0 C 0.222656 0 0.0859375 0.09375 0.03125 0.234375 C -0.0273438 0.371094 0.00390625 0.535156 0.109375 0.640625 L 4.375 4.90625 L 4.375 9.125 C 4.382812 9.21875 4.429688 9.308594 4.5 9.375 Z M 1.277344 0.75 L 10.722656 0.75 L 6.972656 4.5 C 6.898438 4.570312 6.859375 4.667969 6.859375 4.765625 L 6.859375 10.722656 L 5.109375 8.96875 L 5.109375 4.75 C 5.109375 4.652344 5.070312 4.554688 5 4.484375 Z M 1.277344 0.75 ",
+      stencil: {
+        group: "FUNCTIONS",
+        // TODO maintain consistent grouping
+        fontSize: 12
+      },
+      editor: {
+        elements: [
+          {
+            ref: "inputVariable",
+            component: "SelectInput",
+            componentProps: {
+              label: "Variable to categorise",
+              placeholder: "Select variable name",
+              options: "getExistingVariables"
+            },
+            validators: [
+              {
+                method: "required",
+                message: "Please select a variable"
+              }
+            ]
+          },
+          {
+            ref: "categories",
+            component: "KeyValueInput",
+            componentProps: {
+              label: "Categories",
+              placeholder: "Enter categories"
+            }
+          },
+          {
+            ref: "outputVariableName",
+            component: "TextInput",
+            componentProps: {
+              label: "Output category variable name",
+              placeholder: "Output Variable"
+            },
+            validators: [
+              {
+                method: "isVariableUnique",
+                message: "Variable name already exists"
+              },
+              {
+                method: "required",
+                message: "Please enter an output variable name"
+              }
+            ],
+            output: {
+              ref: "outputVariableName"
+            }
+          },
+          {
+            ref: "likelihoodThreshold",
+            label: "Likelihood Threshold",
+            component: "NumberInput",
+            componentProps: {
+              label: "Likelihood Threshold",
+              placeholder: "Enter the likelihood threshold"
+            },
+            validators: [
+              {
+                method: "min",
+                value: "0",
+                message: "The threshold must be a positive number"
+              },
+              {
+                method: "max",
+                value: "1",
+                message: "The threshold must be less than or equal to 1"
+              }
+            ]
+          },
+          {
+            ref: "fallbackCategory",
+            component: "TextInput",
+            componentProps: {
+              label: "Fallback Category",
+              placeholder: "Enter the fallback category"
+            }
+          }
+        ]
+      },
+      runtime: (cbk) => __async(this, null, function* () {
+        const formCategories = cbk.getElementValue("categories") || "[{}]";
+        const input = cbk.library.getVariable(
+          cbk.getElementValue("inputVariable")
+        );
+        const likelihoodThreshold = parseFloat(cbk.getElementValue("likelihoodThreshold")) || 0.5;
+        const outputVariableName = cbk.getElementValue("outputVariableName");
+        const stringified = JSON.stringify(formCategories);
+        const categories = JSON.parse(stringified).map(
+          (category) => {
+            return {
+              label: category.id,
+              description: category.value
+            };
+          }
+        );
+        const result = yield categorizeInput(
+          cbk,
+          categories,
+          input,
+          likelihoodThreshold
+        );
+        const formatResult = result == null ? void 0 : result.category;
+        cbk.setOutput(outputVariableName, formatResult);
+      })
+    };
+  }
+};
 export {
   DateCalc,
   SetVariable,
-  Sharepoint
+  Sharepoint,
+  Triage
 };

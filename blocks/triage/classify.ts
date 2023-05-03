@@ -1,4 +1,5 @@
-import { BackendCBK } from "../../base";
+import type { BackendCBK } from "../../base";
+import type { Category, SelectedCategory } from "./types";
 
 export async function categorizeInput(
   cbk: BackendCBK,

@@ -20,6 +20,8 @@ declare const FIELD_TYPES: {
     DOC: string;
     USERPICKER: string;
     DOCUSIGN_STATUS: string;
+    TXT: string;
+    NUM: string;
 };
 
 interface BaseSchema {

@@ -415,8 +415,8 @@ var SetVariable = class {
                   label: "Variable Type",
                   placeholder: "Select variable type",
                   options: [
-                    { label: "Text", value: "TEXT" },
-                    { label: "Number", value: "NUMBER" },
+                    { label: "Text", value: "TXT" },
+                    { label: "Number", value: "NUM" },
                     { label: "Datetime", value: "DATE" },
                     { label: "File", value: "FILE" },
                     { label: "Doc", value: "DOC" }
@@ -443,7 +443,7 @@ var SetVariable = class {
               {
                 ref: "variableValue",
                 component: "TextInput",
-                showIf: 'variableType == "TEXT"',
+                showIf: 'variableType == "TXT"',
                 componentProps: {
                   label: "Variable Value",
                   placeholder: "Enter variable value"
@@ -463,7 +463,7 @@ var SetVariable = class {
               {
                 ref: "numVariableValue",
                 component: "NumberInput",
-                showIf: 'variableType == "NUMBER"',
+                showIf: 'variableType == "NUM"',
                 componentProps: {
                   label: "Variable Value",
                   placeholder: "Enter variable value"
@@ -622,10 +622,10 @@ var SetVariable = class {
             const datetimeSelection = cbk.getElementValue("datetimeSelection");
             let value = "";
             if (variableType === "DATE") {
-              value = datetimeSelection === "currentDate" ? moment().format("YYYY-MM-DD") : moment(cbk.getElementValue("datetimeVariableValue")).format(
-                "YYYY-MM-DD"
-              );
-            } else if (variableType === "NUMBER") {
+              const curTime = datetimeSelection === "currentDate" ? moment().startOf("day").format() : cbk.getElementValue("datetimeVariableValue");
+              const utc = moment(curTime).parseZone().utcOffset();
+              value = moment(curTime).utcOffset(utc).format();
+            } else if (variableType === "NUM") {
               value = cbk.getElementValue("numVariableValue");
             } else if (variableType === "FILE") {
               value = cbk.getElementValue("fileVariableValue");
@@ -643,10 +643,10 @@ var SetVariable = class {
             cbk.log("UPDATE VAR NAME", updateVariable);
             cbk.log("UPDATE VAR TYPE", updateVarType);
             if (updateVarType === "DATE") {
-              updated = moment(cbk.getElementValue("update_date")).format(
-                "YYYY-MM-DD"
-              );
-            } else if (updateVarType === "NUM" || updateVarType === "NUMBER") {
+              const updateDate = cbk.getElementValue("update_date");
+              const utc = moment(updateDate).parseZone().utcOffset();
+              updated = moment(updateDate).utcOffset(utc).format();
+            } else if (updateVarType === "NUM") {
               updated = cbk.getElementValue("update_num");
             } else if (updateVarType === "FILE") {
               updated = cbk.getElementValue("update_file");

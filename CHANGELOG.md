@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.2
+
+### Patch Changes
+
+- 9181064: Update types for triage block
+
 ## 1.2.1
 
 ### Patch Changes

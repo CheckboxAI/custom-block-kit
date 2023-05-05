@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.3
+
+### Patch Changes
+
+- 093011d: Add fallback category to Triage block
+
 ## 1.2.2
 
 ### Patch Changes

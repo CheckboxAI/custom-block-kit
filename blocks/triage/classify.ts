@@ -5,7 +5,8 @@ export async function categorizeInput(
   cbk: BackendCBK,
   categories: Category[],
   input: string,
-  likelihoodThreshold: number
+  likelihoodThreshold: number,
+  fallbackCategory: string
 ) {
   const categoriesFormatted = categories
     .map((category) => {
@@ -71,7 +72,7 @@ export async function categorizeInput(
     var outputCategory = highestLikelihoodCategory;
     if (highestLikelihoodCategory.category === "") {
       outputCategory = {
-        category: "Catchall",
+        category: fallbackCategory,
         likelihood: 0,
         reason: "No category met the likelihood threshold",
       };

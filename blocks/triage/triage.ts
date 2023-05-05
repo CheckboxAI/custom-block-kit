@@ -97,6 +97,7 @@ export class Triage {
       const likelihoodThreshold =
         parseFloat(cbk.getElementValue("likelihoodThreshold")) || 0.5;
       const outputVariableName = cbk.getElementValue("outputVariableName");
+      const fallbackCategory = cbk.getElementValue("fallbackCategory");
 
       // Transform formCategories keys from {id: "id", value: "value"} to  Category[]
       type Category = {
@@ -117,7 +118,8 @@ export class Triage {
         cbk,
         categories,
         input,
-        likelihoodThreshold
+        likelihoodThreshold,
+        fallbackCategory
       );
 
       const formatResult = result?.category;

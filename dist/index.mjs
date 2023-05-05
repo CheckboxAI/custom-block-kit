@@ -922,7 +922,7 @@ var Sharepoint = class {
 };
 
 // blocks/triage/classify.ts
-function categorizeInput(cbk, categories, input, likelihoodThreshold) {
+function categorizeInput(cbk, categories, input, likelihoodThreshold, fallbackCategory) {
   return __async(this, null, function* () {
     const categoriesFormatted = categories.map((category) => {
       return `- "${category.label}": ${category.description}`;
@@ -981,7 +981,7 @@ function categorizeInput(cbk, categories, input, likelihoodThreshold) {
       var outputCategory = highestLikelihoodCategory;
       if (highestLikelihoodCategory.category === "") {
         outputCategory = {
-          category: "Catchall",
+          category: fallbackCategory,
           likelihood: 0,
           reason: "No category met the likelihood threshold"
         };
@@ -1091,6 +1091,7 @@ var Triage = class {
         );
         const likelihoodThreshold = parseFloat(cbk.getElementValue("likelihoodThreshold")) || 0.5;
         const outputVariableName = cbk.getElementValue("outputVariableName");
+        const fallbackCategory = cbk.getElementValue("fallbackCategory");
         const stringified = JSON.stringify(formCategories);
         const categories = JSON.parse(stringified).map(
           (category) => {
@@ -1104,7 +1105,8 @@ var Triage = class {
           cbk,
           categories,
           input,
-          likelihoodThreshold
+          likelihoodThreshold,
+          fallbackCategory
         );
         const formatResult = result == null ? void 0 : result.category;
         cbk.setOutput(outputVariableName, formatResult);

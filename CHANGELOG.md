@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.4
+
+### Patch Changes
+
+- 99eb55e: updated colours and groups
+
 ## 1.2.3
 
 ### Patch Changes

@@ -71,9 +71,10 @@ export class BruhAI {
           question: prompt,
         },
       });
-      cbk.log(prompt);
+      cbk.log(`${prompt}`);
       cbk.log(response);
       const variableName = cbk.getElementValue("variableName");
+      cbk.log(`writing to ${variableName}`);
       cbk.setOutput(variableName, response.data.answer);
       cbk.log("set output", variableName, response.data.answer);
     },

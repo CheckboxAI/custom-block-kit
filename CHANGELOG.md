@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.5
+
+### Patch Changes
+
+- 5da2e04: Updating the sharepoint block
+
 ## 1.2.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.6
+
+### Patch Changes
+
+- b63fd55: Change output type of triage output and rename confidence threshold
+
 ## 1.2.5
 
 ### Patch Changes

@@ -5,6 +5,6 @@ export type Category = {
 
 export type SelectedCategory = {
   category: string;
-  likelihood: number;
+  confidence: number;
   reason: string;
 };

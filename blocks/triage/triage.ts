@@ -55,16 +55,16 @@ export class Triage {
             },
           ],
           output: {
-            ref: "outputVariableName",
+            as: "TXT",
           },
         },
         {
-          ref: "likelihoodThreshold",
-          label: "Likelihood Threshold",
+          ref: "confidence",
+          label: "Confidence",
           component: "NumberInput",
           componentProps: {
-            label: "Likelihood Threshold",
-            placeholder: "Enter the likelihood threshold",
+            label: "Confidence",
+            placeholder: "Enter the AI confidence required",
           },
           validators: [
             {
@@ -90,14 +90,14 @@ export class Triage {
       ],
     },
     runtime: async (cbk) => {
-      const formCategories = cbk.getElementValue("categories") || "[{}]";
+      const formCategories = cbk.getElementValue("categories");
       const input = cbk.library.getVariable(
         cbk.getElementValue("inputVariable")
       );
-      const likelihoodThreshold =
-        parseFloat(cbk.getElementValue("likelihoodThreshold")) || 0.5;
+      const confidence = parseFloat(cbk.getElementValue("confidence")) || 0.5;
       const outputVariableName = cbk.getElementValue("outputVariableName");
-      const fallbackCategory = cbk.getElementValue("fallbackCategory");
+      const fallbackCategory =
+        cbk.getElementValue("fallbackCategory") || "Catchall";
 
       // Transform formCategories keys from {id: "id", value: "value"} to  Category[]
       type Category = {
@@ -118,7 +118,7 @@ export class Triage {
         cbk,
         categories,
         input,
-        likelihoodThreshold,
+        confidence,
         fallbackCategory
       );
 

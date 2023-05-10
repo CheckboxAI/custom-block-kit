@@ -951,19 +951,19 @@ var Sharepoint = class {
 };
 
 // blocks/triage/classify.ts
-function categorizeInput(cbk, categories, input, likelihoodThreshold, fallbackCategory) {
+function categorizeInput(cbk, categories, input, confidence, fallbackCategory) {
   return __async(this, null, function* () {
     const categoriesFormatted = categories.map((category) => {
       return `- "${category.label}": ${category.description}`;
     }).join("\n");
     const prompt = `
-    You are an AI that triages inbound requests. To get to the right outcome, you think through step by step the likelihood that a request falls within each of the provided categories and include your reasoning in your response. You only respond in the following JSON format - your response includes likelihoods for all categories provided below. Your response should be a single JSON array.
+    You are an AI that triages inbound requests. To get to the right outcome, you think through step by step the confidence that a request falls within each of the provided categories and include your reasoning in your response. You only respond in the following JSON format - your response includes likelihoods for all categories provided below. Your response should be a single JSON array.
 
     {
 
     category:string,
 
-    likelihood:float, // 2 dp
+    confidence:float, // 2 dp
 
     reason: string // up to 200 characters
 
@@ -996,13 +996,13 @@ function categorizeInput(cbk, categories, input, likelihoodThreshold, fallbackCa
       const outputJson = JSON.parse(output);
       let highestLikelihoodCategory = {
         category: "",
-        likelihood: 0,
+        confidence: 0,
         reason: ""
       };
       for (let i = 0; i < outputJson.length; i++) {
         const category = outputJson[i];
-        if (category.likelihood > highestLikelihoodCategory.likelihood && category.likelihood > likelihoodThreshold) {
-          highestLikelihoodCategory.likelihood = category.likelihood;
+        if (category.confidence > highestLikelihoodCategory.confidence && category.confidence > confidence) {
+          highestLikelihoodCategory.confidence = category.confidence;
           highestLikelihoodCategory.category = category.category;
           highestLikelihoodCategory.reason = category.reason;
         }
@@ -1011,8 +1011,8 @@ function categorizeInput(cbk, categories, input, likelihoodThreshold, fallbackCa
       if (highestLikelihoodCategory.category === "") {
         outputCategory = {
           category: fallbackCategory,
-          likelihood: 0,
-          reason: "No category met the likelihood threshold"
+          confidence: 0,
+          reason: "No category met the confidence threshold"
         };
       }
       return outputCategory;
@@ -1079,16 +1079,16 @@ var Triage = class {
               }
             ],
             output: {
-              ref: "outputVariableName"
+              as: "TXT"
             }
           },
           {
-            ref: "likelihoodThreshold",
-            label: "Likelihood Threshold",
+            ref: "confidence",
+            label: "Confidence",
             component: "NumberInput",
             componentProps: {
-              label: "Likelihood Threshold",
-              placeholder: "Enter the likelihood threshold"
+              label: "Confidence",
+              placeholder: "Enter the AI confidence required"
             },
             validators: [
               {
@@ -1114,13 +1114,13 @@ var Triage = class {
         ]
       },
       runtime: (cbk) => __async(this, null, function* () {
-        const formCategories = cbk.getElementValue("categories") || "[{}]";
+        const formCategories = cbk.getElementValue("categories");
         const input = cbk.library.getVariable(
           cbk.getElementValue("inputVariable")
         );
-        const likelihoodThreshold = parseFloat(cbk.getElementValue("likelihoodThreshold")) || 0.5;
+        const confidence = parseFloat(cbk.getElementValue("confidence")) || 0.5;
         const outputVariableName = cbk.getElementValue("outputVariableName");
-        const fallbackCategory = cbk.getElementValue("fallbackCategory");
+        const fallbackCategory = cbk.getElementValue("fallbackCategory") || "Catchall";
         const stringified = JSON.stringify(formCategories);
         const categories = JSON.parse(stringified).map(
           (category) => {
@@ -1134,7 +1134,7 @@ var Triage = class {
           cbk,
           categories,
           input,
-          likelihoodThreshold,
+          confidence,
           fallbackCategory
         );
         const formatResult = result == null ? void 0 : result.category;

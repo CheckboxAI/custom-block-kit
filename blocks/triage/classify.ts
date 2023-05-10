@@ -5,7 +5,7 @@ export async function categorizeInput(
   cbk: BackendCBK,
   categories: Category[],
   input: string,
-  likelihoodThreshold: number,
+  confidence: number,
   fallbackCategory: string
 ) {
   const categoriesFormatted = categories
@@ -15,10 +15,10 @@ export async function categorizeInput(
     .join("\n");
 
   const prompt = `
-    You are an AI that triages inbound requests. To get to the right outcome, you think through step by step the likelihood that a request falls within each of the provided categories and include your reasoning in your response. You only respond in the following JSON format - your response includes likelihoods for all categories provided below. Your response should be a single JSON array.\n
+    You are an AI that triages inbound requests. To get to the right outcome, you think through step by step the confidence that a request falls within each of the provided categories and include your reasoning in your response. You only respond in the following JSON format - your response includes likelihoods for all categories provided below. Your response should be a single JSON array.\n
     {\n
     category:string,\n
-    likelihood:float, // 2 dp\n
+    confidence:float, // 2 dp\n
     reason: string // up to 200 characters\n
     }[]\n
     \n
@@ -50,17 +50,17 @@ export async function categorizeInput(
 
     let highestLikelihoodCategory: SelectedCategory = {
       category: "",
-      likelihood: 0,
+      confidence: 0,
       reason: "",
     };
 
     for (let i = 0; i < outputJson.length; i++) {
       const category = outputJson[i];
       if (
-        category.likelihood > highestLikelihoodCategory.likelihood &&
-        category.likelihood > likelihoodThreshold
+        category.confidence > highestLikelihoodCategory.confidence &&
+        category.confidence > confidence
       ) {
-        highestLikelihoodCategory.likelihood = category.likelihood;
+        highestLikelihoodCategory.confidence = category.confidence;
         highestLikelihoodCategory.category = category.category;
         highestLikelihoodCategory.reason = category.reason;
       }
@@ -73,8 +73,8 @@ export async function categorizeInput(
     if (highestLikelihoodCategory.category === "") {
       outputCategory = {
         category: fallbackCategory,
-        likelihood: 0,
-        reason: "No category met the likelihood threshold",
+        confidence: 0,
+        reason: "No category met the confidence threshold",
       };
     }
 

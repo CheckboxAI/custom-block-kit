@@ -167,11 +167,11 @@ export class Sharepoint {
                     },
                 },
                 {
-                    ref: "file_name",
+                    ref: "prefix_name",
                     showIf: 'fn_selector == "upload_file"',
                     component: "InterpolationInput",
                     componentProps: {
-                        label: "File name",
+                        label: "Prefix Name",
                     },
                 },
             ],
@@ -202,58 +202,98 @@ export class Sharepoint {
                 const siteId = cbk.getElementValue("site_id");
                 const driveId = cbk.getElementValue("drive_id");
                 const folderId = cbk.getElementValue("folder_id");
-                const originalName = cbk.getElementValue("file_name");
+                const prefixName = cbk.getElementValue("prefix_name");
                 const fileVar = cbk.getElementValue("file");
                 const files = cbk.getVariable(fileVar);
-                cbk.log("files", files);
-                const [file] = JSON.parse(files);
-                const fileExtension = file.fileName.slice(
-                    ((file.fileName.lastIndexOf(".") - 1) >>> 0) + 2
+
+                cbk.log("sharepoint: Initiating upload files to sharepoint");
+
+                await Promise.all(
+                    JSON.parse(files).map(async (file: any) => {
+                        cbk.log("upload: Enter()");
+                        cbk.log(`upload: file: ${JSON.stringify(file)}`);
+
+                        // Remove the extension by slicing the string
+                        const fileNameWithoutPrefix = file.fileName.substring(
+                            0,
+                            file.fileName.indexOf(".")
+                        );
+
+                        // This is done because some scenarios the file is already prefixed with double extension.
+                        const fileExtension = file.fileName.slice(
+                            ((file.fileName.lastIndexOf(".") - 1) >>> 0) + 2
+                        );
+
+                        cbk.log("upload: file extension", fileExtension);
+                        cbk.log(
+                            "upload: fileNameWithoutPrefix: ",
+                            fileNameWithoutPrefix
+                        );
+
+                        // This is done so that if there is a prefix, will parse it in prior to the file name without a whitespace at the start.
+                        const fileName = prefixName
+                            ? `${prefixName} ${fileNameWithoutPrefix}.${fileExtension}`
+                            : `${fileNameWithoutPrefix}.${fileExtension}`;
+
+                        const encodedFileName = encodeURIComponent(fileName);
+
+                        cbk.log(`upload: fileName: ${fileName}`);
+
+                        const buffer = await cbk.downloadFile(file.fileKey);
+                        const size = Buffer.byteLength(buffer);
+
+                        const { FileUpload, OneDriveLargeFileUploadTask } =
+                            cbk.library.msgraph;
+
+                        const fileObject = new FileUpload(
+                            buffer,
+                            fileName,
+                            size
+                        );
+
+                        cbk.log("upload: fileObject", fileObject);
+                        const msgraphClient = cbk.apiClient.msgraph;
+
+                        let uploadSessionURL;
+                        if (folderId) {
+                            const { id, parentReference } =
+                                await getFolderDriveItem(
+                                    siteId,
+                                    driveId,
+                                    folderId
+                                );
+                            uploadSessionURL = `/drives/${parentReference.driveId}/items/${id}:/${encodedFileName}:/createUploadSession`;
+                        } else {
+                            const id = await getDriveId(siteId, driveId);
+                            uploadSessionURL = `/drives/${id}/root/children:/${encodedFileName}:/createUploadSession`;
+                        }
+
+                        cbk.log("upload: uploadSessionURL", uploadSessionURL);
+
+                        const options = {
+                            fileName,
+                            rangeSize: 1024 * 1024,
+                            uploadSessionURL,
+                            conflictBehavior: "rename",
+                        };
+
+                        cbk.log("upload: create upload task", options);
+
+                        const uploadTask =
+                            await OneDriveLargeFileUploadTask.createTaskWithFileObject(
+                                msgraphClient,
+                                fileObject,
+                                options
+                            );
+
+                        cbk.log("upload: upload task created", uploadTask);
+
+                        const up = await uploadTask.upload();
+                        cbk.log("upload: DONE upload file to one drive", up);
+                    })
                 );
-                const fileName = encodeURIComponent(
-                    originalName
-                        ? `${originalName}${
-                              fileExtension ? "." + fileExtension : ""
-                          }`
-                        : file.fileName
-                );
-                const buffer = await cbk.downloadFile(file.fileKey);
-                const size = Buffer.byteLength(buffer);
 
-                const { FileUpload, OneDriveLargeFileUploadTask } =
-                    cbk.library.msgraph;
-                const fileObject = new FileUpload(buffer, fileName, size);
-                const msgraphClient = cbk.apiClient.msgraph;
-
-                let uploadSessionURL;
-                if (folderId) {
-                    const { id, parentReference } = await getFolderDriveItem(
-                        siteId,
-                        driveId,
-                        folderId
-                    );
-                    uploadSessionURL = `/drives/${parentReference.driveId}/items/${id}:/${fileName}:/createUploadSession`;
-                } else {
-                    const id = await getDriveId(siteId, driveId);
-                    uploadSessionURL = `/drives/${id}/root/children:/${fileName}:/createUploadSession`;
-                }
-
-                const options = {
-                    fileName,
-                    rangeSize: 1024 * 1024,
-                    uploadSessionURL,
-                    conflictBehavior: "rename",
-                };
-
-                const uploadTask =
-                    await OneDriveLargeFileUploadTask.createTaskWithFileObject(
-                        msgraphClient,
-                        fileObject,
-                        options
-                    );
-
-                const up = await uploadTask.upload();
-                cbk.log("msgraph: DONE upload file to one drive", up);
+                cbk.log("sharepoint: upload files done");
             } else if (fn === "create_folder") {
                 const siteId = cbk.getElementValue("site_id");
                 const driveId = cbk.getElementValue("drive_id");

@@ -888,13 +888,9 @@ var Sharepoint = class {
             JSON.parse(files).map((file) => __async(this, null, function* () {
               cbk.log("upload: Enter()");
               cbk.log(`upload: file: ${JSON.stringify(file)}`);
-              const fileNameWithoutPrefix = file.fileName.substring(
-                0,
-                file.fileName.indexOf(".")
-              );
-              const fileExtension = file.fileName.slice(
-                (file.fileName.lastIndexOf(".") - 1 >>> 0) + 2
-              );
+              const fileParts = file.fileName.split(".");
+              const fileNameWithoutPrefix = fileParts[0];
+              const fileExtension = fileParts[fileParts.length - 1];
               cbk.log("upload: file extension", fileExtension);
               cbk.log(
                 "upload: fileNameWithoutPrefix: ",

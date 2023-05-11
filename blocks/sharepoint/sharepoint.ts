@@ -213,16 +213,9 @@ export class Sharepoint {
                         cbk.log("upload: Enter()");
                         cbk.log(`upload: file: ${JSON.stringify(file)}`);
 
-                        // Remove the extension by slicing the string
-                        const fileNameWithoutPrefix = file.fileName.substring(
-                            0,
-                            file.fileName.indexOf(".")
-                        );
-
-                        // This is done because some scenarios the file is already prefixed with double extension.
-                        const fileExtension = file.fileName.slice(
-                            ((file.fileName.lastIndexOf(".") - 1) >>> 0) + 2
-                        );
+                        const fileParts = file.fileName.split(".");
+                        const fileNameWithoutPrefix = fileParts[0];
+                        const fileExtension = fileParts[fileParts.length - 1];
 
                         cbk.log("upload: file extension", fileExtension);
                         cbk.log(

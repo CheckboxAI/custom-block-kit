@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.7
+
+### Patch Changes
+
+- f6762b7: This is done to allow the sharepoint block to upload multiple blocks and switch it to prefix"
+
 ## 1.2.6
 
 ### Patch Changes

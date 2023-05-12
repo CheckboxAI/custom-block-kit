@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.8
+
+### Patch Changes
+
+- 4bfd274: Updated the sharepoint search props
+
 ## 1.2.7
 
 ### Patch Changes

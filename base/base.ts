@@ -80,13 +80,17 @@ export interface ComponentProps {
         | ComponentOptionProps[]
         | ((
               cbk: FrontendCBK,
-              searchTerm?: string,
-              itemId?: string
+              customResolverProps?: CustomResolverProps
           ) => Promise<ComponentOptionProps[]>)
         | CustomOptionString;
     isSearchable?: boolean;
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
+}
+
+export interface CustomResolverProps {
+    searchTerm?: string;
+    selectedValue?: string;
 }
 
 export interface ComponentOptionProps {

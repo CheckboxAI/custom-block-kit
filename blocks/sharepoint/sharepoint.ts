@@ -117,14 +117,14 @@ export class Sharepoint {
                         label: "Select Folder",
                         placeholder: "Select folder",
                         isSearchable: true,
-                        options: async (cbk, searchTerm, itemId) => {
+                        options: async (cbk, customSearchProps) => {
                             const response = await cbk.api.get<
                                 SharepointData[]
                             >("/public/integrations/sharepoint/folders", {
                                 siteId: cbk.getElementValue("site_id"),
                                 driveId: cbk.getElementValue("drive_id"),
-                                searchTerm: searchTerm,
-                                itemId: itemId,
+                                searchTerm: customSearchProps?.searchTerm,
+                                itemId: customSearchProps?.selectedValue,
                             });
 
                             if (!response) return [];

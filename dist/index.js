@@ -809,12 +809,12 @@ var Sharepoint = class {
               label: "Select Folder",
               placeholder: "Select folder",
               isSearchable: true,
-              options: (cbk, searchTerm, itemId) => __async(this, null, function* () {
+              options: (cbk, customSearchProps) => __async(this, null, function* () {
                 const response = yield cbk.api.get("/public/integrations/sharepoint/folders", {
                   siteId: cbk.getElementValue("site_id"),
                   driveId: cbk.getElementValue("drive_id"),
-                  searchTerm,
-                  itemId
+                  searchTerm: customSearchProps == null ? void 0 : customSearchProps.searchTerm,
+                  itemId: customSearchProps == null ? void 0 : customSearchProps.selectedValue
                 });
                 if (!response)
                   return [];

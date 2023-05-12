@@ -84,10 +84,14 @@ type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFile
 interface ComponentProps {
     label?: string;
     placeholder?: string;
-    options?: ComponentOptionProps[] | ((cbk: FrontendCBK, searchTerm?: string, itemId?: string) => Promise<ComponentOptionProps[]>) | CustomOptionString;
+    options?: ComponentOptionProps[] | ((cbk: FrontendCBK, customResolverProps?: CustomResolverProps) => Promise<ComponentOptionProps[]>) | CustomOptionString;
     isSearchable?: boolean;
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
+}
+interface CustomResolverProps {
+    searchTerm?: string;
+    selectedValue?: string;
 }
 interface ComponentOptionProps {
     label: string;

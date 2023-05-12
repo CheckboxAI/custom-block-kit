@@ -80,13 +80,17 @@ export interface ComponentProps {
         | ComponentOptionProps[]
         | ((
               cbk: FrontendCBK,
-              searchTerm?: string,
-              itemId?: string
+              optionState?: OptionState
           ) => Promise<ComponentOptionProps[]>)
         | CustomOptionString;
     isSearchable?: boolean;
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
+}
+
+export interface OptionState {
+    searchTerm?: string;
+    selectedValue?: string;
 }
 
 export interface ComponentOptionProps {

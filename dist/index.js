@@ -127,7 +127,8 @@ var DateCalc = class {
                 component: "NumberInput",
                 componentProps: {
                   label: "Add time period of",
-                  placeholder: "Insert number"
+                  placeholder: "Insert number",
+                  variableAutoComplete: true
                 },
                 validators: [
                   {
@@ -180,7 +181,8 @@ var DateCalc = class {
                 component: "NumberInput",
                 componentProps: {
                   label: "Subtract time period of",
-                  placeholder: "Insert number"
+                  placeholder: "Insert number",
+                  variableAutoComplete: true
                 },
                 validators: [
                   {

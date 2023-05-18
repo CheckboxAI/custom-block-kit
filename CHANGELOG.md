@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.9
+
+### Patch Changes
+
+- 9323c6c: added varAutocomplete to date_calc time_period
+
 ## 1.2.8
 
 ### Patch Changes

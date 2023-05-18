@@ -86,6 +86,7 @@ export interface ComponentProps {
     isSearchable?: boolean;
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
+    variableAutoComplete?: boolean;
 }
 
 export interface OptionState {

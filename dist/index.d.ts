@@ -88,6 +88,7 @@ interface ComponentProps {
     isSearchable?: boolean;
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
+    variableAutoComplete?: boolean;
 }
 interface OptionState {
     searchTerm?: string;

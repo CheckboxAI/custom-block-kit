@@ -62,6 +62,7 @@ export class DateCalc {
               componentProps: {
                 label: "Add time period of",
                 placeholder: "Insert number",
+                variableAutoComplete: true,
               },
               validators: [
                 {
@@ -115,6 +116,7 @@ export class DateCalc {
               componentProps: {
                 label: "Subtract time period of",
                 placeholder: "Insert number",
+                variableAutoComplete: true,
               },
               validators: [
                 {

@@ -652,7 +652,7 @@ var SetVariable = class {
             const datetimeSelection = cbk.getElementValue("datetimeSelection");
             let value = "";
             if (variableType === "DATE") {
-              const curTime = datetimeSelection === "currentDate" ? moment().startOf("day").format() : cbk.getElementValue("datetimeVariableValue");
+              const curTime = datetimeSelection === "currentDate" ? moment().format() : cbk.getElementValue("datetimeVariableValue");
               const utc = moment(curTime).parseZone().utcOffset();
               value = moment(curTime).utcOffset(utc).format();
             } else if (variableType === "NUM") {

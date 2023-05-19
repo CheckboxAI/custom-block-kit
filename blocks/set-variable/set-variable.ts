@@ -269,7 +269,7 @@ export class SetVariable {
           if (variableType === "DATE") {
             const curTime =
               datetimeSelection === "currentDate"
-                ? moment().startOf('day').format()
+                ? moment().format()
                 : cbk.getElementValue("datetimeVariableValue");
             const utc = moment(curTime).parseZone().utcOffset();
             value = moment(curTime).utcOffset(utc).format();

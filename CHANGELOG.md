@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.10
+
+### Patch Changes
+
+- 0eb374d: removed start of day in set variable create datetime
+
 ## 1.2.9
 
 ### Patch Changes

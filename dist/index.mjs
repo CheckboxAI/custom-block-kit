@@ -160,6 +160,11 @@ var DateCalc = class {
                   {
                     method: "required",
                     message: "Please insert a number"
+                  },
+                  {
+                    method: "min",
+                    value: "0",
+                    message: "This must be a positive number"
                   }
                 ]
               },
@@ -730,7 +735,9 @@ var Sharepoint = class {
               placeholder: "Select site",
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get("/public/integrations/sharepoint/sites");
+                const response = yield cbk.api.get(
+                  "/public/integrations/sharepoint/sites"
+                );
                 return response ? response.map(({ id, displayName }) => ({
                   value: id,
                   label: displayName
@@ -756,9 +763,12 @@ var Sharepoint = class {
               placeholder: "Select drive",
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get("/public/integrations/sharepoint/drives", {
-                  siteId: cbk.getElementValue("site_id")
-                });
+                const response = yield cbk.api.get(
+                  "/public/integrations/sharepoint/drives",
+                  {
+                    siteId: cbk.getElementValue("site_id")
+                  }
+                );
                 return response ? response.map(({ id, name }) => ({
                   value: id,
                   label: name
@@ -784,12 +794,15 @@ var Sharepoint = class {
               placeholder: "Select folder",
               isSearchable: true,
               options: (cbk, optionState) => __async(this, null, function* () {
-                const response = yield cbk.api.get("/public/integrations/sharepoint/folders", {
-                  siteId: cbk.getElementValue("site_id"),
-                  driveId: cbk.getElementValue("drive_id"),
-                  searchTerm: optionState == null ? void 0 : optionState.searchTerm,
-                  itemId: optionState == null ? void 0 : optionState.selectedValue
-                });
+                const response = yield cbk.api.get(
+                  "/public/integrations/sharepoint/folders",
+                  {
+                    siteId: cbk.getElementValue("site_id"),
+                    driveId: cbk.getElementValue("drive_id"),
+                    searchTerm: optionState == null ? void 0 : optionState.searchTerm,
+                    itemId: optionState == null ? void 0 : optionState.selectedValue
+                  }
+                );
                 if (!response)
                   return [];
                 const initialOptions = [{ value: "", label: "/" }];
@@ -806,7 +819,8 @@ var Sharepoint = class {
             showIf: 'fn_selector == "create_folder"',
             component: "InterpolationInput",
             componentProps: {
-              label: "Folder name"
+              label: "Folder name",
+              variableAutoComplete: true
             },
             validators: [
               {
@@ -828,20 +842,20 @@ var Sharepoint = class {
           {
             ref: "prefix_name",
             showIf: 'fn_selector == "upload_file"',
-            component: "InterpolationInput",
+            component: "TextInput",
             componentProps: {
-              label: "Prefix Name"
+              label: "Prefix Name",
+              variableAutoComplete: true
             }
           }
         ]
       },
       runtime: (cbk) => __async(this, null, function* () {
         const fn = cbk.getElementValue("fn_selector");
+        const excludedChars = /[<>:"/\\|?*&%]/g;
         function getFolderDriveItem(siteId, listId, folderId) {
           return __async(this, null, function* () {
-            return yield cbk.apiClient.msgraph.api(
-              `/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`
-            ).get();
+            return yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`).get();
           });
         }
         function getDriveId(siteId, listId) {
@@ -862,25 +876,18 @@ var Sharepoint = class {
             JSON.parse(files).map((file) => __async(this, null, function* () {
               cbk.log("upload: Enter()");
               cbk.log(`upload: file: ${JSON.stringify(file)}`);
-              const fileParts = file.fileName.split(".");
+              const fileParts = file.fileName.replace(excludedChars, "").split(".");
               const fileNameWithoutPrefix = fileParts[0];
               const fileExtension = fileParts[fileParts.length - 1];
               cbk.log("upload: file extension", fileExtension);
-              cbk.log(
-                "upload: fileNameWithoutPrefix: ",
-                fileNameWithoutPrefix
-              );
-              const fileName = prefixName ? `${prefixName} ${fileNameWithoutPrefix}.${fileExtension}` : `${fileNameWithoutPrefix}.${fileExtension}`;
+              cbk.log("upload: fileNameWithoutPrefix: ", fileNameWithoutPrefix);
+              const fileName = prefixName ? `${prefixName}${fileNameWithoutPrefix}.${fileExtension}` : `${fileNameWithoutPrefix}.${fileExtension}`;
               const encodedFileName = encodeURIComponent(fileName);
               cbk.log(`upload: fileName: ${fileName}`);
               const buffer = yield cbk.downloadFile(file.fileKey);
               const size = Buffer.byteLength(buffer);
               const { FileUpload, OneDriveLargeFileUploadTask } = cbk.library.msgraph;
-              const fileObject = new FileUpload(
-                buffer,
-                fileName,
-                size
-              );
+              const fileObject = new FileUpload(buffer, fileName, size);
               cbk.log("upload: fileObject", fileObject);
               const msgraphClient = cbk.apiClient.msgraph;
               let uploadSessionURL;
@@ -918,7 +925,7 @@ var Sharepoint = class {
           const siteId = cbk.getElementValue("site_id");
           const driveId = cbk.getElementValue("drive_id");
           const folderId = cbk.getElementValue("folder_id");
-          const folderName = cbk.getElementValue("folder_name");
+          const folderName = cbk.getElementValue("folder_name").replace(excludedChars, "");
           let dirUrl;
           if (folderId) {
             const { id, parentReference } = yield getFolderDriveItem(

@@ -123,6 +123,11 @@ export class DateCalc {
                   method: "required",
                   message: "Please insert a number",
                 },
+                {
+                  method: "min",
+                  value: "0",
+                  message: "This must be a positive number",
+                },
               ],
             },
             {

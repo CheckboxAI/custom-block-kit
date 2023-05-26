@@ -1,5 +1,12 @@
 # custom-block-kit
 
+## 1.2.11
+
+### Patch Changes
+
+- 630a466: added exclusion to sharepoint characters
+  also added minimum for datecalc sub period
+
 ## 1.2.10
 
 ### Patch Changes

@@ -205,7 +205,7 @@ export class Sharepoint {
         const siteId = cbk.getElementValue("site_id");
         const driveId = cbk.getElementValue("drive_id");
         const folderId = cbk.getElementValue("folder_id");
-        const prefixName = cbk.getElementValue("prefix_name");
+        const prefixName = cbk.getElementValue("prefix_name").replace(excludedChars,'');
         const fileVar = cbk.getElementValue("file");
         const files = cbk.getVariable(fileVar);
 

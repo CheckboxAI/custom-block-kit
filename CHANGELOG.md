@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.2.12
+
+### Patch Changes
+
+- 9404db8: added missing character exclusion
+
 ## 1.2.11
 
 ### Patch Changes

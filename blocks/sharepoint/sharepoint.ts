@@ -84,20 +84,24 @@ export class Sharepoint {
             placeholder: "Select drive",
             isSearchable: true,
             options: async (cbk) => {
-              const response = await cbk.api.get<SharepointData[]>(
-                "/public/integrations/sharepoint/drives",
-                {
-                  siteId: cbk.getElementValue("site_id"),
-                }
-              );
-              return response
-                ? response
-                    .map(({ id, name }) => ({
-                      value: id,
-                      label: name,
-                    }))
-                    .sort(sortOptions)
-                : [];
+              try {
+                const response = await cbk.api.get<SharepointData[]>(
+                  "/public/integrations/sharepoint/drives",
+                  {
+                    siteId: cbk.getElementValue("site_id"),
+                  }
+                );
+                return response
+                  ? response
+                      .map(({ id, name }) => ({
+                        value: id,
+                        label: name,
+                      }))
+                      .sort(sortOptions)
+                  : [];
+              } catch (e) {
+                return [];
+              }
             },
             whenChanged: (cbk) => {
               cbk.setElementValue("folder_id", undefined);
@@ -119,28 +123,32 @@ export class Sharepoint {
             placeholder: "Select folder",
             isSearchable: true,
             options: async (cbk, optionState) => {
-              const response = await cbk.api.get<SharepointData[]>(
-                "/public/integrations/sharepoint/folders",
-                {
-                  siteId: cbk.getElementValue("site_id"),
-                  driveId: cbk.getElementValue("drive_id"),
-                  searchTerm: optionState?.searchTerm,
-                  itemId: optionState?.selectedValue,
-                }
-              );
+              try {
+                const response = await cbk.api.get<SharepointData[]>(
+                  "/public/integrations/sharepoint/folders",
+                  {
+                    siteId: cbk.getElementValue("site_id"),
+                    driveId: cbk.getElementValue("drive_id"),
+                    searchTerm: optionState?.searchTerm,
+                    itemId: optionState?.selectedValue,
+                  }
+                );
 
-              if (!response) return [];
+                if (!response) return [];
 
-              const initialOptions = [{ value: "", label: "/" }];
+                const initialOptions = [{ value: "", label: "/" }];
 
-              const options = response
-                .map(({ id, name }) => ({
-                  value: id,
-                  label: name,
-                }))
-                .sort(sortOptions);
+                const options = response
+                  .map(({ id, name }) => ({
+                    value: id,
+                    label: name,
+                  }))
+                  .sort(sortOptions);
 
-              return initialOptions.concat(options);
+                return initialOptions.concat(options);
+              } catch (e) {
+                return [];
+              }
             },
           },
         },
@@ -205,7 +213,9 @@ export class Sharepoint {
         const siteId = cbk.getElementValue("site_id");
         const driveId = cbk.getElementValue("drive_id");
         const folderId = cbk.getElementValue("folder_id");
-        const prefixName = cbk.getElementValue("prefix_name").replace(excludedChars,'');
+        const prefixName = cbk
+          .getElementValue("prefix_name")
+          .replace(excludedChars, "");
         const fileVar = cbk.getElementValue("file");
         const files = cbk.getVariable(fileVar);
 
@@ -216,7 +226,9 @@ export class Sharepoint {
             cbk.log("upload: Enter()");
             cbk.log(`upload: file: ${JSON.stringify(file)}`);
 
-            const fileParts = file.fileName.replace(excludedChars,'').split(".");
+            const fileParts = file.fileName
+              .replace(excludedChars, "")
+              .split(".");
             const fileNameWithoutPrefix = fileParts[0];
             const fileExtension = fileParts[fileParts.length - 1];
 
@@ -286,7 +298,9 @@ export class Sharepoint {
         const siteId = cbk.getElementValue("site_id");
         const driveId = cbk.getElementValue("drive_id");
         const folderId = cbk.getElementValue("folder_id");
-        const folderName = cbk.getElementValue("folder_name").replace(excludedChars,'');
+        const folderName = cbk
+          .getElementValue("folder_name")
+          .replace(excludedChars, "");
 
         let dirUrl;
         if (folderId) {

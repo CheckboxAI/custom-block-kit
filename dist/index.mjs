@@ -763,16 +763,20 @@ var Sharepoint = class {
               placeholder: "Select drive",
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
-                const response = yield cbk.api.get(
-                  "/public/integrations/sharepoint/drives",
-                  {
-                    siteId: cbk.getElementValue("site_id")
-                  }
-                );
-                return response ? response.map(({ id, name }) => ({
-                  value: id,
-                  label: name
-                })).sort(sortOptions) : [];
+                try {
+                  const response = yield cbk.api.get(
+                    "/public/integrations/sharepoint/drives",
+                    {
+                      siteId: cbk.getElementValue("site_id")
+                    }
+                  );
+                  return response ? response.map(({ id, name }) => ({
+                    value: id,
+                    label: name
+                  })).sort(sortOptions) : [];
+                } catch (e) {
+                  return [];
+                }
               }),
               whenChanged: (cbk) => {
                 cbk.setElementValue("folder_id", void 0);
@@ -794,23 +798,27 @@ var Sharepoint = class {
               placeholder: "Select folder",
               isSearchable: true,
               options: (cbk, optionState) => __async(this, null, function* () {
-                const response = yield cbk.api.get(
-                  "/public/integrations/sharepoint/folders",
-                  {
-                    siteId: cbk.getElementValue("site_id"),
-                    driveId: cbk.getElementValue("drive_id"),
-                    searchTerm: optionState == null ? void 0 : optionState.searchTerm,
-                    itemId: optionState == null ? void 0 : optionState.selectedValue
-                  }
-                );
-                if (!response)
+                try {
+                  const response = yield cbk.api.get(
+                    "/public/integrations/sharepoint/folders",
+                    {
+                      siteId: cbk.getElementValue("site_id"),
+                      driveId: cbk.getElementValue("drive_id"),
+                      searchTerm: optionState == null ? void 0 : optionState.searchTerm,
+                      itemId: optionState == null ? void 0 : optionState.selectedValue
+                    }
+                  );
+                  if (!response)
+                    return [];
+                  const initialOptions = [{ value: "", label: "/" }];
+                  const options = response.map(({ id, name }) => ({
+                    value: id,
+                    label: name
+                  })).sort(sortOptions);
+                  return initialOptions.concat(options);
+                } catch (e) {
                   return [];
-                const initialOptions = [{ value: "", label: "/" }];
-                const options = response.map(({ id, name }) => ({
-                  value: id,
-                  label: name
-                })).sort(sortOptions);
-                return initialOptions.concat(options);
+                }
               })
             }
           },

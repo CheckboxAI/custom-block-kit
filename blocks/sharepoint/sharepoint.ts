@@ -24,6 +24,33 @@ export class Sharepoint {
           },
         },
         {
+          ref: "connection_id",
+          component: "SelectInput",
+          componentProps: {
+            label: "Connection",
+            placeholder: "Select a connection",
+            options: async (cbk) => {
+              const response = await cbk.api.get<any[]>(
+                "/public/integrations/sharepoint/overview"
+              );
+              return response
+                ? response
+                    .map(({ connectionId, name, email }) => ({
+                      value: connectionId,
+                      label: `${name} (${email})`,
+                    }))
+                : [];
+            },
+            whenChanged: (cbk) => { cbk.setElementValue("site_id", undefined); }
+          },
+          validators: [
+            {
+              method: "required",
+              message: "Please select a connection",
+            },
+          ],
+        },
+        {
           ref: "fn_selector",
           component: "SelectInput",
           componentProps: {
@@ -53,7 +80,8 @@ export class Sharepoint {
             isSearchable: true,
             options: async (cbk) => {
               const response = await cbk.api.get<SharepointData[]>(
-                "/public/integrations/sharepoint/sites"
+                "/public/integrations/sharepoint/sites",
+                { connectionId: cbk.getElementValue("connection_id") }
               );
               return response
                 ? response
@@ -89,6 +117,7 @@ export class Sharepoint {
                   "/public/integrations/sharepoint/drives",
                   {
                     siteId: cbk.getElementValue("site_id"),
+                    connectionId: cbk.getElementValue("connection_id")
                   }
                 );
                 return response
@@ -127,6 +156,7 @@ export class Sharepoint {
                 const response = await cbk.api.get<SharepointData[]>(
                   "/public/integrations/sharepoint/folders",
                   {
+                    connectionId: cbk.getElementValue("connection_id"),
                     siteId: cbk.getElementValue("site_id"),
                     driveId: cbk.getElementValue("drive_id"),
                     searchTerm: optionState?.searchTerm,

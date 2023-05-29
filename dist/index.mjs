@@ -707,6 +707,29 @@ var Sharepoint = class {
             }
           },
           {
+            ref: "connection_id",
+            component: "SelectInput",
+            componentProps: {
+              label: "Connection",
+              placeholder: "Select a connection",
+              options: (cbk) => __async(this, null, function* () {
+                const response = yield cbk.api.get(
+                  "/public/integrations/sharepoint/overview"
+                );
+                return response ? response.map(({ connectionId, name, email }) => ({
+                  value: connectionId,
+                  label: `${name} (${email})`
+                })) : [];
+              })
+            },
+            validators: [
+              {
+                method: "required",
+                message: "Please select a connection"
+              }
+            ]
+          },
+          {
             ref: "fn_selector",
             component: "SelectInput",
             componentProps: {
@@ -736,7 +759,8 @@ var Sharepoint = class {
               isSearchable: true,
               options: (cbk) => __async(this, null, function* () {
                 const response = yield cbk.api.get(
-                  "/public/integrations/sharepoint/sites"
+                  "/public/integrations/sharepoint/sites",
+                  { connectionId: cbk.getElementValue("connection_id") }
                 );
                 return response ? response.map(({ id, displayName }) => ({
                   value: id,
@@ -767,7 +791,8 @@ var Sharepoint = class {
                   const response = yield cbk.api.get(
                     "/public/integrations/sharepoint/drives",
                     {
-                      siteId: cbk.getElementValue("site_id")
+                      siteId: cbk.getElementValue("site_id"),
+                      connectionId: cbk.getElementValue("connection_id")
                     }
                   );
                   return response ? response.map(({ id, name }) => ({
@@ -802,6 +827,7 @@ var Sharepoint = class {
                   const response = yield cbk.api.get(
                     "/public/integrations/sharepoint/folders",
                     {
+                      connectionId: cbk.getElementValue("connection_id"),
                       siteId: cbk.getElementValue("site_id"),
                       driveId: cbk.getElementValue("drive_id"),
                       searchTerm: optionState == null ? void 0 : optionState.searchTerm,

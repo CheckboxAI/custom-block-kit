@@ -899,6 +899,9 @@ var Sharepoint = class {
             return id;
           });
         }
+        function isFolderVariable(folderId) {
+          return isNaN(Number(folderId));
+        }
         if (fn === "upload_file") {
           const siteId = cbk.getElementValue("site_id");
           const driveId = cbk.getElementValue("drive_id");
@@ -935,7 +938,7 @@ var Sharepoint = class {
                 uploadSessionURL = `/drives/${parentReference.driveId}/items/${id}:/${encodedFileName}:/createUploadSession`;
               } else {
                 const id = yield getDriveId(siteId, driveId);
-                uploadSessionURL = folderId && isNaN(Number(folderId)) ? `/drives/${id}/root:/${encodeURI(
+                uploadSessionURL = folderId && isFolderVariable(folderId) ? `/drives/${id}/root:/${encodeURI(
                   folderId
                 )}/${encodedFileName}:/createUploadSession` : `/drives/${id}/root/children:/${encodedFileName}:/createUploadSession`;
               }
@@ -965,7 +968,7 @@ var Sharepoint = class {
           const folderName = cbk.getElementValue("folder_name").replace(excludedChars, "");
           const folderVar = cbk.getElementValue("folder_var");
           let dirUrl;
-          if (folderId && !isNaN(Number(folderId))) {
+          if (folderId && !isFolderVariable(folderId)) {
             const { id, parentReference } = yield getFolderDriveItem(
               siteId,
               driveId,

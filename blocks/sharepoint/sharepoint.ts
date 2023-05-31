@@ -235,6 +235,10 @@ export class Sharepoint {
         return id;
       }
 
+      function isFolderVariable(folderId: string) {
+        return isNaN(Number(folderId));
+      }
+
       if (fn === "upload_file") {
         const siteId = cbk.getElementValue("site_id");
         const driveId = cbk.getElementValue("drive_id");
@@ -292,7 +296,7 @@ export class Sharepoint {
             } else {
               const id = await getDriveId(siteId, driveId);
               uploadSessionURL =
-                folderId && isNaN(Number(folderId))
+                folderId && isFolderVariable(folderId)
                   ? `/drives/${id}/root:/${encodeURI(
                       folderId
                     )}/${encodedFileName}:/createUploadSession`
@@ -334,7 +338,7 @@ export class Sharepoint {
           .replace(excludedChars, "");
         const folderVar = cbk.getElementValue("folder_var");
         let dirUrl;
-        if (folderId && !isNaN(Number(folderId))) {
+        if (folderId && !isFolderVariable(folderId)) {
           const { id, parentReference } = await getFolderDriveItem(
             siteId,
             driveId,

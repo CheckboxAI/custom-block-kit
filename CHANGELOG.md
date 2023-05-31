@@ -1,5 +1,15 @@
 # custom-block-kit
 
+## 1.3.0
+
+### Minor Changes
+
+- f6cfc76: All existing blocks now support variable interpolation within the appropriate fields
+
+### Patch Changes
+
+- b091654: Added connection option for sharepoint
+
 ## 1.2.13
 
 ### Patch Changes

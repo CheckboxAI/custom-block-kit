@@ -819,13 +819,14 @@ var Sharepoint = class {
                 } catch (e) {
                   return [];
                 }
-              })
+              }),
+              variableAutoComplete: true
             }
           },
           {
             ref: "folder_name",
             showIf: 'fn_selector == "create_folder"',
-            component: "InterpolationInput",
+            component: "TextInput",
             componentProps: {
               label: "Folder name",
               variableAutoComplete: true
@@ -836,6 +837,25 @@ var Sharepoint = class {
                 message: "Please enter the folder name"
               }
             ]
+          },
+          {
+            ref: "folder_var",
+            showIf: 'fn_selector == "create_folder"',
+            component: "TextInput",
+            componentProps: {
+              label: "Save new folder path as",
+              variableAutoComplete: true,
+              placeholder: "Variable name"
+            },
+            validators: [
+              {
+                method: "required",
+                message: "Please enter the variable name"
+              }
+            ],
+            output: {
+              as: "TXT"
+            }
           },
           {
             ref: "file",
@@ -859,8 +879,9 @@ var Sharepoint = class {
         ]
       },
       runtime: (cbk) => __async(this, null, function* () {
+        var _a;
         const fn = cbk.getElementValue("fn_selector");
-        const excludedChars = /[<>:"/\\|?*&%]/g;
+        const excludedChars = /[<>:"/\\|?*%#]/g;
         function getFolderDriveItem(siteId, listId, folderId) {
           return __async(this, null, function* () {
             return yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`).get();
@@ -869,6 +890,12 @@ var Sharepoint = class {
         function getDriveId(siteId, listId) {
           return __async(this, null, function* () {
             const { id } = yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/drive`).get();
+            return id;
+          });
+        }
+        function getDriveFromPath(siteID, path) {
+          return __async(this, null, function* () {
+            const { id } = yield cbk.apiClient.msgraph.api(`/sites/${siteID}/drive/root:/${path}`).get();
             return id;
           });
         }
@@ -899,7 +926,7 @@ var Sharepoint = class {
               cbk.log("upload: fileObject", fileObject);
               const msgraphClient = cbk.apiClient.msgraph;
               let uploadSessionURL;
-              if (folderId) {
+              if (folderId && !isNaN(Number(folderId))) {
                 const { id, parentReference } = yield getFolderDriveItem(
                   siteId,
                   driveId,
@@ -908,7 +935,9 @@ var Sharepoint = class {
                 uploadSessionURL = `/drives/${parentReference.driveId}/items/${id}:/${encodedFileName}:/createUploadSession`;
               } else {
                 const id = yield getDriveId(siteId, driveId);
-                uploadSessionURL = `/drives/${id}/root/children:/${encodedFileName}:/createUploadSession`;
+                uploadSessionURL = folderId && isNaN(Number(folderId)) ? `/drives/${id}/root:/${encodeURI(
+                  folderId
+                )}/${encodedFileName}:/createUploadSession` : `/drives/${id}/root/children:/${encodedFileName}:/createUploadSession`;
               }
               cbk.log("upload: uploadSessionURL", uploadSessionURL);
               const options = {
@@ -934,8 +963,9 @@ var Sharepoint = class {
           const driveId = cbk.getElementValue("drive_id");
           const folderId = cbk.getElementValue("folder_id");
           const folderName = cbk.getElementValue("folder_name").replace(excludedChars, "");
+          const folderVar = cbk.getElementValue("folder_var");
           let dirUrl;
-          if (folderId) {
+          if (folderId && !isNaN(Number(folderId))) {
             const { id, parentReference } = yield getFolderDriveItem(
               siteId,
               driveId,
@@ -943,8 +973,13 @@ var Sharepoint = class {
             );
             dirUrl = `/drives/${parentReference.driveId}/items/${id}/children`;
           } else {
-            const id = yield getDriveId(siteId, driveId);
-            dirUrl = `/drives/${id}/root/children`;
+            if (folderId && isNaN(Number(folderId))) {
+              const id = yield getDriveFromPath(siteId, encodeURI(folderId));
+              dirUrl = `/sites/${siteId}/drive/items/${id}/children`;
+            } else {
+              const id = yield getDriveId(siteId, driveId);
+              dirUrl = `/drives/${id}/root/children`;
+            }
           }
           const response = yield cbk.apiClient.msgraph.api(dirUrl).post({
             name: folderName,
@@ -952,6 +987,8 @@ var Sharepoint = class {
             "@microsoft.graph.conflictBehavior": "replace"
           });
           cbk.log("msgraph: DONE create folder", response);
+          const folderPath = ((_a = response == null ? void 0 : response.parentReference) == null ? void 0 : _a.path.split("root:/")[1]) || "";
+          cbk.setOutput(folderVar, `${folderPath}/${folderName}`);
         }
       })
     };

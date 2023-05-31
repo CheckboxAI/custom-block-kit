@@ -150,12 +150,13 @@ export class Sharepoint {
                 return [];
               }
             },
+            variableAutoComplete: true,
           },
         },
         {
           ref: "folder_name",
           showIf: 'fn_selector == "create_folder"',
-          component: "InterpolationInput",
+          component: "TextInput",
           componentProps: {
             label: "Folder name",
             variableAutoComplete: true,
@@ -166,6 +167,25 @@ export class Sharepoint {
               message: "Please enter the folder name",
             },
           ],
+        },
+        {
+          ref: "folder_var",
+          showIf: 'fn_selector == "create_folder"',
+          component: "TextInput",
+          componentProps: {
+            label: "Save new folder path as",
+            variableAutoComplete: true,
+            placeholder: "Variable name",
+          },
+          validators: [
+            {
+              method: "required",
+              message: "Please enter the variable name",
+            },
+          ],
+          output: {
+            as: "TXT",
+          },
         },
         {
           ref: "file",
@@ -190,7 +210,7 @@ export class Sharepoint {
     },
     runtime: async (cbk) => {
       const fn = cbk.getElementValue("fn_selector");
-      const excludedChars = /[<>:"/\\|?*&%]/g;
+      const excludedChars = /[<>:"/\\|?*%#]/g;
 
       async function getFolderDriveItem(
         siteId: string,
@@ -205,6 +225,12 @@ export class Sharepoint {
       async function getDriveId(siteId: string, listId: string) {
         const { id } = await cbk.apiClient.msgraph
           .api(`/sites/${siteId}/lists/${listId}/drive`)
+          .get();
+        return id;
+      }
+      async function getDriveFromPath(siteID: string, path: string) {
+        const { id } = await cbk.apiClient.msgraph
+          .api(`/sites/${siteID}/drive/root:/${path}`)
           .get();
         return id;
       }
@@ -256,7 +282,7 @@ export class Sharepoint {
             const msgraphClient = cbk.apiClient.msgraph;
 
             let uploadSessionURL;
-            if (folderId) {
+            if (folderId && !isNaN(Number(folderId))) {
               const { id, parentReference } = await getFolderDriveItem(
                 siteId,
                 driveId,
@@ -265,7 +291,12 @@ export class Sharepoint {
               uploadSessionURL = `/drives/${parentReference.driveId}/items/${id}:/${encodedFileName}:/createUploadSession`;
             } else {
               const id = await getDriveId(siteId, driveId);
-              uploadSessionURL = `/drives/${id}/root/children:/${encodedFileName}:/createUploadSession`;
+              uploadSessionURL =
+                folderId && isNaN(Number(folderId))
+                  ? `/drives/${id}/root:/${encodeURI(
+                      folderId
+                    )}/${encodedFileName}:/createUploadSession`
+                  : `/drives/${id}/root/children:/${encodedFileName}:/createUploadSession`;
             }
 
             cbk.log("upload: uploadSessionURL", uploadSessionURL);
@@ -301,9 +332,9 @@ export class Sharepoint {
         const folderName = cbk
           .getElementValue("folder_name")
           .replace(excludedChars, "");
-
+        const folderVar = cbk.getElementValue("folder_var");
         let dirUrl;
-        if (folderId) {
+        if (folderId && !isNaN(Number(folderId))) {
           const { id, parentReference } = await getFolderDriveItem(
             siteId,
             driveId,
@@ -311,8 +342,13 @@ export class Sharepoint {
           );
           dirUrl = `/drives/${parentReference.driveId}/items/${id}/children`;
         } else {
-          const id = await getDriveId(siteId, driveId);
-          dirUrl = `/drives/${id}/root/children`;
+          if (folderId && isNaN(Number(folderId))) {
+            const id = await getDriveFromPath(siteId, encodeURI(folderId));
+            dirUrl = `/sites/${siteId}/drive/items/${id}/children`;
+          } else {
+            const id = await getDriveId(siteId, driveId);
+            dirUrl = `/drives/${id}/root/children`;
+          }
         }
 
         const response = await cbk.apiClient.msgraph.api(dirUrl).post({
@@ -322,6 +358,9 @@ export class Sharepoint {
         });
 
         cbk.log("msgraph: DONE create folder", response);
+        const folderPath =
+          response?.parentReference?.path.split("root:/")[1] || "";
+        cbk.setOutput(folderVar, `${folderPath}/${folderName}`);
       }
     },
   };

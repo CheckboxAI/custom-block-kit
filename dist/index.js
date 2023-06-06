@@ -712,6 +712,7 @@ var sortOptions = (a, b) => {
 };
 
 // blocks/sharepoint/sharepoint.ts
+var SIGNED_REPORT_TYPE = "signed-report";
 var Sharepoint = class {
   constructor() {
     this.schema = {
@@ -748,7 +749,10 @@ var Sharepoint = class {
                   value: connectionId,
                   label: `${name} (${email})`
                 })) : [];
-              })
+              }),
+              whenChanged: (cbk) => {
+                cbk.setElementValue("site_id", void 0);
+              }
             },
             validators: [
               {
@@ -922,6 +926,23 @@ var Sharepoint = class {
             }
           },
           {
+            ref: "file_types",
+            showIf: 'fn_selector == "upload_file"',
+            component: "CheckboxGroupInput",
+            componentProps: {
+              label: "Upload the following file types if available",
+              options: [
+                { value: "docx", label: "DOCX", defaultChecked: true },
+                { value: "pdf", label: "PDF", defaultChecked: true },
+                {
+                  value: SIGNED_REPORT_TYPE,
+                  label: "E-Signed",
+                  defaultChecked: true
+                }
+              ]
+            }
+          },
+          {
             ref: "prefix_name",
             showIf: 'fn_selector == "upload_file"',
             component: "TextInput",
@@ -956,6 +977,16 @@ var Sharepoint = class {
         function isFolderVariable(folderId) {
           return isNaN(Number(folderId));
         }
+        function isFileTypeSelected(fileType, fileExtension) {
+          const fileTypes = cbk.getElementValue("file_types");
+          if (fileTypes && Object.keys(fileTypes)) {
+            const checkedValues = Object.entries(fileTypes).filter(([_, checked]) => checked).map(([value]) => value);
+            if (fileType === SIGNED_REPORT_TYPE)
+              return checkedValues.includes(SIGNED_REPORT_TYPE);
+            return checkedValues.includes(fileExtension);
+          }
+          return true;
+        }
         if (fn === "upload_file") {
           const siteId = cbk.getElementValue("site_id");
           const driveId = cbk.getElementValue("drive_id");
@@ -971,6 +1002,12 @@ var Sharepoint = class {
               const fileParts = file.fileName.replace(excludedChars, "").split(".");
               const fileNameWithoutPrefix = fileParts[0];
               const fileExtension = fileParts[fileParts.length - 1];
+              if (!isFileTypeSelected(file.fileType, fileExtension)) {
+                cbk.log(
+                  `upload: skipped because file type ${fileExtension} not selected`
+                );
+                return;
+              }
               cbk.log("upload: file extension", fileExtension);
               cbk.log("upload: fileNameWithoutPrefix: ", fileNameWithoutPrefix);
               const fileName = prefixName ? `${prefixName}${fileNameWithoutPrefix}.${fileExtension}` : `${fileNameWithoutPrefix}.${fileExtension}`;

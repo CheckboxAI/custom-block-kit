@@ -72,6 +72,16 @@ export class SetVariable {
                   method: "isVariableUnique",
                   message: "Variable name already exists",
                 },
+                {
+                  method: "matches",
+                  value: "^\\S*$",
+                  message: "Variable name cannot contain spaces",
+                },
+                {
+                  method: "max",
+                  value: "50",
+                  message: "This must be less than 50 characters",
+                }
               ],
               output: {
                 ref: "variableType",

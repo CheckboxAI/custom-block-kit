@@ -50,6 +50,11 @@ export class Triage {
               message: "Variable name already exists",
             },
             {
+              method: "matches",
+              value: "^\\S*$",
+              message: "Variable name cannot contain spaces",
+            },
+            {
               method: "required",
               message: "Please enter an output variable name",
             },

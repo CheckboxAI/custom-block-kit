@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.3.2
+
+### Patch Changes
+
+- 48470db: DEV-11106: Set_variable allows for space in variable name
+
 ## 1.3.1
 
 ### Patch Changes

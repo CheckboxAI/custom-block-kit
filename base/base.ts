@@ -97,6 +97,7 @@ export interface OptionState {
 export interface ComponentOptionProps {
     label: string;
     value: string;
+    defaultChecked?: boolean;
 }
 
 export interface ValidatorProps {

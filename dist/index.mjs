@@ -216,6 +216,11 @@ var DateCalc = class {
                     message: "This variable already exists!"
                   },
                   {
+                    method: "matches",
+                    value: "^\\S*$",
+                    message: "Variable name cannot contain spaces"
+                  },
+                  {
                     method: "max",
                     value: "50",
                     message: "This must be less than 50 characters"
@@ -315,6 +320,11 @@ var DateCalc = class {
                       {
                         method: "required",
                         message: "Please insert a variable name"
+                      },
+                      {
+                        method: "matches",
+                        value: "^\\S*$",
+                        message: "Variable name cannot contain spaces"
                       },
                       {
                         method: "max",
@@ -441,6 +451,16 @@ var SetVariable = class {
                   {
                     method: "isVariableUnique",
                     message: "Variable name already exists"
+                  },
+                  {
+                    method: "matches",
+                    value: "^\\S*$",
+                    message: "Variable name cannot contain spaces"
+                  },
+                  {
+                    method: "max",
+                    value: "50",
+                    message: "This must be less than 50 characters"
                   }
                 ],
                 output: {
@@ -1183,6 +1203,11 @@ var Triage = class {
               {
                 method: "isVariableUnique",
                 message: "Variable name already exists"
+              },
+              {
+                method: "matches",
+                value: "^\\S*$",
+                message: "Variable name cannot contain spaces"
               },
               {
                 method: "required",

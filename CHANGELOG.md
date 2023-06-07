@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.3.1
+
+### Patch Changes
+
+- c4fe137: Added file types to sharepoint block
+
 ## 1.3.0
 
 ### Minor Changes

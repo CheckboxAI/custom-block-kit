@@ -445,7 +445,8 @@ var SetVariable = class {
                 component: "TextInput",
                 componentProps: {
                   label: "Set name of variable as",
-                  placeholder: "Enter variable name"
+                  placeholder: "Enter variable name",
+                  format: "clientTimezone"
                 },
                 validators: [
                   {

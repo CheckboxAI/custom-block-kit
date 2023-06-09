@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.3.3
+
+### Patch Changes
+
+- 60b270c: added format to setvar add timezone
+
 ## 1.3.2
 
 ### Patch Changes

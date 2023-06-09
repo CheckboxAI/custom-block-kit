@@ -66,6 +66,7 @@ export class SetVariable {
               componentProps: {
                 label: "Set name of variable as",
                 placeholder: "Enter variable name",
+                format:"clientTimezone"
               },
               validators: [
                 {

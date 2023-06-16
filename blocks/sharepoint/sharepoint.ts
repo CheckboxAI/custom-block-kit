@@ -246,6 +246,13 @@ export class Sharepoint {
               },
             ],
           },
+          validators: [
+            {
+              method: "minTruthyObjectValues",
+              value: "1",
+              message: "Please select at least one file type",
+            }
+          ]
         },
         {
           ref: "prefix_name",
@@ -311,7 +318,7 @@ export class Sharepoint {
         const folderId = cbk.getElementValue("folder_id");
         const prefixName = cbk
           .getElementValue("prefix_name")
-          .replace(excludedChars, "");
+          ?.replace(excludedChars, "");
         const fileVar = cbk.getElementValue("file");
         const files = cbk.getVariable(fileVar);
 

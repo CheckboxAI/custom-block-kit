@@ -933,7 +933,14 @@ var Sharepoint = class {
                   defaultChecked: true
                 }
               ]
-            }
+            },
+            validators: [
+              {
+                method: "minKeys",
+                value: "1",
+                message: "Please select at least one file type"
+              }
+            ]
           },
           {
             ref: "prefix_name",
@@ -947,7 +954,7 @@ var Sharepoint = class {
         ]
       },
       runtime: (cbk) => __async(this, null, function* () {
-        var _a;
+        var _a, _b;
         const fn = cbk.getElementValue("fn_selector");
         const excludedChars = /[<>:"/\\|?*%#]/g;
         function getFolderDriveItem(siteId, listId, folderId) {
@@ -984,7 +991,7 @@ var Sharepoint = class {
           const siteId = cbk.getElementValue("site_id");
           const driveId = cbk.getElementValue("drive_id");
           const folderId = cbk.getElementValue("folder_id");
-          const prefixName = cbk.getElementValue("prefix_name").replace(excludedChars, "");
+          const prefixName = (_a = cbk.getElementValue("prefix_name")) == null ? void 0 : _a.replace(excludedChars, "");
           const fileVar = cbk.getElementValue("file");
           const files = cbk.getVariable(fileVar);
           cbk.log("sharepoint: Initiating upload files to sharepoint");
@@ -1074,7 +1081,7 @@ var Sharepoint = class {
             "@microsoft.graph.conflictBehavior": "replace"
           });
           cbk.log("msgraph: DONE create folder", response);
-          const folderPath = ((_a = response == null ? void 0 : response.parentReference) == null ? void 0 : _a.path.split("root:/")[1]) || "";
+          const folderPath = ((_b = response == null ? void 0 : response.parentReference) == null ? void 0 : _b.path.split("root:/")[1]) || "";
           cbk.setOutput(folderVar, `${folderPath}/${folderName}`);
         }
       })

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.3.4
+
+### Patch Changes
+
+- 9805eae: Add validation of at least one file types and bug fix to Sharepoint
+
 ## 1.3.3
 
 ### Patch Changes

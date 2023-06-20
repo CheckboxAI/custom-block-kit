@@ -355,6 +355,16 @@ var DateCalc = class {
                         message: "Variable name cannot contain spaces"
                       },
                       {
+                        method: "matches",
+                        value: "^[a-zA-Z]",
+                        message: "Variable name must start with an alphabet"
+                      },
+                      {
+                        method: "matches",
+                        value: "^[a-zA-Z0-9_]+$",
+                        message: "Variable name is alphanumeric characters and _ only"
+                      },
+                      {
                         method: "max",
                         value: "50",
                         message: "This must be less than 50 characters"
@@ -487,6 +497,16 @@ var SetVariable = class {
                     message: "Variable name cannot contain spaces"
                   },
                   {
+                    method: "matches",
+                    value: "^[a-zA-Z]",
+                    message: "Variable name must start with an alphabet"
+                  },
+                  {
+                    method: "matches",
+                    value: "^[a-zA-Z0-9_]+$",
+                    message: "Variable name is alphanumeric characters and _ only"
+                  },
+                  {
                     method: "max",
                     value: "50",
                     message: "This must be less than 50 characters"
@@ -609,6 +629,16 @@ var SetVariable = class {
                   {
                     method: "isVariableUnique",
                     message: "Variable name already exists"
+                  },
+                  {
+                    method: "matches",
+                    value: "^[a-zA-Z]",
+                    message: "Variable name must start with an alphabet"
+                  },
+                  {
+                    method: "matches",
+                    value: "^[a-zA-Z0-9_]+$",
+                    message: "Variable name is alphanumeric characters and _ only"
                   },
                   {
                     method: "max",
@@ -1260,6 +1290,16 @@ var Triage = class {
                 method: "matches",
                 value: "^\\S*$",
                 message: "Variable name cannot contain spaces"
+              },
+              {
+                method: "matches",
+                value: "^[a-zA-Z]",
+                message: "Variable name must start with an alphabet"
+              },
+              {
+                method: "matches",
+                value: "^[a-zA-Z0-9_]+$",
+                message: "Variable name is alphanumeric characters and _ only"
               },
               {
                 method: "required",

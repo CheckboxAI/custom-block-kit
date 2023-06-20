@@ -920,7 +920,14 @@ var Sharepoint = class {
           },
           {
             ref: "file_types",
-            showIf: 'fn_selector == "upload_file"',
+            showIf: (cbk) => {
+              if (cbk.getElementValue("fn_selector") === "upload_file") {
+                if (cbk.getVariableType(cbk.getElementValue("file")) === "DOC") {
+                  return true;
+                }
+              }
+              return false;
+            },
             component: "CheckboxGroupInput",
             componentProps: {
               label: "Upload the following file types if available",
@@ -936,7 +943,7 @@ var Sharepoint = class {
             },
             validators: [
               {
-                method: "minKeys",
+                method: "minTruthyObjectValues",
                 value: "1",
                 message: "Please select at least one file type"
               }
@@ -987,6 +994,9 @@ var Sharepoint = class {
           }
           return true;
         }
+        function isPDFInDocx(file) {
+          return file.fileType === "report" && file.fileName.match(/\.pdf\.docx$/i);
+        }
         if (fn === "upload_file") {
           const siteId = cbk.getElementValue("site_id");
           const driveId = cbk.getElementValue("drive_id");
@@ -1002,6 +1012,12 @@ var Sharepoint = class {
               const fileParts = file.fileName.replace(excludedChars, "").split(".");
               const fileNameWithoutPrefix = fileParts[0];
               const fileExtension = fileParts[fileParts.length - 1];
+              if (isPDFInDocx(file)) {
+                cbk.log(
+                  `upload: skipped because file type is .pdf.docx`
+                );
+                return;
+              }
               if (!isFileTypeSelected(file.fileType, fileExtension)) {
                 cbk.log(
                   `upload: skipped because file type ${fileExtension} not selected`

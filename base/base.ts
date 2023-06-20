@@ -37,7 +37,7 @@ export interface EditorField {
     label?: string;
     component: string;
     componentProps: ComponentProps;
-    showIf?: string;
+    showIf?: string | ((cbk: FrontendCBK) => boolean);
     validators?: ValidatorProps[];
     children?: EditorField[];
     output?: OutputProps;
@@ -52,6 +52,7 @@ export interface FrontendCBK {
     };
     getElementValue(ref: string): string;
     setElementValue(ref: string, value: string | undefined): void;
+    getVariableType(name: string): string;
 }
 
 export interface BackendCBK {

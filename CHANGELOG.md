@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.1
+
+### Patch Changes
+
+- 06afb3f: Follow golang validation for static variable name
+
 ## 1.4.0
 
 ### Minor Changes

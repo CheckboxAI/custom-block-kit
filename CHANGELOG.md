@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.0
+
+### Minor Changes
+
+- 18b6f2c: Allow function in showIf, skip corrupted .pdf.docx
+
 ## 1.3.4
 
 ### Patch Changes

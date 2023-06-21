@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.2
+
+### Patch Changes
+
+- 4cae94a: Do not check file type for non doc
+
 ## 1.4.1
 
 ### Patch Changes

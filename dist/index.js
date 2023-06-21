@@ -1043,7 +1043,7 @@ var Sharepoint = class {
           return isNaN(Number(folderId));
         }
         function isFileTypeSelected(fileType, fileExtension) {
-          const fileTypes = cbk.getElementValue("file_types");
+          const fileTypes = cbk.getVariableType(cbk.getElementValue("file")) === "DOC" && cbk.getElementValue("file_types");
           if (fileTypes && Object.keys(fileTypes)) {
             const checkedValues = Object.entries(fileTypes).filter(([_, checked]) => checked).map(([value]) => value);
             if (fileType === SIGNED_REPORT_TYPE)

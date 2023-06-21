@@ -306,7 +306,7 @@ export class Sharepoint {
       }
 
       function isFileTypeSelected(fileType: string, fileExtension: string) {
-        const fileTypes = cbk.getElementValue("file_types");
+        const fileTypes = cbk.getVariableType(cbk.getElementValue("file")) === "DOC" && cbk.getElementValue("file_types");
         if (fileTypes && Object.keys(fileTypes)) {
           const checkedValues = Object.entries(fileTypes)
             .filter(([_, checked]) => checked)

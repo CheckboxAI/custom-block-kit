@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.3
+
+### Patch Changes
+
+- e51256c: Add feature flag to triage block
+
 ## 1.4.2
 
 ### Patch Changes

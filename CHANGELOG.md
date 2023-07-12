@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.4
+
+### Patch Changes
+
+- e2992af: Use npm run build before pushing
+
 ## 1.4.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.5
+
+### Patch Changes
+
+- 44d42fc: Remove not needed validation
+
 ## 1.4.4
 
 ### Patch Changes

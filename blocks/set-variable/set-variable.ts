@@ -106,17 +106,6 @@ export class SetVariable {
                 label: "Variable Value",
                 placeholder: "Enter variable value",
               },
-              validators: [
-                {
-                  method: "isVariableUnique",
-                  message: "Variable name already exists",
-                },
-                {
-                  method: "max",
-                  value: "50",
-                  message: "This must be less than 50 characters",
-                },
-              ],
             },
             {
               ref: "numVariableValue",
@@ -126,13 +115,6 @@ export class SetVariable {
                 label: "Variable Value",
                 placeholder: "Enter variable value",
               },
-              validators: [
-                {
-                  method: "min",
-                  value: "0",
-                  message: "This must be a positive number",
-                },
-              ],
             },
             {
               ref: "datetimeSelection",
@@ -209,27 +191,6 @@ export class SetVariable {
                 label: "Variable Value",
                 placeholder: "Enter variable value",
               },
-              validators: [
-                {
-                  method: "isVariableUnique",
-                  message: "Variable name already exists",
-                },
-                {
-                  method: "matches",
-                  value: "^[a-zA-Z]",
-                  message: "Variable name must start with an alphabet",
-                },
-                {
-                  method: "matches",
-                  value: "^[a-zA-Z0-9_]+$",
-                  message: "Variable name is alphanumeric characters and _ only",
-                },
-                {
-                  method: "max",
-                  value: "50",
-                  message: "This must be less than 50 characters",
-                },
-              ],
             },
             {
               ref: "update_num",
@@ -240,13 +201,6 @@ export class SetVariable {
                 label: "Variable Value",
                 placeholder: "Enter variable value",
               },
-              validators: [
-                {
-                  method: "min",
-                  value: "0",
-                  message: "This must be a positive number",
-                },
-              ],
             },
             {
               ref: "update_date",

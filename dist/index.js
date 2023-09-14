@@ -451,7 +451,8 @@ var SetVariable = class {
                 {
                   label: "Update existing variable",
                   value: "update"
-                }
+                },
+                { label: "Format existing LIST variable", value: "format" }
               ]
             }
           },
@@ -645,6 +646,86 @@ var SetVariable = class {
                 }
               }
             ]
+          },
+          {
+            ref: "setvar_format_group",
+            component: "Group",
+            componentProps: {
+              label: "Format existing LIST variable"
+            },
+            showIf: 'fn_selector == "format"',
+            children: [
+              {
+                ref: "selected_variable_name",
+                component: "SelectInput",
+                componentProps: {
+                  label: "Selected Variable Name",
+                  placeholder: "Select variable name",
+                  options: "getFormattableVariables"
+                }
+              },
+              {
+                ref: "format_variable_name",
+                component: "TextInput",
+                componentProps: {
+                  label: "Formatted Variable Name",
+                  placeholder: "Enter variable name"
+                },
+                validators: [
+                  {
+                    method: "isVariableUnique",
+                    message: "Variable name already exists"
+                  },
+                  {
+                    method: "matches",
+                    value: "^\\S*$",
+                    message: "Variable name cannot contain spaces"
+                  },
+                  {
+                    method: "matches",
+                    value: "^[a-zA-Z]",
+                    message: "Variable name must start with an alphabet"
+                  },
+                  {
+                    method: "matches",
+                    value: "^[a-zA-Z0-9_]+$",
+                    message: "Variable name is alphanumeric characters and _ only"
+                  },
+                  {
+                    method: "max",
+                    value: "50",
+                    message: "This must be less than 50 characters"
+                  }
+                ],
+                output: {
+                  as: "LIST"
+                }
+              },
+              {
+                ref: "ending_suffix",
+                component: "TextInput",
+                componentProps: {
+                  label: "Suffix to append to end of each list item",
+                  placeholder: "Common suffix"
+                }
+              },
+              {
+                ref: "second_last_suffix",
+                component: "TextInput",
+                componentProps: {
+                  label: "Suffix to append to the end of the second last list item",
+                  placeholder: "Second last suffix"
+                }
+              },
+              {
+                ref: "last_suffix",
+                component: "TextInput",
+                componentProps: {
+                  label: "Suffix to append to the end of the last list item",
+                  placeholder: "Last Suffix"
+                }
+              }
+            ]
           }
         ]
       },
@@ -652,9 +733,11 @@ var SetVariable = class {
         const { moment } = cbk.library;
         const fnTypes = {
           create: "create",
-          update: "update"
+          update: "update",
+          format: "format"
         };
         const fn = cbk.getElementValue("fn_selector");
+        cbk.log("FN", fn);
         switch (fnTypes[fn]) {
           case "create":
             const createVariable = cbk.getElementValue("variableName");
@@ -679,8 +762,7 @@ var SetVariable = class {
           case "update":
             const updateVariable = cbk.getElementValue("update_variable_name");
             const updateVarType = cbk.getVariableType(updateVariable);
-            let updated = "";
-            cbk.log("UPDATE VAR NAME", updateVariable);
+            let updated;
             cbk.log("UPDATE VAR TYPE", updateVarType);
             if (updateVarType === "DATE") {
               const updateDate = cbk.getElementValue("update_date");
@@ -697,6 +779,37 @@ var SetVariable = class {
             }
             cbk.log("UPDATE VAR VALUE", updated);
             cbk.setOutput(updateVariable, updated);
+            break;
+          case "format":
+            const selectedVariable = cbk.getElementValue(
+              "selected_variable_name"
+            );
+            const updatedVariable = cbk.getElementValue("format_variable_name");
+            const endSuffix = cbk.getElementValue("ending_suffix");
+            const secondLastSuffix = cbk.getElementValue("second_last_suffix");
+            const lastSuffix = cbk.getElementValue("last_suffix");
+            const listInfo = cbk.getVariable(selectedVariable);
+            const formatList = (list) => {
+              if (list.length === 0) {
+                return "";
+              }
+              if (list.length === 1) {
+                return [`${list[0]},`];
+              }
+              const formattedList2 = list.map((item, index) => {
+                if (index === list.length - 1) {
+                  return `${item}${lastSuffix}.`;
+                } else if (index === list.length - 2) {
+                  return `${item}${secondLastSuffix},`;
+                } else {
+                  return `${item}${endSuffix}`;
+                }
+              });
+              return formattedList2;
+            };
+            const formattedList = formatList(listInfo);
+            cbk.log("LIST INFO", formattedList);
+            cbk.setOutput(updatedVariable, formattedList);
             break;
         }
       })

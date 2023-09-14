@@ -81,7 +81,7 @@ interface BackendCBK {
     log(...message: any[]): void;
     getVariableType(name: string): string;
 }
-type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables";
+type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableVariables";
 interface ComponentProps {
     label?: string;
     placeholder?: string;

@@ -358,7 +358,7 @@ export class SetVariable {
         case "update":
           const updateVariable = cbk.getElementValue("update_variable_name");
           const updateVarType = cbk.getVariableType(updateVariable);
-          let updated: string;
+          let updated = "";
           cbk.log("UPDATE VAR NAME", updateVariable);
           cbk.log("UPDATE VAR TYPE", updateVarType);
 
@@ -385,7 +385,7 @@ export class SetVariable {
           );
           const updatedVariable = cbk.getElementValue("format_variable_name");
 
-          const endSuffix = cbk.getElementValue("ending_suffix");
+          const endingSuffix = cbk.getElementValue("ending_suffix");
           const secondLastSuffix = cbk.getElementValue("second_last_suffix");
           const lastSuffix = cbk.getElementValue("last_suffix");
 
@@ -401,11 +401,11 @@ export class SetVariable {
 
             const formattedList = list.map((item, index) => {
               if (index === list.length - 1) {
-                return `${item}${lastSuffix}`;
+                return `${item}${lastSuffix || endingSuffix}`;
               } else if (index === list.length - 2) {
-                return `${item}${secondLastSuffix}`;
+                return `${item}${secondLastSuffix || endingSuffix}`;
               } else {
-                return `${item}${endSuffix}`;
+                return `${item}${endingSuffix}`;
               }
             });
 
@@ -414,9 +414,9 @@ export class SetVariable {
 
           const formattedList = formatList(listInfo);
           cbk.log("Formatted List", formattedList);
-          cbk.log("Normal suffix", endSuffix);
-          cbk.log("Second last suffix", secondLastSuffix);
-          cbk.log("Last suffix", lastSuffix);
+          cbk.log("Ending Suffix", endingSuffix);
+          cbk.log("Suffix for second last item", secondLastSuffix);
+          cbk.log("Suffix for last item", lastSuffix);
 
           cbk.setOutput(updatedVariable, formattedList);
           break;

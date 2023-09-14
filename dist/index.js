@@ -737,7 +737,6 @@ var SetVariable = class {
           format: "format"
         };
         const fn = cbk.getElementValue("fn_selector");
-        cbk.log("FN", fn);
         switch (fnTypes[fn]) {
           case "create":
             const createVariable = cbk.getElementValue("variableName");
@@ -763,6 +762,7 @@ var SetVariable = class {
             const updateVariable = cbk.getElementValue("update_variable_name");
             const updateVarType = cbk.getVariableType(updateVariable);
             let updated;
+            cbk.log("UPDATE VAR NAME", updateVariable);
             cbk.log("UPDATE VAR TYPE", updateVarType);
             if (updateVarType === "DATE") {
               const updateDate = cbk.getElementValue("update_date");
@@ -798,9 +798,9 @@ var SetVariable = class {
               }
               const formattedList2 = list.map((item, index) => {
                 if (index === list.length - 1) {
-                  return `${item}${lastSuffix}.`;
+                  return `${item}${lastSuffix}`;
                 } else if (index === list.length - 2) {
-                  return `${item}${secondLastSuffix},`;
+                  return `${item}${secondLastSuffix}`;
                 } else {
                   return `${item}${endSuffix}`;
                 }
@@ -808,7 +808,10 @@ var SetVariable = class {
               return formattedList2;
             };
             const formattedList = formatList(listInfo);
-            cbk.log("LIST INFO", formattedList);
+            cbk.log("Formatted List", formattedList);
+            cbk.log("Normal suffix", endSuffix);
+            cbk.log("Second last suffix", secondLastSuffix);
+            cbk.log("Last suffix", lastSuffix);
             cbk.setOutput(updatedVariable, formattedList);
             break;
         }

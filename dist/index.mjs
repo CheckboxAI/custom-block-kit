@@ -1105,17 +1105,17 @@ var Sharepoint = class {
           const fileVar = cbk.getElementValue("file");
           const files = cbk.getVariable(fileVar);
           cbk.log("sharepoint: Initiating upload files to sharepoint");
+          const parsedFiles = files ? JSON.parse(files) : [];
+          cbk.log("files: ", parsedFiles);
           yield Promise.all(
-            JSON.parse(files).map((file) => __async(this, null, function* () {
+            parsedFiles.map((file) => __async(this, null, function* () {
               cbk.log("upload: Enter()");
               cbk.log(`upload: file: ${JSON.stringify(file)}`);
               const fileParts = file.fileName.replace(excludedChars, "").split(".");
               const fileNameWithoutPrefix = fileParts[0];
               const fileExtension = fileParts[fileParts.length - 1];
               if (isPDFInDocx(file)) {
-                cbk.log(
-                  `upload: skipped because file type is .pdf.docx`
-                );
+                cbk.log(`upload: skipped because file type is .pdf.docx`);
                 return;
               }
               if (!isFileTypeSelected(file.fileType, fileExtension)) {

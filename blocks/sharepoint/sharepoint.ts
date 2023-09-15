@@ -259,8 +259,8 @@ export class Sharepoint {
               method: "minTruthyObjectValues",
               value: "1",
               message: "Please select at least one file type",
-            }
-          ]
+            },
+          ],
         },
         {
           ref: "prefix_name",
@@ -306,7 +306,9 @@ export class Sharepoint {
       }
 
       function isFileTypeSelected(fileType: string, fileExtension: string) {
-        const fileTypes = cbk.getVariableType(cbk.getElementValue("file")) === "DOC" && cbk.getElementValue("file_types");
+        const fileTypes =
+          cbk.getVariableType(cbk.getElementValue("file")) === "DOC" &&
+          cbk.getElementValue("file_types");
         if (fileTypes && Object.keys(fileTypes)) {
           const checkedValues = Object.entries(fileTypes)
             .filter(([_, checked]) => checked)
@@ -321,7 +323,9 @@ export class Sharepoint {
       }
 
       function isPDFInDocx(file: { fileType: string; fileName: string }) {
-        return file.fileType === 'report' && file.fileName.match(/\.pdf\.docx$/i);
+        return (
+          file.fileType === "report" && file.fileName.match(/\.pdf\.docx$/i)
+        );
       }
 
       if (fn === "upload_file") {
@@ -336,8 +340,11 @@ export class Sharepoint {
 
         cbk.log("sharepoint: Initiating upload files to sharepoint");
 
+        const parsedFiles = files ? JSON.parse(files) : [];
+        cbk.log("files: ", parsedFiles);
+
         await Promise.all(
-          JSON.parse(files).map(async (file: any) => {
+          parsedFiles.map(async (file: any) => {
             cbk.log("upload: Enter()");
             cbk.log(`upload: file: ${JSON.stringify(file)}`);
 
@@ -348,9 +355,7 @@ export class Sharepoint {
             const fileExtension = fileParts[fileParts.length - 1];
 
             if (isPDFInDocx(file)) {
-              cbk.log(
-                `upload: skipped because file type is .pdf.docx`
-              );
+              cbk.log(`upload: skipped because file type is .pdf.docx`);
               return;
             }
 

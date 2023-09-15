@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.7
+
+### Patch Changes
+
+- a4f445c: Added in null check for files in sharepoint
+
 ## 1.4.6
 
 ### Patch Changes

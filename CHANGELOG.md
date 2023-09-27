@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.8
+
+### Patch Changes
+
+- 7b1c718: Ignore invalid date
+
 ## 1.4.7
 
 ### Patch Changes

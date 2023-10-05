@@ -275,6 +275,7 @@ export class Sharepoint {
     },
     runtime: async (cbk) => {
       const fn = cbk.getElementValue("fn_selector");
+      const msgraphClient = await cbk.apiClient.msgraph();
       const excludedChars = /[<>:"/\\|?*%#]/g;
 
       async function getFolderDriveItem(
@@ -282,14 +283,12 @@ export class Sharepoint {
         listId: string,
         folderId: string
       ) {
-        const msgraphClient = await cbk.apiClient.msgraph();
         return await msgraphClient
           .api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`)
           .get();
       }
 
       async function getDriveId(siteId: string, listId: string) {
-        const msgraphClient = await cbk.apiClient.msgraph();
         const { id } = await msgraphClient
           .api(`/sites/${siteId}/lists/${listId}/drive`)
           .get();
@@ -297,7 +296,6 @@ export class Sharepoint {
       }
 
       async function getDriveFromPath(siteID: string, path: string) {
-        const msgraphClient = await cbk.apiClient.msgraph();
         const { id } = await msgraphClient
           .api(`/sites/${siteID}/drive/root:/${path}`)
           .get();
@@ -389,7 +387,6 @@ export class Sharepoint {
             const fileObject = new FileUpload(buffer, fileName, size);
 
             cbk.log("upload: fileObject", fileObject);
-            const msgraphClient = await cbk.apiClient.msgraph();
 
             let uploadSessionURL;
             if (folderId && !isNaN(Number(folderId))) {
@@ -461,13 +458,11 @@ export class Sharepoint {
           }
         }
 
-        const response = await (await cbk.apiClient.msgraph())
-          .api(dirUrl)
-          .post({
-            name: folderName,
-            folder: {},
-            "@microsoft.graph.conflictBehavior": "replace",
-          });
+        const response = await msgraphClient.api(dirUrl).post({
+          name: folderName,
+          folder: {},
+          "@microsoft.graph.conflictBehavior": "replace",
+        });
 
         cbk.log("msgraph: DONE create folder", response);
         const folderPath =

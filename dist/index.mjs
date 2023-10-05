@@ -1067,21 +1067,22 @@ var Sharepoint = class {
       runtime: (cbk) => __async(this, null, function* () {
         var _a, _b;
         const fn = cbk.getElementValue("fn_selector");
+        const msgraphClient = yield cbk.apiClient.msgraph();
         const excludedChars = /[<>:"/\\|?*%#]/g;
         function getFolderDriveItem(siteId, listId, folderId) {
           return __async(this, null, function* () {
-            return yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`).get();
+            return yield msgraphClient.api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`).get();
           });
         }
         function getDriveId(siteId, listId) {
           return __async(this, null, function* () {
-            const { id } = yield cbk.apiClient.msgraph.api(`/sites/${siteId}/lists/${listId}/drive`).get();
+            const { id } = yield msgraphClient.api(`/sites/${siteId}/lists/${listId}/drive`).get();
             return id;
           });
         }
         function getDriveFromPath(siteID, path) {
           return __async(this, null, function* () {
-            const { id } = yield cbk.apiClient.msgraph.api(`/sites/${siteID}/drive/root:/${path}`).get();
+            const { id } = yield msgraphClient.api(`/sites/${siteID}/drive/root:/${path}`).get();
             return id;
           });
         }
@@ -1138,7 +1139,6 @@ var Sharepoint = class {
               const { FileUpload, OneDriveLargeFileUploadTask } = cbk.library.msgraph;
               const fileObject = new FileUpload(buffer, fileName, size);
               cbk.log("upload: fileObject", fileObject);
-              const msgraphClient = cbk.apiClient.msgraph;
               let uploadSessionURL;
               if (folderId && !isNaN(Number(folderId))) {
                 const { id, parentReference } = yield getFolderDriveItem(
@@ -1195,7 +1195,7 @@ var Sharepoint = class {
               dirUrl = `/drives/${id}/root/children`;
             }
           }
-          const response = yield cbk.apiClient.msgraph.api(dirUrl).post({
+          const response = yield msgraphClient.api(dirUrl).post({
             name: folderName,
             folder: {},
             "@microsoft.graph.conflictBehavior": "replace"
@@ -1249,7 +1249,8 @@ function categorizeInput(cbk, categories, input, confidence, fallbackCategory) {
           }
         ]
       };
-      const response = yield cbk.apiClient.openai.completions(data);
+      const openAiClient = yield cbk.apiClient.openai();
+      const response = yield openAiClient.completions(data);
       const responseJson = response.data;
       const output = responseJson.choices[0].message.content;
       const outputJson = JSON.parse(output);

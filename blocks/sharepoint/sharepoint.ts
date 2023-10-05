@@ -275,6 +275,7 @@ export class Sharepoint {
     },
     runtime: async (cbk) => {
       const fn = cbk.getElementValue("fn_selector");
+      const msgraphClient = await cbk.apiClient.msgraph();
       const excludedChars = /[<>:"/\\|?*%#]/g;
 
       async function getFolderDriveItem(
@@ -282,20 +283,20 @@ export class Sharepoint {
         listId: string,
         folderId: string
       ) {
-        return await cbk.apiClient.msgraph
+        return await msgraphClient
           .api(`/sites/${siteId}/lists/${listId}/items/${folderId}/driveItem`)
           .get();
       }
 
       async function getDriveId(siteId: string, listId: string) {
-        const { id } = await cbk.apiClient.msgraph
+        const { id } = await msgraphClient
           .api(`/sites/${siteId}/lists/${listId}/drive`)
           .get();
         return id;
       }
 
       async function getDriveFromPath(siteID: string, path: string) {
-        const { id } = await cbk.apiClient.msgraph
+        const { id } = await msgraphClient
           .api(`/sites/${siteID}/drive/root:/${path}`)
           .get();
         return id;
@@ -339,7 +340,6 @@ export class Sharepoint {
         const files = cbk.getVariable(fileVar);
 
         cbk.log("sharepoint: Initiating upload files to sharepoint");
-
         const parsedFiles = files ? JSON.parse(files) : [];
         cbk.log("files: ", parsedFiles);
 
@@ -387,7 +387,6 @@ export class Sharepoint {
             const fileObject = new FileUpload(buffer, fileName, size);
 
             cbk.log("upload: fileObject", fileObject);
-            const msgraphClient = cbk.apiClient.msgraph;
 
             let uploadSessionURL;
             if (folderId && !isNaN(Number(folderId))) {
@@ -459,7 +458,7 @@ export class Sharepoint {
           }
         }
 
-        const response = await cbk.apiClient.msgraph.api(dirUrl).post({
+        const response = await msgraphClient.api(dirUrl).post({
           name: folderName,
           folder: {},
           "@microsoft.graph.conflictBehavior": "replace",

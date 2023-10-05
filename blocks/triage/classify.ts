@@ -42,7 +42,8 @@ export async function categorizeInput(
     };
 
     // This is called from apiClient so we have rate limiting and so openai key is not exposed
-    const response = await cbk.apiClient.openai.completions(data);
+    const openAiClient = await cbk.apiClient.openai();
+    const response = await openAiClient.completions(data);
 
     const responseJson = response.data;
     const output = responseJson.choices[0].message.content;

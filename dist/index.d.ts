@@ -71,8 +71,8 @@ interface FrontendCBK {
 interface BackendCBK {
     library: any;
     apiClient: {
-        msgraph: Client;
-        openai: any;
+        msgraph: () => Promise<Client>;
+        openai: () => Promise<any>;
     };
     getElementValue(ref: string): string;
     getVariable(name: string): any;

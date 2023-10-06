@@ -254,10 +254,23 @@ export class SetVariable {
               },
             },
             {
-              ref: "format_variable_name",
-              component: "TextInput",
+              ref: "override_variable",
+              component: "SelectInput",
               componentProps: {
-                label: "Formatted Variable Name",
+                label: "Override Variable Value",
+                placeholder: "To override the list variable or not",
+                options: [
+                  { label: "Yes", value: "true" },
+                  { label: "No", value: "false" },
+                ],
+              },
+            },
+            {
+              ref: "new_variable_name",
+              component: "TextInput",
+              showIf: "override_variable == 'false'",
+              componentProps: {
+                label: "New Formatted Variable Name",
                 placeholder: "Enter variable name",
               },
               validators: [
@@ -314,6 +327,34 @@ export class SetVariable {
               componentProps: {
                 label: "Suffix to append to the end of the last list item",
                 placeholder: "Last Suffix",
+              },
+            },
+            {
+              ref: "concatenated_variable",
+              component: "TextInput",
+              componentProps: {
+                label: "Concatenated Variable Name",
+                placeholder:
+                  "Enter variable name, converts ['a','b'] to 'a, b'",
+              },
+              validators: [
+                {
+                  method: "isVariableUnique",
+                  message: "Variable name already exists",
+                },
+                {
+                  method: "matches",
+                  value: "^\\S*$",
+                  message: "Variable name cannot contain spaces",
+                },
+                {
+                  method: "max",
+                  value: "50",
+                  message: "This must be less than 50 characters",
+                },
+              ],
+              output: {
+                as: "TXT",
               },
             },
           ],
@@ -383,29 +424,46 @@ export class SetVariable {
           const selectedVariable = cbk.getElementValue(
             "selected_variable_name"
           );
-          const updatedVariable = cbk.getElementValue("format_variable_name");
+          const overrideVariable = cbk.getElementValue("override_variable");
+          const newFormattedVariable = cbk.getElementValue("new_variable_name");
+          const concatenatedVariable = cbk.getElementValue(
+            "concatenated_variable"
+          );
 
-          const endingSuffix = cbk.getElementValue("ending_suffix");
-          const secondLastSuffix = cbk.getElementValue("second_last_suffix");
-          const lastSuffix = cbk.getElementValue("last_suffix");
+          const defaultSuffix = ",";
+          const defaultEndingSuffix = ".";
+
+          const commonSuffix =
+            cbk.getElementValue("ending_suffix") || defaultSuffix;
+          const secondLastSuffix =
+            cbk.getElementValue("second_last_suffix") || defaultSuffix;
+          const lastSuffix =
+            cbk.getElementValue("last_suffix") || defaultEndingSuffix;
 
           const listInfo = cbk.getVariable(selectedVariable) as string[];
+          let concatenatedResult = "";
+
           const formatList = (list: string[]) => {
             if (list.length === 0) {
-              return "";
+              concatenatedResult = "";
+              return [];
             }
 
             if (list.length === 1) {
-              return [`${list[0]},`];
+              concatenatedResult = `${list[0]}${lastSuffix}`;
+              return [`${list[0]}${lastSuffix}`];
             }
 
             const formattedList = list.map((item, index) => {
               if (index === list.length - 1) {
-                return `${item}${lastSuffix || endingSuffix}`;
+                concatenatedResult += list[index] + lastSuffix + " ";
+                return `${item}${lastSuffix}`;
               } else if (index === list.length - 2) {
-                return `${item}${secondLastSuffix || endingSuffix}`;
+                concatenatedResult += list[index] + secondLastSuffix + " ";
+                return `${item}${secondLastSuffix}`;
               } else {
-                return `${item}${endingSuffix}`;
+                concatenatedResult += list[index] + commonSuffix + " ";
+                return `${item}${commonSuffix}`;
               }
             });
 
@@ -414,11 +472,23 @@ export class SetVariable {
 
           const formattedList = formatList(listInfo);
           cbk.log("Formatted List", formattedList);
-          cbk.log("Ending Suffix", endingSuffix);
+          cbk.log("Common Suffix", commonSuffix);
           cbk.log("Suffix for second last item", secondLastSuffix);
           cbk.log("Suffix for last item", lastSuffix);
 
-          cbk.setOutput(updatedVariable, formattedList);
+          if (overrideVariable === "false") {
+            cbk.log("Override is false, creating a new variable");
+            cbk.setOutput(newFormattedVariable, formattedList);
+          } else {
+            cbk.log("Override is true, updating existing variable");
+            cbk.setOutput(selectedVariable, formattedList);
+          }
+
+          if (concatenatedVariable) {
+            cbk.log("Creating concatenated variable");
+            cbk.setOutput(concatenatedVariable, concatenatedResult);
+          }
+
           break;
       }
     },

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.9
+
+### Patch Changes
+
+- e54d849: Made change to lazy load the api clients
+
 ## 1.4.8
 
 ### Patch Changes

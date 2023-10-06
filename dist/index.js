@@ -843,7 +843,7 @@ var SetVariable = class {
             const formatList = (list) => {
               if (list.length === 0) {
                 concatenatedResult = "";
-                return "";
+                return [];
               }
               if (list.length === 1) {
                 concatenatedResult = `${list[0]}${lastSuffix}`;

@@ -446,7 +446,7 @@ export class SetVariable {
           const formatList = (list: string[]) => {
             if (list.length === 0) {
               concatenatedResult = "";
-              return "";
+              return [];
             }
 
             if (list.length === 1) {

@@ -430,20 +430,20 @@ export class SetVariable {
             "concatenated_variable"
           );
 
-          const defaultSuffix = ",";
-          const defaultEndingSuffix = ".";
-
-          const commonSuffix =
-            cbk.getElementValue("ending_suffix") || defaultSuffix;
-          const secondLastSuffix =
-            cbk.getElementValue("second_last_suffix") || defaultSuffix;
-          const lastSuffix =
-            cbk.getElementValue("last_suffix") || defaultEndingSuffix;
+          const commonSuffix = cbk.getElementValue("ending_suffix");
+          const secondLastSuffix = cbk.getElementValue("second_last_suffix");
+          const lastSuffix = cbk.getElementValue("last_suffix");
 
           const listInfo = cbk.getVariable(selectedVariable) as string[];
+
           let concatenatedResult = "";
 
           const formatList = (list: string[]) => {
+            if (!commonSuffix && !secondLastSuffix && !lastSuffix) {
+              concatenatedResult = list.join("");
+              return list;
+            }
+
             if (list.length === 0) {
               concatenatedResult = "";
               return [];
@@ -456,13 +456,14 @@ export class SetVariable {
 
             const formattedList = list.map((item, index) => {
               if (index === list.length - 1) {
-                concatenatedResult += list[index] + lastSuffix + " ";
+                concatenatedResult += list[index] + lastSuffix;
                 return `${item}${lastSuffix}`;
               } else if (index === list.length - 2) {
-                concatenatedResult += list[index] + secondLastSuffix + " ";
-                return `${item}${secondLastSuffix}`;
+                concatenatedResult +=
+                  list[index] + (secondLastSuffix || commonSuffix);
+                return `${item}${secondLastSuffix || commonSuffix}`;
               } else {
-                concatenatedResult += list[index] + commonSuffix + " ";
+                concatenatedResult += list[index] + commonSuffix;
                 return `${item}${commonSuffix}`;
               }
             });
@@ -471,6 +472,7 @@ export class SetVariable {
           };
 
           const formattedList = formatList(listInfo);
+          cbk.log("Pre-formatted List", listInfo);
           cbk.log("Formatted List", formattedList);
           cbk.log("Common Suffix", commonSuffix);
           cbk.log("Suffix for second last item", secondLastSuffix);

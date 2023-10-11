@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.10
+
+### Patch Changes
+
+- 8a14e64: Updated the logic for set list
+
 ## 1.4.9
 
 ### Patch Changes

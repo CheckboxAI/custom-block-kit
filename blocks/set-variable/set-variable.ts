@@ -440,7 +440,7 @@ export class SetVariable {
 
           const formatList = (list: string[]) => {
             if (!commonSuffix && !secondLastSuffix && !lastSuffix) {
-              concatenatedResult = list.join(" ");
+              concatenatedResult = list.join("");
               return list;
             }
 
@@ -456,14 +456,14 @@ export class SetVariable {
 
             const formattedList = list.map((item, index) => {
               if (index === list.length - 1) {
-                concatenatedResult += list[index] + lastSuffix + " ";
+                concatenatedResult += list[index] + lastSuffix;
                 return `${item}${lastSuffix}`;
               } else if (index === list.length - 2) {
                 concatenatedResult +=
-                  list[index] + (secondLastSuffix || commonSuffix) + " ";
+                  list[index] + (secondLastSuffix || commonSuffix);
                 return `${item}${secondLastSuffix || commonSuffix}`;
               } else {
-                concatenatedResult += list[index] + commonSuffix + " ";
+                concatenatedResult += list[index] + commonSuffix;
                 return `${item}${commonSuffix}`;
               }
             });
@@ -472,6 +472,7 @@ export class SetVariable {
           };
 
           const formattedList = formatList(listInfo);
+          cbk.log("Pre-formatted List", listInfo);
           cbk.log("Formatted List", formattedList);
           cbk.log("Common Suffix", commonSuffix);
           cbk.log("Suffix for second last item", secondLastSuffix);

@@ -812,7 +812,7 @@ var SetVariable = class {
             let concatenatedResult = "";
             const formatList = (list) => {
               if (!commonSuffix && !secondLastSuffix && !lastSuffix) {
-                concatenatedResult = list.join(" ");
+                concatenatedResult = list.join("");
                 return list;
               }
               if (list.length === 0) {
@@ -825,19 +825,20 @@ var SetVariable = class {
               }
               const formattedList2 = list.map((item, index) => {
                 if (index === list.length - 1) {
-                  concatenatedResult += list[index] + lastSuffix + " ";
+                  concatenatedResult += list[index] + lastSuffix;
                   return `${item}${lastSuffix}`;
                 } else if (index === list.length - 2) {
-                  concatenatedResult += list[index] + (secondLastSuffix || commonSuffix) + " ";
+                  concatenatedResult += list[index] + (secondLastSuffix || commonSuffix);
                   return `${item}${secondLastSuffix || commonSuffix}`;
                 } else {
-                  concatenatedResult += list[index] + commonSuffix + " ";
+                  concatenatedResult += list[index] + commonSuffix;
                   return `${item}${commonSuffix}`;
                 }
               });
               return formattedList2;
             };
             const formattedList = formatList(listInfo);
+            cbk.log("Pre-formatted List", listInfo);
             cbk.log("Formatted List", formattedList);
             cbk.log("Common Suffix", commonSuffix);
             cbk.log("Suffix for second last item", secondLastSuffix);

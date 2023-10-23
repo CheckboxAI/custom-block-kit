@@ -941,7 +941,9 @@ var Sharepoint = class {
                 })) : [];
               }),
               whenChanged: (cbk) => {
-                cbk.setElementValue("site_id", void 0);
+                cbk.setElementValue("site_id", "");
+                cbk.setElementValue("drive_id", "");
+                cbk.setElementValue("folder_id", "");
               }
             },
             validators: [
@@ -974,6 +976,7 @@ var Sharepoint = class {
           },
           {
             ref: "site_id",
+            showIf: "!!connection_id",
             component: "SelectInput",
             componentProps: {
               label: "Select Site",
@@ -990,7 +993,7 @@ var Sharepoint = class {
                 })).sort(sortOptions) : [];
               }),
               whenChanged: (cbk, value) => {
-                cbk.setElementValue("drive_id", void 0);
+                cbk.setElementValue("drive_id", "");
               }
             },
             validators: [
@@ -1002,7 +1005,7 @@ var Sharepoint = class {
           },
           {
             ref: "drive_id",
-            showIf: "!!site_id",
+            showIf: "!!connection_id && !!site_id",
             component: "SelectInput",
             componentProps: {
               label: "Select Drive",
@@ -1026,7 +1029,7 @@ var Sharepoint = class {
                 }
               }),
               whenChanged: (cbk) => {
-                cbk.setElementValue("folder_id", void 0);
+                cbk.setElementValue("folder_id", "");
               }
             },
             validators: [
@@ -1038,7 +1041,7 @@ var Sharepoint = class {
           },
           {
             ref: "folder_id",
-            showIf: "!!site_id && !!drive_id",
+            showIf: "!!connection_id && !!site_id && !!drive_id",
             component: "SelectInput",
             componentProps: {
               label: "Select Folder",

@@ -43,7 +43,9 @@ export class Sharepoint {
                 : [];
             },
             whenChanged: (cbk) => {
-              cbk.setElementValue("site_id", undefined);
+              cbk.setElementValue("site_id", "");
+              cbk.setElementValue("drive_id", "");
+              cbk.setElementValue("folder_id", "");
             },
           },
           validators: [
@@ -76,6 +78,7 @@ export class Sharepoint {
         },
         {
           ref: "site_id",
+          showIf: "!!connection_id",
           component: "SelectInput",
           componentProps: {
             label: "Select Site",
@@ -96,7 +99,7 @@ export class Sharepoint {
                 : [];
             },
             whenChanged: (cbk, value) => {
-              cbk.setElementValue("drive_id", undefined);
+              cbk.setElementValue("drive_id", "");
             },
           },
           validators: [
@@ -108,7 +111,7 @@ export class Sharepoint {
         },
         {
           ref: "drive_id",
-          showIf: "!!site_id",
+          showIf: "!!connection_id && !!site_id",
           component: "SelectInput",
           componentProps: {
             label: "Select Drive",
@@ -136,7 +139,7 @@ export class Sharepoint {
               }
             },
             whenChanged: (cbk) => {
-              cbk.setElementValue("folder_id", undefined);
+              cbk.setElementValue("folder_id", "");
             },
           },
           validators: [
@@ -148,7 +151,7 @@ export class Sharepoint {
         },
         {
           ref: "folder_id",
-          showIf: "!!site_id && !!drive_id",
+          showIf: "!!connection_id && !!site_id && !!drive_id",
           component: "SelectInput",
           componentProps: {
             label: "Select Folder",

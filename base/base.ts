@@ -67,6 +67,8 @@ export interface BackendCBK {
   downloadFile(fileKey: string): Promise<any>;
   log(...message: any[]): void;
   getVariableType(name: string): string;
+  hasInput(name: string): boolean;
+  overwriteInput(name: string, value: any): void;
 }
 
 type CustomOptionString =

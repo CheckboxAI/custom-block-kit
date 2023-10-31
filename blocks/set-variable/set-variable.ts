@@ -418,7 +418,11 @@ export class SetVariable {
           }
 
           cbk.log("UPDATE VAR VALUE", updated);
-          cbk.setOutput(updateVariable, updated);
+          if (cbk.hasInput(updateVariable)) {
+            cbk.overwriteInput(updateVariable, updated);
+          } else {
+            cbk.setOutput(updateVariable, updated);
+          }
           break;
         case "format":
           const selectedVariable = cbk.getElementValue(

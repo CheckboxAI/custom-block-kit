@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.4.12
+
+### Patch Changes
+
+- fd38f34: Widget not showing updated values of variable
+
 ## 1.4.11
 
 ### Patch Changes

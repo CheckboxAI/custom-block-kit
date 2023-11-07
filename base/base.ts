@@ -75,7 +75,8 @@ type CustomOptionString =
   | "getDateVariables"
   | "getExistingVariables"
   | "getFileVariables"
-  | "getFormattableVariables";
+  | "getFormattableVariables"
+  | "getTextVariables";
 
 export interface ComponentProps {
   label?: string;

@@ -198,6 +198,29 @@ export class Ticket {
           componentProps: {
             label: "Return ID", // TODO: tooltip icon?
           },
+          validators: [
+            {
+              method: "isVariableUnique",
+              message: "This variable already exists!",
+            },
+            {
+              method: "matches",
+              value: "^\\S*$",
+              message: "Variable name cannot contain spaces",
+            },
+            {
+              method: "max",
+              value: "50",
+              message: "This must be less than 50 characters",
+            },
+            {
+              method: "required",
+              message: "Must enter a variable name",
+            },
+          ],
+          output: {
+            as: "TXT",
+          },
         },
       ],
     },

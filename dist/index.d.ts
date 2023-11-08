@@ -83,9 +83,10 @@ interface BackendCBK {
     hasInput(name: string): boolean;
     overwriteInput(name: string, value: any): void;
 }
-type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableVariables";
+type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableVariables" | "getTextVariables";
 interface ComponentProps {
     label?: string;
+    icon?: string;
     placeholder?: string;
     options?: ComponentOptionProps[] | ((cbk: FrontendCBK, optionState?: OptionState) => Promise<ComponentOptionProps[]>) | CustomOptionString;
     isSearchable?: boolean;
@@ -125,4 +126,8 @@ declare class Triage {
     schema: BaseSchema;
 }
 
-export { DateCalc, SetVariable, Sharepoint, Triage };
+declare class Ticket {
+    schema: BaseSchema;
+}
+
+export { DateCalc, SetVariable, Sharepoint, Ticket, Triage };

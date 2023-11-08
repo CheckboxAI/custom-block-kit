@@ -200,7 +200,7 @@ export class Ticket {
           ],
         },
         {
-          ref: "return_id",
+          ref: "ticket_return_id",
           component: "TextInput",
           componentProps: {
             label: "Return ID",

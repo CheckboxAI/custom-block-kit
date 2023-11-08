@@ -80,6 +80,7 @@ type CustomOptionString =
 
 export interface ComponentProps {
   label?: string;
+  icon?: string; // svg path
   placeholder?: string;
   options?:
     | ComponentOptionProps[]

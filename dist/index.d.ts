@@ -67,6 +67,12 @@ interface FrontendCBK {
     getElementValue(ref: string): string;
     setElementValue(ref: string, value: string | undefined): void;
     getVariableType(name: string): string;
+    getAllVars(): VariableOption[];
+}
+interface VariableOption {
+    label: string;
+    value: string;
+    type: string;
 }
 interface BackendCBK {
     library: any;

@@ -110,6 +110,58 @@ export class Ticket {
                 },
               },
             },
+            {
+              ref: "ticketing_layout_field_selector",
+              component: "TicketingKeyValueInput",
+              showIf: "!!ticket_layout_id",
+              componentProps: {
+                label: "Select Field",
+                placeholder: "--None--",
+                options: async (cbk) => {
+                  const layoutId = cbk.getElementValue("ticket_layout_id");
+                  const allWorkflowVars = cbk.getAllVars();
+                  const response = await cbk.api.get<any>(
+                    `/ticketing/ticket-layouts/${layoutId}`
+                  );
+
+                  const ticketingWorkflowVarMapping: Record<string, string[]> =
+                    {
+                      USER: ["USER"],
+                      SHORT_TXT: ["TXT", "PARA"],
+                      LONG_TXT: ["TXT", "PARA"],
+                      NUM: ["NUM", "SLDR"],
+                      SEL: ["SEL", "RAD", "CBX", "ACT"],
+                      MULTI_SEL: ["LIST", "LP_SIZE", "LP_IND"],
+                      UPLOAD: ["FILE", "DOC"],
+                      DATE_TIME: ["DATE"],
+                    };
+
+                  return response
+                    ? response?.result?.fields?.map((v: any) => {
+                        const mapping =
+                          ticketingWorkflowVarMapping[v.fieldType];
+
+                        const filteredVars = allWorkflowVars.filter((v) =>
+                          mapping ? mapping.includes(v.type) : true
+                        );
+
+                        return {
+                          left: {
+                            type: "Dropdown",
+                            options: filteredVars,
+                            mapping,
+                          },
+                          right: {
+                            type: v.fieldType,
+                            value: v.name,
+                            readOnly: true,
+                          },
+                        };
+                      })
+                    : [];
+                },
+              },
+            },
           ],
         },
         {

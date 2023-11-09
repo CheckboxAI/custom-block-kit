@@ -1598,6 +1598,51 @@ var Ticket = class {
                   whenChanged: (cbk) => {
                   }
                 }
+              },
+              {
+                ref: "ticketing_layout_field_selector",
+                component: "TicketingKeyValueInput",
+                showIf: "!!ticket_layout_id",
+                componentProps: {
+                  label: "Select Field",
+                  placeholder: "--None--",
+                  options: (cbk) => __async(this, null, function* () {
+                    var _a, _b;
+                    const layoutId = cbk.getElementValue("ticket_layout_id");
+                    const allWorkflowVars = cbk.getAllVars();
+                    const response = yield cbk.api.get(
+                      `/ticketing/ticket-layouts/${layoutId}`
+                    );
+                    const ticketingWorkflowVarMapping = {
+                      USER: ["USER"],
+                      SHORT_TXT: ["TXT", "PARA"],
+                      LONG_TXT: ["TXT", "PARA"],
+                      NUM: ["NUM", "SLDR"],
+                      SEL: ["SEL", "RAD", "CBX", "ACT"],
+                      MULTI_SEL: ["LIST", "LP_SIZE", "LP_IND"],
+                      UPLOAD: ["FILE", "DOC"],
+                      DATE_TIME: ["DATE"]
+                    };
+                    return response ? (_b = (_a = response == null ? void 0 : response.result) == null ? void 0 : _a.fields) == null ? void 0 : _b.map((v) => {
+                      const mapping = ticketingWorkflowVarMapping[v.fieldType];
+                      const filteredVars = allWorkflowVars.filter(
+                        (v2) => mapping ? mapping.includes(v2.type) : true
+                      );
+                      return {
+                        left: {
+                          type: "Dropdown",
+                          options: filteredVars,
+                          mapping
+                        },
+                        right: {
+                          type: v.fieldType,
+                          value: v.name,
+                          readOnly: true
+                        }
+                      };
+                    }) : [];
+                  })
+                }
               }
             ]
           },

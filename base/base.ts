@@ -42,7 +42,6 @@ export interface EditorField {
   children?: EditorField[];
   output?: OutputProps;
 }
-
 export interface FrontendCBK {
   api: {
     get: <T extends object>(
@@ -53,6 +52,13 @@ export interface FrontendCBK {
   getElementValue(ref: string): string;
   setElementValue(ref: string, value: string | undefined): void;
   getVariableType(name: string): string;
+  getAllVars(): VariableOption[];
+}
+
+interface VariableOption {
+  label: string;
+  value: string;
+  type: string;
 }
 
 export interface BackendCBK {

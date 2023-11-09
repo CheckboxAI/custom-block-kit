@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.0
+
+### Minor Changes
+
+- db55527: add ticket block
+
 ## 1.4.12
 
 ### Patch Changes

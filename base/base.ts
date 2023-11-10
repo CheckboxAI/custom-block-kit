@@ -89,6 +89,7 @@ export interface ComponentProps {
         optionState?: OptionState
       ) => Promise<ComponentOptionProps[]>)
     | CustomOptionString;
+  inputComponent?: EditorField;
   isSearchable?: boolean;
   format?: string;
   whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;

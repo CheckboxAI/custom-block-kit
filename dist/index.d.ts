@@ -89,6 +89,7 @@ interface ComponentProps {
     icon?: string;
     placeholder?: string;
     options?: ComponentOptionProps[] | ((cbk: FrontendCBK, optionState?: OptionState) => Promise<ComponentOptionProps[]>) | CustomOptionString;
+    inputComponent?: EditorField;
     isSearchable?: boolean;
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;

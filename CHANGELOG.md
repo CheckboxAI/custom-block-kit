@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.1
+
+### Patch Changes
+
+- 5c4c5d0: Added list variables component
+
 ## 1.5.0
 
 ### Minor Changes

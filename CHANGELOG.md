@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.2
+
+### Patch Changes
+
+- 12d04f2: Added in key value input for ticketing
+
 ## 1.5.1
 
 ### Patch Changes

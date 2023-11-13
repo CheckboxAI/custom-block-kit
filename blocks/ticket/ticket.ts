@@ -106,10 +106,20 @@ export class Ticket {
                 },
                 whenChanged: (cbk) => {
                   // TODO: reset variable to ticket field mapping
-                  // cbk.setElementValue("var_to_ticket_field_mapping", "");
+                  // cbk.setElementValue("ticketing_layout_field_selector", "");
                 },
               },
             },
+          ],
+        },
+        {
+          ref: "create_new_ticket_group",
+          showIf: "fn_selector == 'create_new_ticket'",
+          component: "Group",
+          componentProps: {
+            label: "Create new ticket",
+          },
+          children: [
             {
               ref: "ticketing_layout_field_selector",
               component: "TicketingKeyValueInput",
@@ -160,26 +170,6 @@ export class Ticket {
                       })
                     : [];
                 },
-              },
-            },
-          ],
-        },
-        {
-          ref: "create_new_ticket_group",
-          showIf: "fn_selector == 'create_new_ticket'",
-          component: "Group",
-          componentProps: {
-            label: "Create new ticket",
-          },
-          children: [
-            // TODO: DEV-11941 key value mapping component
-            {
-              ref: "var_to_ticket_field_mapping",
-              component: "SelectInput",
-              componentProps: {
-                label:
-                  "Select one or more variable(s) you want to populate in the new ticket.",
-                options: [],
               },
             },
           ],

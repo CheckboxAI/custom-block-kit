@@ -1627,7 +1627,17 @@ var Ticket = class {
                   whenChanged: (cbk) => {
                   }
                 }
-              },
+              }
+            ]
+          },
+          {
+            ref: "create_new_ticket_group",
+            showIf: "fn_selector == 'create_new_ticket'",
+            component: "Group",
+            componentProps: {
+              label: "Create new ticket"
+            },
+            children: [
               {
                 ref: "ticketing_layout_field_selector",
                 component: "TicketingKeyValueInput",
@@ -1671,25 +1681,6 @@ var Ticket = class {
                       };
                     }) : [];
                   })
-                }
-              }
-            ]
-          },
-          {
-            ref: "create_new_ticket_group",
-            showIf: "fn_selector == 'create_new_ticket'",
-            component: "Group",
-            componentProps: {
-              label: "Create new ticket"
-            },
-            children: [
-              // TODO: DEV-11941 key value mapping component
-              {
-                ref: "var_to_ticket_field_mapping",
-                component: "SelectInput",
-                componentProps: {
-                  label: "Select one or more variable(s) you want to populate in the new ticket.",
-                  options: []
                 }
               }
             ]

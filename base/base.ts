@@ -75,6 +75,7 @@ export interface BackendCBK {
   getVariableType(name: string): string;
   hasInput(name: string): boolean;
   overwriteInput(name: string, value: any): void;
+  getAccountId(): string;
 }
 
 type CustomOptionString =
@@ -96,10 +97,16 @@ export interface ComponentProps {
       ) => Promise<ComponentOptionProps[]>)
     | CustomOptionString;
   inputComponent?: EditorField;
+  keyValueComponents?: (cbk: FrontendCBK) => Promise<KeyValueOptionProp[]>;
   isSearchable?: boolean;
   format?: string;
   whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
   variableAutoComplete?: boolean;
+}
+
+export interface KeyValueOptionProp {
+  left: EditorField;
+  right: EditorField;
 }
 
 export interface OptionState {

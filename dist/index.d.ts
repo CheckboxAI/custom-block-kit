@@ -88,7 +88,6 @@ interface BackendCBK {
     getVariableType(name: string): string;
     hasInput(name: string): boolean;
     overwriteInput(name: string, value: any): void;
-    getAccountId(): string;
 }
 type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableVariables" | "getTextVariables";
 interface ComponentProps {

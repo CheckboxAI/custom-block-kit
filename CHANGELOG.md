@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.4
+
+### Patch Changes
+
+- 72c7aa3: Added in changes for KeyValueListInput
+
 ## 1.5.3
 
 ### Patch Changes

@@ -1,4 +1,4 @@
-import type { BaseSchema } from "../../base/base";
+import type { BaseSchema, KeyValueOptionProp } from "../../base/base";
 
 export class Ticket {
   schema: BaseSchema = {
@@ -122,12 +122,12 @@ export class Ticket {
           children: [
             {
               ref: "ticketing_layout_field_selector",
-              component: "TicketingKeyValueInput",
+              component: "KeyValueListInput",
               showIf: "!!ticket_layout_id",
               componentProps: {
                 label: "Select Field",
                 placeholder: "--None--",
-                options: async (cbk) => {
+                keyValueComponents: async (cbk) => {
                   const layoutId = cbk.getElementValue("ticket_layout_id");
                   const allWorkflowVars = cbk.getAllVars();
                   const response = await cbk.api.get<any>(
@@ -157,16 +157,22 @@ export class Ticket {
 
                         return {
                           left: {
-                            type: "Dropdown",
-                            options: filteredVars,
-                            mapping,
+                            ref: "value",
+                            component: "SelectInput",
+                            componentProps: {
+                              options: filteredVars,
+                            },
                           },
                           right: {
-                            type: v.fieldType,
-                            value: v.name,
-                            readOnly: true,
+                            ref: "id",
+                            component: "TextValueDisplay",
+                            componentProps: {
+                              readOnly: true,
+                              value: v.id,
+                              displayText: v.name,
+                            },
                           },
-                        };
+                        } as KeyValueOptionProp;
                       })
                     : [];
                 },

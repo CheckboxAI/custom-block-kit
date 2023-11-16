@@ -96,10 +96,15 @@ interface ComponentProps {
     placeholder?: string;
     options?: ComponentOptionProps[] | ((cbk: FrontendCBK, optionState?: OptionState) => Promise<ComponentOptionProps[]>) | CustomOptionString;
     inputComponent?: EditorField;
+    keyValueComponents?: (cbk: FrontendCBK) => Promise<KeyValueOptionProp[]>;
     isSearchable?: boolean;
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
     variableAutoComplete?: boolean;
+}
+interface KeyValueOptionProp {
+    left: EditorField;
+    right: EditorField;
 }
 interface OptionState {
     searchTerm?: string;

@@ -1611,12 +1611,12 @@ var Ticket = class {
             children: [
               {
                 ref: "ticketing_layout_field_selector",
-                component: "TicketingKeyValueInput",
+                component: "KeyValueListInput",
                 showIf: "!!ticket_layout_id",
                 componentProps: {
                   label: "Select Field",
                   placeholder: "--None--",
-                  options: (cbk) => __async(this, null, function* () {
+                  keyValueComponents: (cbk) => __async(this, null, function* () {
                     var _a, _b;
                     const layoutId = cbk.getElementValue("ticket_layout_id");
                     const allWorkflowVars = cbk.getAllVars();
@@ -1640,14 +1640,20 @@ var Ticket = class {
                       );
                       return {
                         left: {
-                          type: "Dropdown",
-                          options: filteredVars,
-                          mapping
+                          ref: "value",
+                          component: "SelectInput",
+                          componentProps: {
+                            options: filteredVars
+                          }
                         },
                         right: {
-                          type: v.fieldType,
-                          value: v.name,
-                          readOnly: true
+                          ref: "id",
+                          component: "TextValueDisplay",
+                          componentProps: {
+                            readOnly: true,
+                            value: v.id,
+                            displayText: v.name
+                          }
                         }
                       };
                     }) : [];

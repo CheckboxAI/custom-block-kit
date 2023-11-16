@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.5
+
+### Patch Changes
+
+- c007021: Added in missing type
+
 ## 1.5.4
 
 ### Patch Changes

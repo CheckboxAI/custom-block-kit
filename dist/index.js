@@ -1681,7 +1681,8 @@ var Ticket = class {
                           componentProps: {
                             readOnly: true,
                             value: v.id,
-                            displayText: v.name
+                            displayText: v.name,
+                            type: v.fieldType
                           }
                         }
                       };

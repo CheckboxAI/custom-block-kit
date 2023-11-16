@@ -170,6 +170,7 @@ export class Ticket {
                               readOnly: true,
                               value: v.id,
                               displayText: v.name,
+                              type: v.fieldType,
                             },
                           },
                         } as KeyValueOptionProp;

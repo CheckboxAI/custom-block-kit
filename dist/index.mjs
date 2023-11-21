@@ -1768,6 +1768,66 @@ var Ticket = class {
         ]
       },
       runtime: (cbk) => __async(this, null, function* () {
+        try {
+          const fn = cbk.getElementValue("fn_selector");
+          if (fn === "create_new_ticket") {
+            const boardId = cbk.getElementValue("board_id");
+            const ticketLayoutId = cbk.getElementValue("ticket_layout_id");
+            const subjectVariable = cbk.getElementValue("subject_variable");
+            const messageVariable = cbk.getElementValue("message_variable");
+            const subject = cbk.getVariable(subjectVariable);
+            const message = cbk.getVariable(messageVariable);
+            const attachments = JSON.parse(cbk.getElementValue("attachments"));
+            const checkbox = yield cbk.apiClient.checkbox();
+            const ticketingMessageService = checkbox.ticketingMessageService;
+            const ticketingTicketService = checkbox.ticketingTicketService;
+            const keyValueMappings = JSON.parse(cbk.getElementValue("ticketing_layout_field_selector"));
+            const ticketFieldsRaw = {};
+            for (const mapping of keyValueMappings) {
+              if (mapping.id && mapping.value) {
+                ticketFieldsRaw[mapping.id] = cbk.getVariable(mapping.value);
+              }
+            }
+            const validatedTicketFields = yield ticketingTicketService.validateTicketFieldInputs(
+              ticketLayoutId,
+              ticketFieldsRaw
+            );
+            const isPreview = cbk.getIsPreview();
+            const ticket = yield ticketingTicketService.createOneTicket(boardId, {
+              layoutId: ticketLayoutId,
+              subject: `${isPreview ? "{TEST}" : ""} ${subject}`,
+              platformType: "workflow",
+              fields: validatedTicketFields
+            });
+            let attachmentPayload = [];
+            for (const attachment of attachments) {
+              const uploadedFile = JSON.parse(
+                cbk.getVariable(attachment.variable)
+              );
+              if (uploadedFile.length) {
+                attachmentPayload.push({
+                  fileName: uploadedFile[0].fileName,
+                  s3Id: uploadedFile[0].fileKey,
+                  ticketId: ticket.id
+                });
+              }
+            }
+            const user = cbk.getUser();
+            yield ticketingMessageService.createTicketMessageWithAttachments(
+              {
+                platformType: "workflow",
+                ticketId: ticket.id,
+                body: message,
+                senderId: user.userNumber
+              },
+              attachmentPayload
+            );
+            const ticketReturnIdVar = cbk.getElementValue("ticket_return_id");
+            cbk.setOutput(ticketReturnIdVar, ticket.id);
+          }
+        } catch (e) {
+          cbk.log("Error in runtime", e);
+        }
       })
     };
   }

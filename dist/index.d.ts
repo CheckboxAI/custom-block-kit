@@ -79,6 +79,13 @@ interface BackendCBK {
     apiClient: {
         msgraph: () => Promise<Client>;
         openai: () => Promise<any>;
+        checkbox: () => Promise<any>;
+    };
+    getIsPreview(): boolean;
+    getUser(): {
+        userNumber: number;
+        userUUID: string;
+        accountUUID: string;
     };
     getElementValue(ref: string): string;
     getVariable(name: string): any;

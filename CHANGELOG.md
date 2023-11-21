@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.6
+
+### Patch Changes
+
+- 95ff9fe: add runtime to ticketing block
+
 ## 1.5.5
 
 ### Patch Changes

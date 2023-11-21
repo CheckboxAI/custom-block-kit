@@ -1625,6 +1625,7 @@ var Ticket = class {
                     ) : [];
                   }),
                   whenChanged: (cbk) => {
+                    cbk.setElementValue("ticketing_layout_field_selector", "");
                   }
                 }
               }

@@ -105,8 +105,7 @@ export class Ticket {
                     : [];
                 },
                 whenChanged: (cbk) => {
-                  // TODO: reset variable to ticket field mapping
-                  // cbk.setElementValue("ticketing_layout_field_selector", "");
+                  cbk.setElementValue("ticketing_layout_field_selector", "");
                 },
               },
             },

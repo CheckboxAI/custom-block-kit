@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.7
+
+### Patch Changes
+
+- 903848b: ticketing block reset key value mapping when layout change
+
 ## 1.5.6
 
 ### Patch Changes

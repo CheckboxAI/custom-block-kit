@@ -451,7 +451,8 @@ var SetVariable = class {
                     { label: "Number", value: "NUM" },
                     { label: "Datetime", value: "DATE" },
                     { label: "File", value: "FILE" },
-                    { label: "Doc", value: "DOC" }
+                    { label: "Doc", value: "DOC" },
+                    { label: "Checkbox", value: "CBX" }
                   ]
                 }
               },
@@ -556,6 +557,25 @@ var SetVariable = class {
                   label: "Document Value",
                   placeholder: "Enter document value"
                 }
+              },
+              {
+                ref: "checkboxVariableValue",
+                component: "SelectInput",
+                showIf: 'variableType == "CBX"',
+                componentProps: {
+                  label: "Variable Value",
+                  placeholder: "Select variable value",
+                  options: [
+                    {
+                      label: "Yes",
+                      value: "TRUE"
+                    },
+                    {
+                      label: "No",
+                      value: "FALSE"
+                    }
+                  ]
+                }
               }
             ]
           },
@@ -619,6 +639,25 @@ var SetVariable = class {
                 componentProps: {
                   label: "Document Value",
                   placeholder: "Enter document value"
+                }
+              },
+              {
+                ref: "update_checkbox",
+                component: "SelectInput",
+                showIf: '(GET(VARS,update_variable_name)).fieldInputType == "CBX"',
+                componentProps: {
+                  label: "Checkbox Value",
+                  placeholder: "Enter variable value",
+                  options: [
+                    {
+                      label: "Yes",
+                      value: "TRUE"
+                    },
+                    {
+                      label: "No",
+                      value: "FALSE"
+                    }
+                  ]
                 }
               }
             ]
@@ -769,6 +808,8 @@ var SetVariable = class {
               value = cbk.getElementValue("fileVariableValue");
             } else if (variableType === "DOC") {
               value = cbk.getElementValue("docVariableValue");
+            } else if (variableType === "CBX") {
+              value = cbk.getElementValue("checkboxVariableValue");
             } else {
               value = cbk.getElementValue("variableValue");
             }
@@ -790,6 +831,8 @@ var SetVariable = class {
               updated = cbk.getElementValue("update_file");
             } else if (updateVarType === "DOC") {
               updated = cbk.getElementValue("update_doc");
+            } else if (updateVarType === "CBX") {
+              updated = cbk.getElementValue("update_checkbox");
             } else {
               updated = cbk.getElementValue("update_value");
             }

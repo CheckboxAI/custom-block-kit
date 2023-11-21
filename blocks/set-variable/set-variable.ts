@@ -1,4 +1,6 @@
 import type { BaseSchema } from "../../base/base";
+import { dateOptions } from "../date-calc/date-options";
+import timezones from "./timezones.json";
 
 export class SetVariable {
   schema: BaseSchema = {
@@ -34,7 +36,8 @@ export class SetVariable {
                 label: "Update existing variable",
                 value: "update",
               },
-              { label: "Format existing LIST variable", value: "format" },
+              { label: "Format existing LIST variable", value: "formatList" },
+              { label: "Format existing DATE variable", value: "formatDate" },
             ],
           },
         },
@@ -58,6 +61,8 @@ export class SetVariable {
                   { label: "Datetime", value: "DATE" },
                   { label: "File", value: "FILE" },
                   { label: "Doc", value: "DOC" },
+                  { label: "Checkbox", value: "CBX" },
+                  { label: "Radio", value: "RAD" },
                 ],
               },
             },
@@ -165,6 +170,78 @@ export class SetVariable {
                 placeholder: "Enter document value",
               },
             },
+            {
+              ref: "checkboxVariableValue",
+              component: "SelectInput",
+              showIf: 'variableType == "CBX"',
+              componentProps: {
+                label: "Variable Value",
+                placeholder: "Select variable value",
+                options: [
+                  {
+                    label: "Yes",
+                    value: "TRUE",
+                  },
+                  {
+                    label: "No",
+                    value: "FALSE",
+                  },
+                ],
+              },
+            },
+            {
+              ref: "radio_variable_group",
+              component: "Group",
+              showIf: 'variableType == "RAD"',
+              componentProps: {
+                label: "Add Radio Options",
+              },
+              children: [
+                {
+                  ref: "radioVariableValue",
+                  component: "SelectInput",
+                  showIf: "!!radioOptions",
+                  componentProps: {
+                    label: "Select radio option",
+                    options: async (cbk) => {
+                      let options: { label: string; value: string }[] = [];
+                      const radioOptions = cbk.getElementValue("radioOptions");
+                      if (radioOptions instanceof Array) {
+                        options = radioOptions
+                          .filter((x) => x?.option)
+                          .map((x) => ({
+                            label: x.option,
+                            value: x.option,
+                          }));
+                      }
+
+                      return options;
+                    },
+                  },
+                },
+                {
+                  ref: "radioOptions",
+                  component: "ListInput",
+                  componentProps: {
+                    label: "Add options to radio input",
+                    inputComponent: {
+                      ref: "option",
+                      component: "TextInput",
+                      componentProps: {
+                        placeholder: "--None--",
+                        includeEmptyErrorPlaceholder: false,
+                        whenChanged: (cbk, value) => {
+                          console.log("changed inner", value);
+                        },
+                      },
+                    },
+                    whenChanged: (cbk, value) => {
+                      console.log("changed", value);
+                    },
+                  },
+                },
+              ],
+            },
           ],
         },
         {
@@ -234,15 +311,46 @@ export class SetVariable {
                 placeholder: "Enter document value",
               },
             },
+            {
+              ref: "update_checkbox",
+              component: "SelectInput",
+              showIf:
+                '(GET(VARS,update_variable_name)).fieldInputType == "CBX"',
+              componentProps: {
+                label: "Checkbox Value",
+                placeholder: "Enter variable value",
+                options: [
+                  {
+                    label: "Yes",
+                    value: "TRUE",
+                  },
+                  {
+                    label: "No",
+                    value: "FALSE",
+                  },
+                ],
+              },
+            },
+            {
+              ref: "update_checkbox",
+              component: "SelectInput",
+              showIf:
+                '(GET(VARS,update_variable_name)).fieldInputType == "RAD"',
+              componentProps: {
+                label: "Radio Option Value",
+                placeholder: "Select Radio Option",
+                options: "getRadioVariables",
+              },
+            },
           ],
         },
         {
-          ref: "setvar_format_group",
+          ref: "setvar_format_list_group",
           component: "Group",
           componentProps: {
             label: "Format existing LIST variable",
           },
-          showIf: 'fn_selector == "format"',
+          showIf: 'fn_selector == "formatList"',
           children: [
             {
               ref: "selected_variable_name",
@@ -250,7 +358,7 @@ export class SetVariable {
               componentProps: {
                 label: "Selected Variable Name",
                 placeholder: "Select variable name",
-                options: "getFormattableVariables",
+                options: "getFormattableListVariables",
               },
             },
             {
@@ -359,6 +467,47 @@ export class SetVariable {
             },
           ],
         },
+        {
+          ref: "setvar_format_date_group",
+          component: "Group",
+          componentProps: {
+            label: "Format existing DATE variable",
+          },
+          showIf: 'fn_selector == "formatDate"',
+          children: [
+            {
+              ref: "selected_date_variable_name",
+              component: "SelectInput",
+              componentProps: {
+                label: "Selected Variable Name",
+                placeholder: "Select variable name",
+                options: "getDateVariables",
+              },
+            },
+            {
+              ref: "timezones",
+              component: "SelectInput",
+              componentProps: {
+                label: "Timezone",
+                placeholder: "Select timezone",
+                options: timezones.map((x) => ({
+                  label: x.text,
+                  value: x.offset,
+                })),
+                isSearchable: true,
+              },
+            },
+            {
+              ref: "format_date",
+              component: "SelectInput",
+              componentProps: {
+                label: "Format Date as",
+                placeholder: "YYYY/MM/DD",
+                options: dateOptions,
+              },
+            },
+          ],
+        },
       ],
     },
     runtime: async (cbk) => {
@@ -366,7 +515,8 @@ export class SetVariable {
       const fnTypes = {
         create: "create",
         update: "update",
-        format: "format",
+        formatList: "formatList",
+        formatDate: "formatDate",
       };
       const fn = cbk.getElementValue("fn_selector") as keyof typeof fnTypes;
 
@@ -390,6 +540,8 @@ export class SetVariable {
             value = cbk.getElementValue("fileVariableValue");
           } else if (variableType === "DOC") {
             value = cbk.getElementValue("docVariableValue");
+          } else if (variableType === "CBX") {
+            value = cbk.getElementValue("checkboxVariableValue");
           } else {
             value = cbk.getElementValue("variableValue");
           }
@@ -413,6 +565,8 @@ export class SetVariable {
             updated = cbk.getElementValue("update_file");
           } else if (updateVarType === "DOC") {
             updated = cbk.getElementValue("update_doc");
+          } else if (updateVarType === "CBX") {
+            updated = cbk.getElementValue("update_checkbox");
           } else {
             updated = cbk.getElementValue("update_value");
           }
@@ -424,7 +578,7 @@ export class SetVariable {
             cbk.setOutput(updateVariable, updated);
           }
           break;
-        case "format":
+        case "formatList":
           const selectedVariable = cbk.getElementValue(
             "selected_variable_name"
           );
@@ -494,6 +648,14 @@ export class SetVariable {
             cbk.log("Creating concatenated variable");
             cbk.setOutput(concatenatedVariable, concatenatedResult);
           }
+
+          break;
+        case "formatDate":
+          const selectedDateVariableName = cbk.getElementValue(
+            "selected_date_variable_name"
+          );
+          const timezone = cbk.getElementValue("timezones");
+          const formatDate = cbk.getElementValue("format_date");
 
           break;
       }

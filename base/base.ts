@@ -49,7 +49,9 @@ export interface FrontendCBK {
       params?: Record<string, unknown>
     ) => Promise<T>;
   };
-  getElementValue(ref: string): string | any;
+  // This one needs to be any because the general return is string however
+  // for radio option it might be { "option_ref": "option_value" } where option_ref is dynamic.
+  getElementValue(ref: string): any;
   setElementValue(ref: string, value: string | undefined): void;
   getVariableType(name: string): string;
   getAllVars(): VariableOption[];

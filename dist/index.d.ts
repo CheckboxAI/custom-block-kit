@@ -64,7 +64,7 @@ interface FrontendCBK {
     api: {
         get: <T extends object>(url: string, params?: Record<string, unknown>) => Promise<T>;
     };
-    getElementValue(ref: string): string | any;
+    getElementValue(ref: string): any;
     setElementValue(ref: string, value: string | undefined): void;
     getVariableType(name: string): string;
     getAllVars(): VariableOption[];

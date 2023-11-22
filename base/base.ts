@@ -49,10 +49,11 @@ export interface FrontendCBK {
       params?: Record<string, unknown>
     ) => Promise<T>;
   };
-  getElementValue(ref: string): string | any[];
+  getElementValue(ref: string): string | any;
   setElementValue(ref: string, value: string | undefined): void;
   getVariableType(name: string): string;
   getAllVars(): VariableOption[];
+  getRadioOptions(ref: string): string[];
 }
 
 interface VariableOption {
@@ -111,11 +112,7 @@ export interface ComponentProps {
   whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
   variableAutoComplete?: boolean;
   includeEmptyErrorPlaceholder?: boolean;
-  optionsParams?: OptionParam[];
-}
-
-export interface OptionParam {
-  ref?: string;
+  optionsRef?: string;
 }
 
 export interface KeyValueOptionProp {

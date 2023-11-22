@@ -37,7 +37,7 @@ export class SetVariable {
                 value: "update",
               },
               { label: "Format existing LIST variable", value: "formatList" },
-              { label: "Format existing DATE variable", value: "formatDate" },
+              // { label: "Format existing DATE variable", value: "formatDate" },
             ],
           },
         },
@@ -73,6 +73,7 @@ export class SetVariable {
                 label: "Set name of variable as",
                 placeholder: "Enter variable name",
                 format: "clientTimezone",
+                optionsRef: "radioOptions",
               },
               validators: [
                 {
@@ -230,13 +231,15 @@ export class SetVariable {
                       componentProps: {
                         placeholder: "--None--",
                         includeEmptyErrorPlaceholder: false,
-                        whenChanged: (cbk, value) => {
-                          console.log("changed inner", value);
-                        },
                       },
                     },
                     whenChanged: (cbk, value) => {
-                      console.log("changed", value);
+                      const radioVariableValue =
+                        cbk.getElementValue("radioVariableValue");
+
+                      if (value === radioVariableValue) {
+                        cbk.setElementValue("radioVariableValue", "");
+                      }
                     },
                   },
                 },
@@ -332,14 +335,25 @@ export class SetVariable {
               },
             },
             {
-              ref: "update_checkbox",
+              ref: "update_radio",
               component: "SelectInput",
               showIf:
                 '(GET(VARS,update_variable_name)).fieldInputType == "RAD"',
               componentProps: {
                 label: "Radio Option Value",
                 placeholder: "Select Radio Option",
-                options: "getRadioVariables",
+                options: async (cbk) => {
+                  const selectedVariable = cbk.getElementValue(
+                    "update_variable_name"
+                  );
+
+                  const radioOptions = cbk.getRadioOptions(selectedVariable);
+
+                  return radioOptions.map((x) => ({
+                    label: x,
+                    value: x,
+                  }));
+                },
               },
             },
           ],
@@ -542,6 +556,8 @@ export class SetVariable {
             value = cbk.getElementValue("docVariableValue");
           } else if (variableType === "CBX") {
             value = cbk.getElementValue("checkboxVariableValue");
+          } else if (variableType === "RAD") {
+            value = cbk.getElementValue("radioVariableValue");
           } else {
             value = cbk.getElementValue("variableValue");
           }
@@ -567,6 +583,8 @@ export class SetVariable {
             updated = cbk.getElementValue("update_doc");
           } else if (updateVarType === "CBX") {
             updated = cbk.getElementValue("update_checkbox");
+          } else if (updateVarType === "RAD") {
+            updated = cbk.getElementValue("update_radio");
           } else {
             updated = cbk.getElementValue("update_value");
           }

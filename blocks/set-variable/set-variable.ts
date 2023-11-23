@@ -206,13 +206,16 @@ export class SetVariable {
                     label: "Select radio option",
                     options: async (cbk) => {
                       let options: { label: string; value: string }[] = [];
-                      const radioOptions = cbk.getElementValue("radioOptions");
+                      const radioOptions = cbk.getElementValue(
+                        "radioOptions"
+                      ) as Record<string, string>[];
+
                       if (radioOptions instanceof Array) {
                         options = radioOptions
                           .filter((x) => x?.option)
                           .map((x) => ({
-                            label: x.option,
-                            value: x.option,
+                            label: x.option || "",
+                            value: x.option || "",
                           }));
                       }
 
@@ -345,7 +348,7 @@ export class SetVariable {
                 options: async (cbk) => {
                   const selectedVariable = cbk.getElementValue(
                     "update_variable_name"
-                  );
+                  ) as string;
 
                   const radioOptions = cbk.getRadioOptions(selectedVariable);
 

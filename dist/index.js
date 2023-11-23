@@ -1898,11 +1898,13 @@ var SetVariable = class {
                       label: "Select radio option",
                       options: (cbk) => __async(this, null, function* () {
                         let options = [];
-                        const radioOptions = cbk.getElementValue("radioOptions");
+                        const radioOptions = cbk.getElementValue(
+                          "radioOptions"
+                        );
                         if (radioOptions instanceof Array) {
                           options = radioOptions.filter((x) => x == null ? void 0 : x.option).map((x) => ({
-                            label: x.option,
-                            value: x.option
+                            label: x.option || "",
+                            value: x.option || ""
                           }));
                         }
                         return options;

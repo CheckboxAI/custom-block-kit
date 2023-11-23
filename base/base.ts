@@ -49,10 +49,13 @@ export interface FrontendCBK {
       params?: Record<string, unknown>
     ) => Promise<T>;
   };
-  getElementValue(ref: string): string;
+  // This one needs to be any because the general return is string however
+  // for radio option it might be { "option_ref": "option_value" } where option_ref is dynamic.
+  getElementValue(ref: string): string | Record<string, string>[];
   setElementValue(ref: string, value: string | undefined): void;
   getVariableType(name: string): string;
   getAllVars(): VariableOption[];
+  getRadioOptions(ref: string): string[];
 }
 
 interface VariableOption {
@@ -88,8 +91,10 @@ type CustomOptionString =
   | "getDateVariables"
   | "getExistingVariables"
   | "getFileVariables"
-  | "getFormattableVariables"
-  | "getTextVariables";
+  | "getFormattableListVariables"
+  | "getTextVariables"
+  | "getRadioVariables"
+  | "getRadioOptions";
 
 export interface ComponentProps {
   label?: string;
@@ -108,6 +113,8 @@ export interface ComponentProps {
   format?: string;
   whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
   variableAutoComplete?: boolean;
+  includeEmptyErrorPlaceholder?: boolean;
+  optionsRef?: string;
 }
 
 export interface KeyValueOptionProp {
@@ -122,7 +129,7 @@ export interface OptionState {
 
 export interface ComponentOptionProps {
   label: string;
-  value: string;
+  value: string | number;
   defaultChecked?: boolean;
 }
 

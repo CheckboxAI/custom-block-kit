@@ -237,7 +237,10 @@ export class Sharepoint {
           ref: "file_types",
           showIf: (cbk) => {
             if (cbk.getElementValue("fn_selector") === "upload_file") {
-              if (cbk.getVariableType(cbk.getElementValue("file")) === "DOC") {
+              if (
+                cbk.getVariableType(cbk.getElementValue("file") as string) ===
+                "DOC"
+              ) {
                 return true;
               }
             }

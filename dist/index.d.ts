@@ -64,10 +64,11 @@ interface FrontendCBK {
     api: {
         get: <T extends object>(url: string, params?: Record<string, unknown>) => Promise<T>;
     };
-    getElementValue(ref: string): string;
+    getElementValue(ref: string): string | Record<string, string>[];
     setElementValue(ref: string, value: string | undefined): void;
     getVariableType(name: string): string;
     getAllVars(): VariableOption[];
+    getRadioOptions(ref: string): string[];
 }
 interface VariableOption {
     label: string;
@@ -96,7 +97,7 @@ interface BackendCBK {
     hasInput(name: string): boolean;
     overwriteInput(name: string, value: any): void;
 }
-type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableVariables" | "getTextVariables";
+type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableListVariables" | "getTextVariables" | "getRadioVariables" | "getRadioOptions";
 interface ComponentProps {
     label?: string;
     icon?: string;
@@ -108,6 +109,8 @@ interface ComponentProps {
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
     variableAutoComplete?: boolean;
+    includeEmptyErrorPlaceholder?: boolean;
+    optionsRef?: string;
 }
 interface KeyValueOptionProp {
     left: EditorField;
@@ -119,7 +122,7 @@ interface OptionState {
 }
 interface ComponentOptionProps {
     label: string;
-    value: string;
+    value: string | number;
     defaultChecked?: boolean;
 }
 interface ValidatorProps {

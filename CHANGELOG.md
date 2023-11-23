@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.8
+
+### Patch Changes
+
+- f45a48d: Added in RAD/CBX input to set-variable
+
 ## 1.5.7
 
 ### Patch Changes

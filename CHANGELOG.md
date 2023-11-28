@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.9
+
+### Patch Changes
+
+- 495dd9e: Fix empty attachment causes crash
+
 ## 1.5.8
 
 ### Patch Changes

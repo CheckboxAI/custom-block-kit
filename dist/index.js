@@ -3241,6 +3241,7 @@ var Ticket = class {
         ]
       },
       runtime: (cbk) => __async(this, null, function* () {
+        var _a, _b, _c;
         try {
           const fn = cbk.getElementValue("fn_selector");
           if (fn === "create_new_ticket") {
@@ -3250,11 +3251,11 @@ var Ticket = class {
             const messageVariable = cbk.getElementValue("message_variable");
             const subject = cbk.getVariable(subjectVariable);
             const message = cbk.getVariable(messageVariable);
-            const attachments = JSON.parse(cbk.getElementValue("attachments"));
+            const attachments = JSON.parse((_a = cbk.getElementValue("attachments")) != null ? _a : "[]");
             const checkbox = yield cbk.apiClient.checkbox();
             const ticketingMessageService = checkbox.ticketingMessageService;
             const ticketingTicketService = checkbox.ticketingTicketService;
-            const keyValueMappings = JSON.parse(cbk.getElementValue("ticketing_layout_field_selector"));
+            const keyValueMappings = JSON.parse((_b = cbk.getElementValue("ticketing_layout_field_selector")) != null ? _b : "[]");
             const ticketFieldsRaw = {};
             for (const mapping of keyValueMappings) {
               if (mapping.id && mapping.value) {
@@ -3275,7 +3276,7 @@ var Ticket = class {
             let attachmentPayload = [];
             for (const attachment of attachments) {
               const uploadedFile = JSON.parse(
-                cbk.getVariable(attachment.variable)
+                (_c = cbk.getVariable(attachment.variable)) != null ? _c : "[]"
               );
               if (uploadedFile.length) {
                 attachmentPayload.push({

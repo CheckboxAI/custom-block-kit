@@ -295,14 +295,14 @@ export class Ticket {
           const messageVariable = cbk.getElementValue("message_variable");
           const subject = cbk.getVariable(subjectVariable);
           const message = cbk.getVariable(messageVariable);
-          const attachments = JSON.parse(cbk.getElementValue("attachments"));
+          const attachments = JSON.parse(cbk.getElementValue("attachments") ?? '[]');
 
           const checkbox = await cbk.apiClient.checkbox();
           const ticketingMessageService = checkbox.ticketingMessageService;
           const ticketingTicketService = checkbox.ticketingTicketService;
 
           // build ticket fields
-          const keyValueMappings = JSON.parse(cbk.getElementValue("ticketing_layout_field_selector"));
+          const keyValueMappings = JSON.parse(cbk.getElementValue("ticketing_layout_field_selector") ?? '[]');
           const ticketFieldsRaw: Record<string, string> = {};
           for (const mapping of keyValueMappings) {
             if (mapping.id && mapping.value) {
@@ -327,7 +327,7 @@ export class Ticket {
           let attachmentPayload = [];
           for (const attachment of attachments) {
             const uploadedFile = JSON.parse(
-              cbk.getVariable(attachment.variable)
+              cbk.getVariable(attachment.variable) ?? '[]'
             );
             if (uploadedFile.length) {
               attachmentPayload.push({

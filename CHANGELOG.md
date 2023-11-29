@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.5.10
+
+### Patch Changes
+
+- b0a5b55: modify ticket svg
+
 ## 1.5.9
 
 ### Patch Changes

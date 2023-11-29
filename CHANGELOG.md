@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.0
+
+### Minor Changes
+
+- c5c593a: Added feature to support var input for document var in set var block
+
 ## 1.5.10
 
 ### Patch Changes

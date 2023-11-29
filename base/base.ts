@@ -79,6 +79,7 @@ export interface BackendCBK {
   };
   getElementValue(ref: string): string;
   getVariable(name: string): any;
+  getVariableDocValue(name: string): string;
   setOutput(name: string, value: any): void;
   downloadFile(fileKey: string): Promise<any>;
   log(...message: any[]): void;
@@ -94,7 +95,8 @@ type CustomOptionString =
   | "getFormattableListVariables"
   | "getTextVariables"
   | "getRadioVariables"
-  | "getRadioOptions";
+  | "getRadioOptions"
+  | "getOnlyDocVariables";
 
 export interface ComponentProps {
   label?: string;

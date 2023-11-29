@@ -1826,13 +1826,52 @@ var SetVariable = class {
                 }
               },
               {
-                ref: "docVariableValue",
-                component: "DocInput",
-                showIf: 'variableType == "DOC"',
+                ref: "setvar_doc_var_group",
+                component: "Group",
                 componentProps: {
-                  label: "Document Value",
-                  placeholder: "Enter document value"
-                }
+                  label: "Select document template to use"
+                },
+                showIf: 'variableType == "DOC"',
+                children: [
+                  {
+                    ref: "docTemplateType",
+                    component: "RadioGroupInput",
+                    componentProps: {
+                      options: [
+                        {
+                          label: "New template",
+                          value: "new_template"
+                        },
+                        {
+                          label: "Existing document variable",
+                          value: "existing_document_variable"
+                        }
+                      ],
+                      whenChanged: (cbk) => {
+                        cbk.setElementValue("docVariableValue", "");
+                        cbk.setElementValue("existingDocVariableValue", "");
+                      }
+                    }
+                  },
+                  {
+                    ref: "docVariableValue",
+                    component: "DocInput",
+                    showIf: 'docTemplateType == "new_template"',
+                    componentProps: {
+                      label: "Document Value",
+                      placeholder: "Enter document value"
+                    }
+                  },
+                  {
+                    ref: "existingDocVariableValue",
+                    component: "SelectInput",
+                    showIf: 'docTemplateType == "existing_document_variable"',
+                    componentProps: {
+                      label: "Select doc variable",
+                      options: "getOnlyDocVariables"
+                    }
+                  }
+                ]
               },
               {
                 ref: "checkboxVariableValue",
@@ -1961,13 +2000,52 @@ var SetVariable = class {
                 }
               },
               {
-                ref: "update_doc",
-                component: "DocInput",
-                showIf: '(GET(VARS,update_variable_name)).fieldInputType == "DOC"',
+                ref: "update_doc_var_group",
+                component: "Group",
                 componentProps: {
-                  label: "Document Value",
-                  placeholder: "Enter document value"
-                }
+                  label: "Select document template to use"
+                },
+                showIf: '(GET(VARS,update_variable_name)).fieldInputType == "DOC"',
+                children: [
+                  {
+                    ref: "updateDocTemplateType",
+                    component: "RadioGroupInput",
+                    componentProps: {
+                      options: [
+                        {
+                          label: "New template",
+                          value: "new_template"
+                        },
+                        {
+                          label: "Existing document variable",
+                          value: "existing_document_variable"
+                        }
+                      ],
+                      whenChanged: (cbk) => {
+                        cbk.setElementValue("update_doc", "");
+                        cbk.setElementValue("existing_update_doc", "");
+                      }
+                    }
+                  },
+                  {
+                    ref: "update_doc",
+                    component: "DocInput",
+                    showIf: 'updateDocTemplateType == "new_template"',
+                    componentProps: {
+                      label: "Document Value",
+                      placeholder: "Enter document value"
+                    }
+                  },
+                  {
+                    ref: "existing_update_doc",
+                    component: "SelectInput",
+                    showIf: 'updateDocTemplateType == "existing_document_variable"',
+                    componentProps: {
+                      label: "Select doc variable",
+                      options: "getOnlyDocVariables"
+                    }
+                  }
+                ]
               },
               {
                 ref: "update_checkbox",
@@ -2196,7 +2274,12 @@ var SetVariable = class {
             } else if (variableType === "FILE") {
               value = cbk.getElementValue("fileVariableValue");
             } else if (variableType === "DOC") {
-              value = cbk.getElementValue("docVariableValue");
+              if (cbk.getElementValue("docTemplateType") === "new_template") {
+                value = cbk.getElementValue("docVariableValue");
+              } else {
+                const docVar = cbk.getElementValue("existingDocVariableValue");
+                value = cbk.getVariableDocValue(docVar);
+              }
             } else if (variableType === "CBX") {
               value = cbk.getElementValue("checkboxVariableValue");
             } else if (variableType === "RAD") {
@@ -2221,7 +2304,12 @@ var SetVariable = class {
             } else if (updateVarType === "FILE") {
               updated = cbk.getElementValue("update_file");
             } else if (updateVarType === "DOC") {
-              updated = cbk.getElementValue("update_doc");
+              if (cbk.getElementValue("updateDocTemplateType") === "new_template") {
+                updated = cbk.getElementValue("update_doc");
+              } else {
+                const docVar = cbk.getElementValue("existing_update_doc");
+                updated = cbk.getVariableDocValue(docVar);
+              }
             } else if (updateVarType === "CBX") {
               updated = cbk.getElementValue("update_checkbox");
             } else if (updateVarType === "RAD") {

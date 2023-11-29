@@ -90,6 +90,7 @@ interface BackendCBK {
     };
     getElementValue(ref: string): string;
     getVariable(name: string): any;
+    getVariableDocValue(name: string): string;
     setOutput(name: string, value: any): void;
     downloadFile(fileKey: string): Promise<any>;
     log(...message: any[]): void;
@@ -97,7 +98,7 @@ interface BackendCBK {
     hasInput(name: string): boolean;
     overwriteInput(name: string, value: any): void;
 }
-type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableListVariables" | "getTextVariables" | "getRadioVariables" | "getRadioOptions";
+type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableListVariables" | "getTextVariables" | "getRadioVariables" | "getRadioOptions" | "getOnlyDocVariables";
 interface ComponentProps {
     label?: string;
     icon?: string;

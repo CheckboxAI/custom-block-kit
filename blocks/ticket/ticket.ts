@@ -36,6 +36,7 @@ export class Ticket {
                 label: "Select board*",
                 placeholder: "Select a board",
                 isSearchable: true,
+                allowUnselect: true,
                 options: async (cbk) => {
                   const response = await cbk.api.get<any>("/ticketing/boards");
                   return response?.result
@@ -75,14 +76,20 @@ export class Ticket {
               componentProps: {
                 label: "Function",
                 placeholder: "Select a function",
+                allowUnselect: true,
                 options: [
                   {
                     label: "Create new ticket",
                     value: "create_new_ticket",
-                    defaultChecked: true,
                   },
                 ],
               },
+              validators: [
+                {
+                  method: "required",
+                  message: "Please select a function",
+                },
+              ],
             },
             {
               ref: "ticket_layout_id",
@@ -91,6 +98,7 @@ export class Ticket {
                 label: "Ticket layout",
                 placeholder: "Select ticket layout",
                 isSearchable: true,
+                allowUnselect: true,
                 options: async (cbk) => {
                   const response = await cbk.api.get<any>(
                     "/ticketing/ticket-layouts?offset=0&limit=100000&status=live"
@@ -108,6 +116,12 @@ export class Ticket {
                   cbk.setElementValue("ticketing_layout_field_selector", "");
                 },
               },
+              validators: [
+                {
+                  method: "required",
+                  message: "Please select a ticket layout",
+                },
+              ],
             },
           ],
         },
@@ -150,8 +164,13 @@ export class Ticket {
                         const mapping =
                           ticketingWorkflowVarMapping[v.fieldType];
 
-                        const filteredVars = allWorkflowVars.filter((v) =>
-                          mapping ? mapping.includes(v.type) : true
+                        let filteredVars = allWorkflowVars.filter(
+                          (workflowVar) =>
+                            !mapping ||
+                            mapping?.includes(workflowVar.type) ||
+                            // for single select field, we allow COMP variable
+                            (v.fieldType === "SEL" &&
+                              /^COMP\d+/.test(workflowVar.label))
                         );
 
                         return {
@@ -160,6 +179,7 @@ export class Ticket {
                             component: "SelectInput",
                             componentProps: {
                               options: filteredVars,
+                              allowUnselect: !v.metadata?.isReadonly,
                             },
                           },
                           right: {
@@ -195,7 +215,8 @@ export class Ticket {
               componentProps: {
                 label: "Add subject into a ticket*",
                 placeholder: "--None--",
-                options: "getTextVariables",
+                options: "getTicketingEmailSubjectVariables",
+                allowUnselect: true,
               },
               validators: [
                 {
@@ -222,6 +243,7 @@ export class Ticket {
                 label: "Add messages into ticket's conversation thread",
                 placeholder: "--None--",
                 options: "getTextVariables",
+                allowUnselect: true,
               },
             },
           ],
@@ -294,31 +316,38 @@ export class Ticket {
           const subjectVariable = cbk.getElementValue("subject_variable");
           const messageVariable = cbk.getElementValue("message_variable");
           const subject = cbk.getVariable(subjectVariable);
-          const message = cbk.getVariable(messageVariable);
-          const attachments = JSON.parse(cbk.getElementValue("attachments") ?? '[]');
+          const message = messageVariable?.length
+            ? cbk.getVariable(messageVariable)
+            : "";
+          const attachments = JSON.parse(
+            cbk.getElementValue("attachments") ?? "[]"
+          );
 
           const checkbox = await cbk.apiClient.checkbox();
           const ticketingMessageService = checkbox.ticketingMessageService;
           const ticketingTicketService = checkbox.ticketingTicketService;
 
           // build ticket fields
-          const keyValueMappings = JSON.parse(cbk.getElementValue("ticketing_layout_field_selector") ?? '[]');
+          const keyValueMappings = JSON.parse(
+            cbk.getElementValue("ticketing_layout_field_selector") ?? "[]"
+          );
           const ticketFieldsRaw: Record<string, string> = {};
           for (const mapping of keyValueMappings) {
             if (mapping.id && mapping.value) {
               ticketFieldsRaw[mapping.id] = cbk.getVariable(mapping.value);
             }
           }
-          const validatedTicketFields = await ticketingTicketService.validateTicketFieldInputs(
-            ticketLayoutId,
-            ticketFieldsRaw,
-          );
+          const validatedTicketFields =
+            await ticketingTicketService.validateTicketFieldInputs(
+              ticketLayoutId,
+              ticketFieldsRaw
+            );
 
           // create ticket
           const isPreview = cbk.getIsPreview();
           const ticket = await ticketingTicketService.createOneTicket(boardId, {
             layoutId: ticketLayoutId,
-            subject: `${isPreview? '{TEST}' : ''} ${subject}`,
+            subject: `${isPreview ? "{TEST}" : ""} ${subject}`,
             platformType: "workflow",
             fields: validatedTicketFields,
           });
@@ -327,7 +356,7 @@ export class Ticket {
           let attachmentPayload = [];
           for (const attachment of attachments) {
             const uploadedFile = JSON.parse(
-              cbk.getVariable(attachment.variable) ?? '[]'
+              cbk.getVariable(attachment.variable) ?? "[]"
             );
             if (uploadedFile.length) {
               attachmentPayload.push({

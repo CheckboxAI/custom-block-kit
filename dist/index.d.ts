@@ -98,7 +98,7 @@ interface BackendCBK {
     hasInput(name: string): boolean;
     overwriteInput(name: string, value: any): void;
 }
-type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableListVariables" | "getTextVariables" | "getRadioVariables" | "getRadioOptions" | "getOnlyDocVariables";
+type CustomOptionString = "getDateVariables" | "getExistingVariables" | "getFileVariables" | "getFormattableListVariables" | "getTextVariables" | "getTicketingEmailSubjectVariables" | "getRadioVariables" | "getRadioOptions" | "getOnlyDocVariables";
 interface ComponentProps {
     label?: string;
     icon?: string;
@@ -107,6 +107,7 @@ interface ComponentProps {
     inputComponent?: EditorField;
     keyValueComponents?: (cbk: FrontendCBK) => Promise<KeyValueOptionProp[]>;
     isSearchable?: boolean;
+    allowUnselect?: boolean;
     format?: string;
     whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
     variableAutoComplete?: boolean;

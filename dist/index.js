@@ -3090,6 +3090,7 @@ var Ticket = class {
                   label: "Select board*",
                   placeholder: "Select a board",
                   isSearchable: true,
+                  allowUnselect: true,
                   options: (cbk) => __async(this, null, function* () {
                     const response = yield cbk.api.get("/ticketing/boards");
                     return (response == null ? void 0 : response.result) ? response.result.map(
@@ -3127,14 +3128,20 @@ var Ticket = class {
                 componentProps: {
                   label: "Function",
                   placeholder: "Select a function",
+                  allowUnselect: true,
                   options: [
                     {
                       label: "Create new ticket",
-                      value: "create_new_ticket",
-                      defaultChecked: true
+                      value: "create_new_ticket"
                     }
                   ]
-                }
+                },
+                validators: [
+                  {
+                    method: "required",
+                    message: "Please select a function"
+                  }
+                ]
               },
               {
                 ref: "ticket_layout_id",
@@ -3143,6 +3150,7 @@ var Ticket = class {
                   label: "Ticket layout",
                   placeholder: "Select ticket layout",
                   isSearchable: true,
+                  allowUnselect: true,
                   options: (cbk) => __async(this, null, function* () {
                     var _a, _b;
                     const response = yield cbk.api.get(
@@ -3158,7 +3166,13 @@ var Ticket = class {
                   whenChanged: (cbk) => {
                     cbk.setElementValue("ticketing_layout_field_selector", "");
                   }
-                }
+                },
+                validators: [
+                  {
+                    method: "required",
+                    message: "Please select a ticket layout"
+                  }
+                ]
               }
             ]
           },
@@ -3195,16 +3209,19 @@ var Ticket = class {
                       DATE_TIME: ["DATE"]
                     };
                     return response ? (_b = (_a = response == null ? void 0 : response.result) == null ? void 0 : _a.fields) == null ? void 0 : _b.map((v) => {
+                      var _a2;
                       const mapping = ticketingWorkflowVarMapping[v.fieldType];
-                      const filteredVars = allWorkflowVars.filter(
-                        (v2) => mapping ? mapping.includes(v2.type) : true
+                      let filteredVars = allWorkflowVars.filter(
+                        (workflowVar) => !mapping || (mapping == null ? void 0 : mapping.includes(workflowVar.type)) || // for single select field, we allow COMP variable
+                        v.fieldType === "SEL" && /^COMP\d+/.test(workflowVar.label)
                       );
                       return {
                         left: {
                           ref: "value",
                           component: "SelectInput",
                           componentProps: {
-                            options: filteredVars
+                            options: filteredVars,
+                            allowUnselect: !((_a2 = v.metadata) == null ? void 0 : _a2.isReadonly)
                           }
                         },
                         right: {
@@ -3239,7 +3256,8 @@ var Ticket = class {
                 componentProps: {
                   label: "Add subject into a ticket*",
                   placeholder: "--None--",
-                  options: "getTextVariables"
+                  options: "getTicketingEmailSubjectVariables",
+                  allowUnselect: true
                 },
                 validators: [
                   {
@@ -3265,7 +3283,8 @@ var Ticket = class {
                 componentProps: {
                   label: "Add messages into ticket's conversation thread",
                   placeholder: "--None--",
-                  options: "getTextVariables"
+                  options: "getTextVariables",
+                  allowUnselect: true
                 }
               }
             ]
@@ -3338,12 +3357,16 @@ var Ticket = class {
             const subjectVariable = cbk.getElementValue("subject_variable");
             const messageVariable = cbk.getElementValue("message_variable");
             const subject = cbk.getVariable(subjectVariable);
-            const message = cbk.getVariable(messageVariable);
-            const attachments = JSON.parse((_a = cbk.getElementValue("attachments")) != null ? _a : "[]");
+            const message = (messageVariable == null ? void 0 : messageVariable.length) ? cbk.getVariable(messageVariable) : "";
+            const attachments = JSON.parse(
+              (_a = cbk.getElementValue("attachments")) != null ? _a : "[]"
+            );
             const checkbox = yield cbk.apiClient.checkbox();
             const ticketingMessageService = checkbox.ticketingMessageService;
             const ticketingTicketService = checkbox.ticketingTicketService;
-            const keyValueMappings = JSON.parse((_b = cbk.getElementValue("ticketing_layout_field_selector")) != null ? _b : "[]");
+            const keyValueMappings = JSON.parse(
+              (_b = cbk.getElementValue("ticketing_layout_field_selector")) != null ? _b : "[]"
+            );
             const ticketFieldsRaw = {};
             for (const mapping of keyValueMappings) {
               if (mapping.id && mapping.value) {

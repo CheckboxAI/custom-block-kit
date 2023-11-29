@@ -94,6 +94,7 @@ type CustomOptionString =
   | "getFileVariables"
   | "getFormattableListVariables"
   | "getTextVariables"
+  | "getTicketingEmailSubjectVariables"
   | "getRadioVariables"
   | "getRadioOptions"
   | "getOnlyDocVariables";
@@ -112,6 +113,7 @@ export interface ComponentProps {
   inputComponent?: EditorField;
   keyValueComponents?: (cbk: FrontendCBK) => Promise<KeyValueOptionProp[]>;
   isSearchable?: boolean;
+  allowUnselect?: boolean;
   format?: string;
   whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
   variableAutoComplete?: boolean;

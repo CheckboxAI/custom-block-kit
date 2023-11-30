@@ -179,7 +179,7 @@ export class Ticket {
                             component: "SelectInput",
                             componentProps: {
                               options: filteredVars,
-                              allowUnselect: !v.metadata?.isReadonly,
+                              allowUnselect: !v.metadata?.isReadOnly,
                             },
                           },
                           right: {

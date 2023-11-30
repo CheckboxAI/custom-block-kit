@@ -3221,7 +3221,7 @@ var Ticket = class {
                           component: "SelectInput",
                           componentProps: {
                             options: filteredVars,
-                            allowUnselect: !((_a2 = v.metadata) == null ? void 0 : _a2.isReadonly)
+                            allowUnselect: !((_a2 = v.metadata) == null ? void 0 : _a2.isReadOnly)
                           }
                         },
                         right: {

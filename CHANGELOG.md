@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.2
+
+### Patch Changes
+
+- 3adeda3: add showPageRef for text field
+
 ## 1.6.1
 
 ### Patch Changes

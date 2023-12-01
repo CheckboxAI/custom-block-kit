@@ -113,6 +113,7 @@ interface ComponentProps {
     variableAutoComplete?: boolean;
     includeEmptyErrorPlaceholder?: boolean;
     optionsRef?: string;
+    showPageRef?: boolean;
 }
 interface KeyValueOptionProp {
     left: EditorField;

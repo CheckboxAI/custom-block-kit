@@ -36,7 +36,6 @@ export class Ticket {
                 label: "Select board*",
                 placeholder: "Select a board",
                 isSearchable: true,
-                allowUnselect: true,
                 options: async (cbk) => {
                   const response = await cbk.api.get<any>("/ticketing/boards");
                   return response?.result
@@ -76,7 +75,6 @@ export class Ticket {
               componentProps: {
                 label: "Function",
                 placeholder: "Select a function",
-                allowUnselect: true,
                 options: [
                   {
                     label: "Create new ticket",
@@ -98,7 +96,6 @@ export class Ticket {
                 label: "Ticket layout",
                 placeholder: "Select ticket layout",
                 isSearchable: true,
-                allowUnselect: true,
                 options: async (cbk) => {
                   const response = await cbk.api.get<any>(
                     "/ticketing/ticket-layouts?offset=0&limit=100000&status=live"
@@ -179,7 +176,7 @@ export class Ticket {
                             component: "SelectInput",
                             componentProps: {
                               options: filteredVars,
-                              allowUnselect: !v.metadata?.isReadonly,
+                              allowUnselect: !v.metadata?.isReadOnly,
                             },
                           },
                           right: {
@@ -216,7 +213,6 @@ export class Ticket {
                 label: "Add subject into a ticket*",
                 placeholder: "--None--",
                 options: "getTicketingEmailSubjectVariables",
-                allowUnselect: true,
               },
               validators: [
                 {
@@ -243,7 +239,6 @@ export class Ticket {
                 label: "Add messages into ticket's conversation thread",
                 placeholder: "--None--",
                 options: "getTextVariables",
-                allowUnselect: true,
               },
             },
           ],
@@ -279,6 +274,7 @@ export class Ticket {
           component: "TextInput",
           componentProps: {
             label: "Return ID",
+            showPageRef: true,
           },
           validators: [
             {

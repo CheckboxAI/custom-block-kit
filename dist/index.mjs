@@ -3061,7 +3061,6 @@ var Ticket = class {
                   label: "Select board*",
                   placeholder: "Select a board",
                   isSearchable: true,
-                  allowUnselect: true,
                   options: (cbk) => __async(this, null, function* () {
                     const response = yield cbk.api.get("/ticketing/boards");
                     return (response == null ? void 0 : response.result) ? response.result.map(
@@ -3099,7 +3098,6 @@ var Ticket = class {
                 componentProps: {
                   label: "Function",
                   placeholder: "Select a function",
-                  allowUnselect: true,
                   options: [
                     {
                       label: "Create new ticket",
@@ -3121,7 +3119,6 @@ var Ticket = class {
                   label: "Ticket layout",
                   placeholder: "Select ticket layout",
                   isSearchable: true,
-                  allowUnselect: true,
                   options: (cbk) => __async(this, null, function* () {
                     var _a, _b;
                     const response = yield cbk.api.get(
@@ -3192,7 +3189,7 @@ var Ticket = class {
                           component: "SelectInput",
                           componentProps: {
                             options: filteredVars,
-                            allowUnselect: !((_a2 = v.metadata) == null ? void 0 : _a2.isReadonly)
+                            allowUnselect: !((_a2 = v.metadata) == null ? void 0 : _a2.isReadOnly)
                           }
                         },
                         right: {
@@ -3227,8 +3224,7 @@ var Ticket = class {
                 componentProps: {
                   label: "Add subject into a ticket*",
                   placeholder: "--None--",
-                  options: "getTicketingEmailSubjectVariables",
-                  allowUnselect: true
+                  options: "getTicketingEmailSubjectVariables"
                 },
                 validators: [
                   {
@@ -3254,8 +3250,7 @@ var Ticket = class {
                 componentProps: {
                   label: "Add messages into ticket's conversation thread",
                   placeholder: "--None--",
-                  options: "getTextVariables",
-                  allowUnselect: true
+                  options: "getTextVariables"
                 }
               }
             ]
@@ -3290,7 +3285,8 @@ var Ticket = class {
             ref: "ticket_return_id",
             component: "TextInput",
             componentProps: {
-              label: "Return ID"
+              label: "Return ID",
+              showPageRef: true
             },
             validators: [
               {

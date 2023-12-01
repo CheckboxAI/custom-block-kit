@@ -119,6 +119,7 @@ export interface ComponentProps {
   variableAutoComplete?: boolean;
   includeEmptyErrorPlaceholder?: boolean;
   optionsRef?: string;
+  showPageRef?: boolean;
 }
 
 export interface KeyValueOptionProp {

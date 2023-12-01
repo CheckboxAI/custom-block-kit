@@ -3314,7 +3314,8 @@ var Ticket = class {
             ref: "ticket_return_id",
             component: "TextInput",
             componentProps: {
-              label: "Return ID"
+              label: "Return ID",
+              showPageRef: true
             },
             validators: [
               {

@@ -274,6 +274,7 @@ export class Ticket {
           component: "TextInput",
           componentProps: {
             label: "Return ID",
+            showPageRef: true,
           },
           validators: [
             {

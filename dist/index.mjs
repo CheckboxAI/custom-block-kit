@@ -1882,11 +1882,11 @@ var SetVariable = class {
                   placeholder: "Select variable value",
                   options: [
                     {
-                      label: "Yes",
+                      label: "Checked",
                       value: "TRUE"
                     },
                     {
-                      label: "No",
+                      label: "Unchecked",
                       value: "FALSE"
                     }
                   ]
@@ -2056,11 +2056,11 @@ var SetVariable = class {
                   placeholder: "Enter variable value",
                   options: [
                     {
-                      label: "Yes",
+                      label: "Checked",
                       value: "TRUE"
                     },
                     {
-                      label: "No",
+                      label: "Unchecked",
                       value: "FALSE"
                     }
                   ]

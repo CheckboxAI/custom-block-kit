@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.3
+
+### Patch Changes
+
+- 9543c77: Updating label of checkbox options for set-variable
+
 ## 1.6.2
 
 ### Patch Changes

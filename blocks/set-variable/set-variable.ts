@@ -219,11 +219,11 @@ export class SetVariable {
                 placeholder: "Select variable value",
                 options: [
                   {
-                    label: "Yes",
+                    label: "Checked",
                     value: "TRUE",
                   },
                   {
-                    label: "No",
+                    label: "Unchecked",
                     value: "FALSE",
                   },
                 ],
@@ -352,7 +352,8 @@ export class SetVariable {
               componentProps: {
                 label: "Select document template to use",
               },
-              showIf: '(GET(VARS,update_variable_name)).fieldInputType == "DOC"',
+              showIf:
+                '(GET(VARS,update_variable_name)).fieldInputType == "DOC"',
               children: [
                 {
                   ref: "updateDocTemplateType",
@@ -386,7 +387,8 @@ export class SetVariable {
                 {
                   ref: "existing_update_doc",
                   component: "SelectInput",
-                  showIf: 'updateDocTemplateType == "existing_document_variable"',
+                  showIf:
+                    'updateDocTemplateType == "existing_document_variable"',
                   componentProps: {
                     label: "Select doc variable",
                     options: "getOnlyDocVariables",
@@ -404,11 +406,11 @@ export class SetVariable {
                 placeholder: "Enter variable value",
                 options: [
                   {
-                    label: "Yes",
+                    label: "Checked",
                     value: "TRUE",
                   },
                   {
-                    label: "No",
+                    label: "Unchecked",
                     value: "FALSE",
                   },
                 ],
@@ -636,8 +638,8 @@ export class SetVariable {
             if (cbk.getElementValue("docTemplateType") === "new_template") {
               value = cbk.getElementValue("docVariableValue");
             } else {
-              const docVar = cbk.getElementValue("existingDocVariableValue")
-              value = cbk.getVariableDocValue(docVar)
+              const docVar = cbk.getElementValue("existingDocVariableValue");
+              value = cbk.getVariableDocValue(docVar);
             }
           } else if (variableType === "CBX") {
             value = cbk.getElementValue("checkboxVariableValue");
@@ -665,11 +667,13 @@ export class SetVariable {
           } else if (updateVarType === "FILE") {
             updated = cbk.getElementValue("update_file");
           } else if (updateVarType === "DOC") {
-            if (cbk.getElementValue("updateDocTemplateType") === "new_template") {
+            if (
+              cbk.getElementValue("updateDocTemplateType") === "new_template"
+            ) {
               updated = cbk.getElementValue("update_doc");
             } else {
               const docVar = cbk.getElementValue("existing_update_doc");
-              updated = cbk.getVariableDocValue(docVar)
+              updated = cbk.getVariableDocValue(docVar);
             }
           } else if (updateVarType === "CBX") {
             updated = cbk.getElementValue("update_checkbox");

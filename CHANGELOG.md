@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.4
+
+### Patch Changes
+
+- 9daf7e8: Reverted the value of formatList
+
 ## 1.6.3
 
 ### Patch Changes

@@ -1869,7 +1869,8 @@ var SetVariable = class {
                       options: [
                         {
                           label: "New template",
-                          value: "new_template"
+                          value: "new_template",
+                          defaultChecked: true
                         },
                         {
                           label: "Existing document variable",
@@ -2044,7 +2045,8 @@ var SetVariable = class {
                       options: [
                         {
                           label: "New template",
-                          value: "new_template"
+                          value: "new_template",
+                          defaultChecked: true
                         },
                         {
                           label: "Existing document variable",
@@ -2305,11 +2307,11 @@ var SetVariable = class {
             } else if (variableType === "FILE") {
               value = cbk.getElementValue("fileVariableValue");
             } else if (variableType === "DOC") {
-              if (cbk.getElementValue("docTemplateType") === "new_template") {
-                value = cbk.getElementValue("docVariableValue");
-              } else {
+              if (cbk.getElementValue("docTemplateType") === "existing_document_variable") {
                 const docVar = cbk.getElementValue("existingDocVariableValue");
                 value = cbk.getVariableDocValue(docVar);
+              } else {
+                value = cbk.getElementValue("docVariableValue");
               }
             } else if (variableType === "CBX") {
               value = cbk.getElementValue("checkboxVariableValue");
@@ -2335,11 +2337,11 @@ var SetVariable = class {
             } else if (updateVarType === "FILE") {
               updated = cbk.getElementValue("update_file");
             } else if (updateVarType === "DOC") {
-              if (cbk.getElementValue("updateDocTemplateType") === "new_template") {
-                updated = cbk.getElementValue("update_doc");
-              } else {
+              if (cbk.getElementValue("updateDocTemplateType") === "existing_document_variable") {
                 const docVar = cbk.getElementValue("existing_update_doc");
                 updated = cbk.getVariableDocValue(docVar);
+              } else {
+                updated = cbk.getElementValue("update_doc");
               }
             } else if (updateVarType === "CBX") {
               updated = cbk.getElementValue("update_checkbox");

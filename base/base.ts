@@ -120,6 +120,7 @@ export interface ComponentProps {
   includeEmptyErrorPlaceholder?: boolean;
   optionsRef?: string;
   showPageRef?: boolean;
+  addLabel?: string;
 }
 
 export interface KeyValueOptionProp {

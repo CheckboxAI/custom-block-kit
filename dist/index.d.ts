@@ -114,6 +114,7 @@ interface ComponentProps {
     includeEmptyErrorPlaceholder?: boolean;
     optionsRef?: string;
     showPageRef?: boolean;
+    addLabel?: string;
 }
 interface KeyValueOptionProp {
     left: EditorField;

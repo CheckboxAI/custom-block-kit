@@ -267,6 +267,7 @@ export class SetVariable {
                   component: "ListInput",
                   componentProps: {
                     label: "Add options to radio input",
+                    addLabel: "Add Option",
                     inputComponent: {
                       ref: "option",
                       component: "TextInput",

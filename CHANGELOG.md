@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.5
+
+### Patch Changes
+
+- 6a4a35b: Remove PARA from keyvaluemapping
+
 ## 1.6.4
 
 ### Patch Changes

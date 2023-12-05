@@ -1730,7 +1730,7 @@ var SetVariable = class {
                   label: "Update existing variable",
                   value: "update"
                 },
-                { label: "Format existing LIST variable", value: "formatList" }
+                { label: "Format existing LIST variable", value: "format" }
                 // { label: "Format existing DATE variable", value: "formatDate" },
               ]
             }
@@ -1955,6 +1955,7 @@ var SetVariable = class {
                     component: "ListInput",
                     componentProps: {
                       label: "Add options to radio input",
+                      addLabel: "Add Option",
                       inputComponent: {
                         ref: "option",
                         component: "TextInput",
@@ -2122,7 +2123,7 @@ var SetVariable = class {
             componentProps: {
               label: "Format existing LIST variable"
             },
-            showIf: 'fn_selector == "formatList"',
+            showIf: 'fn_selector == "format"',
             children: [
               {
                 ref: "selected_variable_name",
@@ -2284,10 +2285,11 @@ var SetVariable = class {
         const fnTypes = {
           create: "create",
           update: "update",
-          formatList: "formatList",
+          format: "format",
           formatDate: "formatDate"
         };
         const fn = cbk.getElementValue("fn_selector");
+        cbk.log("FUNCTION TYPE", fn);
         switch (fnTypes[fn]) {
           case "create":
             const createVariable = cbk.getElementValue("variableName");
@@ -2353,7 +2355,7 @@ var SetVariable = class {
               cbk.setOutput(updateVariable, updated);
             }
             break;
-          case "formatList":
+          case "format":
             const selectedVariable = cbk.getElementValue(
               "selected_variable_name"
             );

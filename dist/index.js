@@ -3199,8 +3199,8 @@ var Ticket = class {
                     );
                     const ticketingWorkflowVarMapping = {
                       USER: ["USER"],
-                      SHORT_TXT: ["TXT", "PARA"],
-                      LONG_TXT: ["TXT", "PARA"],
+                      SHORT_TXT: ["TXT"],
+                      LONG_TXT: ["TXT"],
                       NUM: ["NUM", "SLDR"],
                       SEL: ["SEL", "RAD", "CBX", "ACT"],
                       MULTI_SEL: ["LIST", "LP_SIZE", "LP_IND"],

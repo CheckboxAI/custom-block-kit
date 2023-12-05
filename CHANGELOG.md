@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.6
+
+### Patch Changes
+
+- 2e71f78: Default checked value to match the existing data
+
 ## 1.6.5
 
 ### Patch Changes

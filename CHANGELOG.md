@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.7
+
+### Patch Changes
+
+- 5a41440: fix all attachments should be saved in cbk ticketing
+
 ## 1.6.6
 
 ### Patch Changes

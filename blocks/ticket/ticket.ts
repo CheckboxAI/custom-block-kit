@@ -315,7 +315,7 @@ export class Ticket {
           const message = messageVariable?.length
             ? cbk.getVariable(messageVariable)
             : "";
-          const attachments = JSON.parse(
+          const attachmentVariables = JSON.parse(
             cbk.getElementValue("attachments") ?? "[]"
           );
 
@@ -350,14 +350,14 @@ export class Ticket {
 
           // build attachment payload
           let attachmentPayload = [];
-          for (const attachment of attachments) {
-            const uploadedFile = JSON.parse(
-              cbk.getVariable(attachment.variable) ?? "[]"
+          for (const attachmentVar of attachmentVariables) {
+            const uploadedFiles = JSON.parse(
+              cbk.getVariable(attachmentVar.variable) ?? "[]"
             );
-            if (uploadedFile.length) {
+            for (const uploadedFile of uploadedFiles) {
               attachmentPayload.push({
-                fileName: uploadedFile[0].fileName,
-                s3Id: uploadedFile[0].fileKey,
+                fileName: uploadedFile.fileName,
+                s3Id: uploadedFile.fileKey,
                 ticketId: ticket.id,
               });
             }

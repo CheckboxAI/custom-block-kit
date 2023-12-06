@@ -3329,7 +3329,7 @@ var Ticket = class {
             const messageVariable = cbk.getElementValue("message_variable");
             const subject = cbk.getVariable(subjectVariable);
             const message = (messageVariable == null ? void 0 : messageVariable.length) ? cbk.getVariable(messageVariable) : "";
-            const attachments = JSON.parse(
+            const attachmentVariables = JSON.parse(
               (_a = cbk.getElementValue("attachments")) != null ? _a : "[]"
             );
             const checkbox = yield cbk.apiClient.checkbox();
@@ -3356,14 +3356,14 @@ var Ticket = class {
               fields: validatedTicketFields
             });
             let attachmentPayload = [];
-            for (const attachment of attachments) {
-              const uploadedFile = JSON.parse(
-                (_c = cbk.getVariable(attachment.variable)) != null ? _c : "[]"
+            for (const attachmentVar of attachmentVariables) {
+              const uploadedFiles = JSON.parse(
+                (_c = cbk.getVariable(attachmentVar.variable)) != null ? _c : "[]"
               );
-              if (uploadedFile.length) {
+              for (const uploadedFile of uploadedFiles) {
                 attachmentPayload.push({
-                  fileName: uploadedFile[0].fileName,
-                  s3Id: uploadedFile[0].fileKey,
+                  fileName: uploadedFile.fileName,
+                  s3Id: uploadedFile.fileKey,
                   ticketId: ticket.id
                 });
               }

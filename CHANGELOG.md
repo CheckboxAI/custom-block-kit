@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.8
+
+### Patch Changes
+
+- fa50d72: Added safeguard to the JSON string check for triaging
+
 ## 1.6.7
 
 ### Patch Changes

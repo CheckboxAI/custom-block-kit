@@ -3004,7 +3004,7 @@ var Triage = class {
         const confidence = parseFloat(cbk.getElementValue("confidence")) || 0.5;
         const outputVariableName = cbk.getElementValue("outputVariableName");
         const fallbackCategory = cbk.getElementValue("fallbackCategory") || "Catchall";
-        const stringified = JSON.stringify(formCategories);
+        const stringified = typeof formCategories === "string" ? formCategories : JSON.stringify(formCategories);
         const categories = JSON.parse(stringified).map(
           (category) => {
             return {
@@ -3013,6 +3013,7 @@ var Triage = class {
             };
           }
         );
+        cbk.log("Parsed categories: ", categories);
         const result = yield categorizeInput(
           cbk,
           categories,

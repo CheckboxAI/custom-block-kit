@@ -107,6 +107,7 @@ export class Triage {
     },
     runtime: async (cbk) => {
       const formCategories = cbk.getElementValue("categories");
+
       const input = cbk.library.getVariable(
         cbk.getElementValue("inputVariable")
       );
@@ -120,7 +121,12 @@ export class Triage {
         label: string;
         description: string;
       };
-      const stringified = JSON.stringify(formCategories);
+
+      const stringified =
+        typeof formCategories === "string"
+          ? formCategories
+          : JSON.stringify(formCategories);
+
       const categories: Category[] = JSON.parse(stringified).map(
         (category: { id: string; value: string }) => {
           return {
@@ -129,6 +135,8 @@ export class Triage {
           };
         }
       );
+
+      cbk.log("Parsed categories: ", categories);
 
       const result = await categorizeInput(
         cbk,

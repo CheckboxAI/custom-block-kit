@@ -1701,8 +1701,8 @@ var SetVariable = class {
                   label: "Update existing variable",
                   value: "update"
                 },
-                { label: "Format existing LIST variable", value: "format" }
-                // { label: "Format existing DATE variable", value: "formatDate" },
+                { label: "Format existing LIST variable", value: "format" },
+                { label: "Format existing DATE variable", value: "formatDate" }
               ]
             }
           },
@@ -2235,7 +2235,7 @@ var SetVariable = class {
                   placeholder: "Select timezone",
                   options: timezones_default.map((x) => ({
                     label: x.text,
-                    value: x.offset
+                    value: x.value
                   })),
                   isSearchable: true
                 }
@@ -2247,6 +2247,49 @@ var SetVariable = class {
                   label: "Format Date as",
                   placeholder: "YYYY/MM/DD",
                   options: dateOptions
+                }
+              },
+              {
+                ref: "format_date_variable_name",
+                component: "TextInput",
+                componentProps: {
+                  label: "Set name of variable as",
+                  placeholder: "Enter Variable Name",
+                  format: "format_date",
+                  timezone: "timezones"
+                },
+                validators: [
+                  {
+                    method: "isVariableUnique",
+                    message: "This variable already exists!"
+                  },
+                  {
+                    method: "required",
+                    message: "Please insert a variable name"
+                  },
+                  {
+                    method: "matches",
+                    value: "^\\S*$",
+                    message: "Variable name cannot contain spaces"
+                  },
+                  {
+                    method: "matches",
+                    value: "^[a-zA-Z]",
+                    message: "Variable name must start with an alphabet"
+                  },
+                  {
+                    method: "matches",
+                    value: "^[a-zA-Z0-9_]+$",
+                    message: "Variable name is alphanumeric characters and _ only"
+                  },
+                  {
+                    method: "max",
+                    value: "50",
+                    message: "This must be less than 50 characters"
+                  }
+                ],
+                output: {
+                  as: "DATE"
                 }
               }
             ]
@@ -2271,8 +2314,8 @@ var SetVariable = class {
             let value = "";
             if (variableType === "DATE") {
               const curTime = datetimeSelection === "currentDate" ? moment().format() : cbk.getElementValue("datetimeVariableValue");
-              const utc = moment(curTime).parseZone().utcOffset();
-              value = moment(curTime).utcOffset(utc).format();
+              const utc2 = moment(curTime).parseZone().utcOffset();
+              value = moment(curTime).utcOffset(utc2).format();
             } else if (variableType === "NUM") {
               value = cbk.getElementValue("numVariableValue");
             } else if (variableType === "FILE") {
@@ -2301,8 +2344,8 @@ var SetVariable = class {
             cbk.log("UPDATE VAR TYPE", updateVarType);
             if (updateVarType === "DATE") {
               const updateDate = cbk.getElementValue("update_date");
-              const utc = moment(updateDate).parseZone().utcOffset();
-              updated = moment(updateDate).utcOffset(utc).format();
+              const utc2 = moment(updateDate).parseZone().utcOffset();
+              updated = moment(updateDate).utcOffset(utc2).format();
             } else if (updateVarType === "NUM") {
               updated = cbk.getElementValue("update_num");
             } else if (updateVarType === "FILE") {
@@ -2391,8 +2434,20 @@ var SetVariable = class {
             const selectedDateVariableName = cbk.getElementValue(
               "selected_date_variable_name"
             );
-            const timezone = cbk.getElementValue("timezones");
-            const formatDate = cbk.getElementValue("format_date");
+            const selectedDateVariableValue = cbk.getVariable(
+              selectedDateVariableName
+            );
+            const newFormattedDateVariable = cbk.getElementValue(
+              "format_date_variable_name"
+            );
+            cbk.log("Selected Date Variable Name: ", selectedDateVariableName);
+            cbk.log("Selected Date Variable Value: ", selectedDateVariableValue);
+            cbk.log("New Formatted Date Variable: ", newFormattedDateVariable);
+            const utc = moment(selectedDateVariableValue).parseZone().format();
+            const updatedDate = moment(selectedDateVariableValue).utcOffset(utc).format();
+            cbk.log("Updated Date Value: ", updatedDate);
+            cbk.log("UTC: ", utc);
+            cbk.setOutput(newFormattedDateVariable, updatedDate);
             break;
         }
       })

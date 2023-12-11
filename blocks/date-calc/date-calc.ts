@@ -296,7 +296,8 @@ export class DateCalc {
                     {
                       method: "matches",
                       value: "^[a-zA-Z0-9_]+$",
-                      message: "Variable name is alphanumeric characters and _ only",
+                      message:
+                        "Variable name is alphanumeric characters and _ only",
                     },
                     {
                       method: "max",

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.6.9
+
+### Patch Changes
+
+- d8ab853: Added in format date variable function
+
 ## 1.6.8
 
 ### Patch Changes

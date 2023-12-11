@@ -115,6 +115,7 @@ export interface ComponentProps {
   isSearchable?: boolean;
   allowUnselect?: boolean;
   format?: string;
+  timezone?: string;
   whenChanged?: (cbk: FrontendCBK, value?: any) => void | string;
   variableAutoComplete?: boolean;
   includeEmptyErrorPlaceholder?: boolean;

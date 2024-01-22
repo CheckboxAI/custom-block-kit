@@ -367,6 +367,7 @@ export class Ticket {
           const user = cbk.getUser();
           await ticketingMessageService.createTicketMessageWithAttachments(
             {
+              messageType: 'email',
               platformType: "workflow",
               ticketId: ticket.id,
               body: message,

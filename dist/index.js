@@ -3456,6 +3456,7 @@ var Ticket = class {
             const user = cbk.getUser();
             yield ticketingMessageService.createTicketMessageWithAttachments(
               {
+                messageType: "email",
                 platformType: "workflow",
                 ticketId: ticket.id,
                 body: message,

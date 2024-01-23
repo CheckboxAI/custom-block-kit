@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.7.0
+
+### Minor Changes
+
+- 00d3fd1: Add new param for create ticket message endpoitn in ticket block
+
 ## 1.6.9
 
 ### Patch Changes

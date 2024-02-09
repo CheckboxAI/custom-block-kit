@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.7.1
+
+### Patch Changes
+
+- 8914346: fix ticketing description block not showing on ui
+
 ## 1.7.0
 
 ### Minor Changes

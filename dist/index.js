@@ -3134,42 +3134,42 @@ var Ticket = class {
             componentProps: {
               label: "General"
             },
-            children: [
+            children: []
+          },
+          {
+            ref: "block_description",
+            // must be outside of group to work
+            component: "BlockDescription",
+            componentProps: {
+              label: "Block Description",
+              placeholder: "Enter a description for this block"
+            }
+          },
+          {
+            ref: "board_id",
+            component: "SelectInput",
+            componentProps: {
+              label: "Select board*",
+              placeholder: "Select a board",
+              isSearchable: true,
+              options: (cbk) => __async(this, null, function* () {
+                const response = yield cbk.api.get("/ticketing/boards");
+                return (response == null ? void 0 : response.result) ? response.result.map(
+                  ({ id, name }) => ({
+                    value: id,
+                    label: `${name}`
+                  })
+                ) : [];
+              }),
+              whenChanged: (cbk) => {
+                cbk.setElementValue("fn_selector", "");
+                cbk.setElementValue("ticket_layout_id", "");
+              }
+            },
+            validators: [
               {
-                ref: "block_description",
-                component: "BlockDescription",
-                componentProps: {
-                  label: "Block Description",
-                  placeholder: "Enter a description for this block"
-                }
-              },
-              {
-                ref: "board_id",
-                component: "SelectInput",
-                componentProps: {
-                  label: "Select board*",
-                  placeholder: "Select a board",
-                  isSearchable: true,
-                  options: (cbk) => __async(this, null, function* () {
-                    const response = yield cbk.api.get("/ticketing/boards");
-                    return (response == null ? void 0 : response.result) ? response.result.map(
-                      ({ id, name }) => ({
-                        value: id,
-                        label: `${name}`
-                      })
-                    ) : [];
-                  }),
-                  whenChanged: (cbk) => {
-                    cbk.setElementValue("fn_selector", "");
-                    cbk.setElementValue("ticket_layout_id", "");
-                  }
-                },
-                validators: [
-                  {
-                    method: "required",
-                    message: "Please select a board"
-                  }
-                ]
+                method: "required",
+                message: "Please select a board"
               }
             ]
           },

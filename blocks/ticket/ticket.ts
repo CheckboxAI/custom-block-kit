@@ -20,44 +20,43 @@ export class Ticket {
           componentProps: {
             label: "General",
           },
-          children: [
-            {
-              ref: "block_description",
-              component: "BlockDescription",
-              componentProps: {
-                label: "Block Description",
-                placeholder: "Enter a description for this block",
-              },
+          children: [],
+        },
+        {
+          ref: "block_description", // must be outside of group to work
+          component: "BlockDescription",
+          componentProps: {
+            label: "Block Description",
+            placeholder: "Enter a description for this block",
+          },
+        },
+        {
+          ref: "board_id",
+          component: "SelectInput",
+          componentProps: {
+            label: "Select board*",
+            placeholder: "Select a board",
+            isSearchable: true,
+            options: async (cbk) => {
+              const response = await cbk.api.get<any>("/ticketing/boards");
+              return response?.result
+                ? response.result.map(
+                    ({ id, name }: { id: string; name: string }) => ({
+                      value: id,
+                      label: `${name}`,
+                    })
+                  )
+                : [];
             },
+            whenChanged: (cbk) => {
+              cbk.setElementValue("fn_selector", "");
+              cbk.setElementValue("ticket_layout_id", "");
+            },
+          },
+          validators: [
             {
-              ref: "board_id",
-              component: "SelectInput",
-              componentProps: {
-                label: "Select board*",
-                placeholder: "Select a board",
-                isSearchable: true,
-                options: async (cbk) => {
-                  const response = await cbk.api.get<any>("/ticketing/boards");
-                  return response?.result
-                    ? response.result.map(
-                        ({ id, name }: { id: string; name: string }) => ({
-                          value: id,
-                          label: `${name}`,
-                        })
-                      )
-                    : [];
-                },
-                whenChanged: (cbk) => {
-                  cbk.setElementValue("fn_selector", "");
-                  cbk.setElementValue("ticket_layout_id", "");
-                },
-              },
-              validators: [
-                {
-                  method: "required",
-                  message: "Please select a board",
-                },
-              ],
+              method: "required",
+              message: "Please select a board",
             },
           ],
         },

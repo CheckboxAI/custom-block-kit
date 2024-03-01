@@ -2754,7 +2754,13 @@ var Sharepoint = class {
         function isFileTypeSelected(fileType, fileExtension) {
           const fileTypes = cbk.getVariableType(cbk.getElementValue("file")) === "DOC" && cbk.getElementValue("file_types");
           if (fileTypes && Object.keys(fileTypes)) {
-            const checkedValues = Object.entries(fileTypes).filter(([_, checked]) => checked).map(([value]) => value);
+            const typedFileTypes = JSON.parse(fileTypes);
+            let checkedValues = [];
+            Object.keys(typedFileTypes).forEach((key) => {
+              if (typedFileTypes[key]) {
+                checkedValues.push(key);
+              }
+            });
             if (fileType === SIGNED_REPORT_TYPE)
               return checkedValues.includes(SIGNED_REPORT_TYPE);
             return checkedValues.includes(fileExtension);
@@ -2774,6 +2780,7 @@ var Sharepoint = class {
           cbk.log("sharepoint: Initiating upload files to sharepoint");
           const parsedFiles = files ? JSON.parse(files) : [];
           cbk.log("files: ", parsedFiles);
+          cbk.log("sharepoint: parsedFiles", parsedFiles);
           yield Promise.all(
             parsedFiles.map((file) => __async(this, null, function* () {
               cbk.log("upload: Enter()");

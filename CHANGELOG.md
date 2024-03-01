@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.7.2
+
+### Patch Changes
+
+- 434903f: fix if check statement on sharepoint upload from DOC type
+
 ## 1.7.1
 
 ### Patch Changes

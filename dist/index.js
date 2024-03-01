@@ -2783,13 +2783,7 @@ var Sharepoint = class {
         function isFileTypeSelected(fileType, fileExtension) {
           const fileTypes = cbk.getVariableType(cbk.getElementValue("file")) === "DOC" && cbk.getElementValue("file_types");
           if (fileTypes && Object.keys(fileTypes)) {
-            const typedFileTypes = JSON.parse(fileTypes);
-            let checkedValues = [];
-            Object.keys(typedFileTypes).forEach((key) => {
-              if (typedFileTypes[key]) {
-                checkedValues.push(key);
-              }
-            });
+            const checkedValues = Object.entries(JSON.parse(fileTypes)).filter(([_, checked]) => checked).map(([value]) => value);
             if (fileType === SIGNED_REPORT_TYPE)
               return checkedValues.includes(SIGNED_REPORT_TYPE);
             return checkedValues.includes(fileExtension);

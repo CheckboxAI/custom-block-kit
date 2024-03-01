@@ -317,9 +317,9 @@ export class Sharepoint {
           cbk.getVariableType(cbk.getElementValue("file")) === "DOC" &&
           cbk.getElementValue("file_types");
         if (fileTypes && Object.keys(fileTypes)) {
-          const checkedValues = Object.entries(fileTypes)
-            .filter(([_, checked]) => checked)
-            .map(([value]) => value);
+          const checkedValues = Object.entries(JSON.parse(fileTypes))
+          .filter(([_, checked]) => checked)
+          .map(([value]) => value);
 
           if (fileType === SIGNED_REPORT_TYPE)
             return checkedValues.includes(SIGNED_REPORT_TYPE);
@@ -349,6 +349,8 @@ export class Sharepoint {
         const parsedFiles = files ? JSON.parse(files) : [];
         cbk.log("files: ", parsedFiles);
 
+        cbk.log("sharepoint: parsedFiles", parsedFiles);
+
         await Promise.all(
           parsedFiles.map(async (file: any) => {
             cbk.log("upload: Enter()");
@@ -359,7 +361,7 @@ export class Sharepoint {
               .split(".");
             const fileNameWithoutPrefix = fileParts[0];
             const fileExtension = fileParts[fileParts.length - 1];
-
+            
             if (isPDFInDocx(file)) {
               cbk.log(`upload: skipped because file type is .pdf.docx`);
               return;

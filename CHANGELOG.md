@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.7.3
+
+### Patch Changes
+
+- c199f88: remove duplicated cbk console log
+
 ## 1.7.2
 
 ### Patch Changes

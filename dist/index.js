@@ -2803,7 +2803,6 @@ var Sharepoint = class {
           cbk.log("sharepoint: Initiating upload files to sharepoint");
           const parsedFiles = files ? JSON.parse(files) : [];
           cbk.log("files: ", parsedFiles);
-          cbk.log("sharepoint: parsedFiles", parsedFiles);
           yield Promise.all(
             parsedFiles.map((file) => __async(this, null, function* () {
               cbk.log("upload: Enter()");

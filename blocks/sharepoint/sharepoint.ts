@@ -349,8 +349,6 @@ export class Sharepoint {
         const parsedFiles = files ? JSON.parse(files) : [];
         cbk.log("files: ", parsedFiles);
 
-        cbk.log("sharepoint: parsedFiles", parsedFiles);
-
         await Promise.all(
           parsedFiles.map(async (file: any) => {
             cbk.log("upload: Enter()");

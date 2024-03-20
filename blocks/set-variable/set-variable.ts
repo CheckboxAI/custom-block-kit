@@ -117,12 +117,19 @@ export class SetVariable {
             },
             {
               ref: "numVariableValue",
-              component: "NumberInput",
+              component: "TextInput",
               showIf: 'variableType == "NUM"',
               componentProps: {
                 label: "Variable Value",
                 placeholder: "Enter variable value",
               },
+              validators: [
+                {
+                  method: "matches",
+                  value: "^{{.*}}$|^-?\\d*\\.?\\d+$",
+                  message: "Must be a number or variable",
+                },
+              ],
             },
             {
               ref: "datetimeSelection",
@@ -320,13 +327,20 @@ export class SetVariable {
             },
             {
               ref: "update_num",
-              component: "NumberInput",
+              component: "TextInput",
               showIf:
                 '(GET(VARS,update_variable_name)).fieldInputType == "NUM"',
               componentProps: {
                 label: "Variable Value",
                 placeholder: "Enter variable value",
               },
+              validators: [
+                {
+                  method: "matches",
+                  value: "^{{.*}}$|^-?\\d*\\.?\\d+$",
+                  message: "Must be a number or variable",
+                },
+              ],
             },
             {
               ref: "update_date",

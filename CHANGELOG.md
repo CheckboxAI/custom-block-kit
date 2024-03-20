@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.8.0
+
+### Minor Changes
+
+- 1fd6218: SetVar block num input allow variables
+
 ## 1.7.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.9.0
+
+### Minor Changes
+
+- 29deb23: add base.ts to build export
+
 ## 1.8.0
 
 ### Minor Changes

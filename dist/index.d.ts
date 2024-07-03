@@ -157,4 +157,4 @@ declare class Ticket {
     schema: BaseSchema;
 }
 
-export { DateCalc, SetVariable, Sharepoint, Ticket, Triage };
+export { BackendCBK, BaseSchema, ComponentOptionProps, ComponentProps, DateCalc, Editor, EditorField, FrontendCBK, KeyValueOptionProp, OptionState, OutputProps, SetVariable, Sharepoint, Stencil, StudioShape, Ticket, Triage, ValidatorProps };

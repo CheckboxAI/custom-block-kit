@@ -319,7 +319,7 @@ export class Ticket {
           );
 
           const checkbox = await cbk.apiClient.checkbox();
-          const ticketingMessageService = checkbox.ticketingMessageService;
+          const ticketingThreadService = checkbox.ticketingThreadService;
           const ticketingTicketService = checkbox.ticketingTicketService;
 
           // build ticket fields
@@ -364,7 +364,12 @@ export class Ticket {
 
           // create ticket message with attachments
           const user = cbk.getUser();
-          await ticketingMessageService.createTicketMessageWithAttachments(
+          await ticketingThreadService.createThreadWithMessageWithAttachments(
+            {
+              ticketId: ticket.id,
+              platformType: "workflow",
+              subject: `${isPreview ? "{TEST}" : ""} ${subject}`,
+            },
             {
               messageType: 'email',
               platformType: "workflow",

@@ -3403,7 +3403,7 @@ var Ticket = class {
               (_a = cbk.getElementValue("attachments")) != null ? _a : "[]"
             );
             const checkbox = yield cbk.apiClient.checkbox();
-            const ticketingMessageService = checkbox.ticketingMessageService;
+            const ticketingThreadService = checkbox.ticketingThreadService;
             const ticketingTicketService = checkbox.ticketingTicketService;
             const keyValueMappings = JSON.parse(
               (_b = cbk.getElementValue("ticketing_layout_field_selector")) != null ? _b : "[]"
@@ -3439,7 +3439,12 @@ var Ticket = class {
               }
             }
             const user = cbk.getUser();
-            yield ticketingMessageService.createTicketMessageWithAttachments(
+            yield ticketingThreadService.createThreadWithMessageWithAttachments(
+              {
+                ticketId: ticket.id,
+                platformType: "workflow",
+                subject: `${isPreview ? "{TEST}" : ""} ${subject}`
+              },
               {
                 messageType: "email",
                 platformType: "workflow",

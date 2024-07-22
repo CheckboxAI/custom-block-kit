@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.0
+
+### Minor Changes
+
+- 9980bc8: Update create message to consume new service and function
+
 ## 1.9.0
 
 ### Minor Changes

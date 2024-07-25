@@ -8,7 +8,6 @@ export class SetVariable {
     name: "Set Var",
     color: "#EAAB46",
     blockType: "functional",
-    toggleName: "feature.cbk.setvariable",
     icon: "M10 2H2C1.445 2 1 2.45 1 3V9C1 9.55 1.445 10 2 10H10C10.55 10 11 9.55 11 9V3C11 2.45 10.555 2 10 2ZM10 9H2V4H10V9ZM9 8.5H6V7.5H9V8.5ZM3.75 8.5 3.045 7.795 4.335 6.5 3.04 5.205 3.75 4.5 5.75 6.5 3.75 8.5Z",
     stencil: {
       group: "FUNCTIONS",

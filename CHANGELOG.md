@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.1
+
+### Patch Changes
+
+- 9ae1d7a: remove setvariable and datecalc feature flags
+
 ## 1.10.0
 
 ### Minor Changes

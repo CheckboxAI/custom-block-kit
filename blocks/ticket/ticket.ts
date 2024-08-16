@@ -369,6 +369,7 @@ export class Ticket {
               ticketId: ticket.id,
               platformType: "workflow",
               subject: `${isPreview ? "{TEST}" : ""} ${subject}`,
+              isMainThread: true,
             },
             {
               messageType: 'email',

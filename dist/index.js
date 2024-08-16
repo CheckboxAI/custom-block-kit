@@ -3470,7 +3470,8 @@ var Ticket = class {
               {
                 ticketId: ticket.id,
                 platformType: "workflow",
-                subject: `${isPreview ? "{TEST}" : ""} ${subject}`
+                subject: `${isPreview ? "{TEST}" : ""} ${subject}`,
+                isMainThread: true
               },
               {
                 messageType: "email",

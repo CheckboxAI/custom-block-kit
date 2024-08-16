@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.2
+
+### Patch Changes
+
+- 20e1212: Fix main thread label for matter created via cbk
+
 ## 1.10.1
 
 ### Patch Changes

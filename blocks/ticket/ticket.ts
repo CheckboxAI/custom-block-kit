@@ -1,4 +1,5 @@
 import type { BaseSchema, KeyValueOptionProp } from "../../base/base";
+import { tryGetVariable } from "./utils";
 
 export class Ticket {
   schema: BaseSchema = {
@@ -310,10 +311,8 @@ export class Ticket {
           const ticketLayoutId = cbk.getElementValue("ticket_layout_id");
           const subjectVariable = cbk.getElementValue("subject_variable");
           const messageVariable = cbk.getElementValue("message_variable");
-          const subject = cbk.getVariable(subjectVariable);
-          const message = messageVariable?.length
-            ? cbk.getVariable(messageVariable)
-            : "";
+          const subject = tryGetVariable(cbk, subjectVariable);
+          const message = messageVariable?.length && tryGetVariable(cbk, messageVariable);
           const attachmentVariables = JSON.parse(
             cbk.getElementValue("attachments") ?? "[]"
           );
@@ -329,7 +328,7 @@ export class Ticket {
           const ticketFieldsRaw: Record<string, string> = {};
           for (const mapping of keyValueMappings) {
             if (mapping.id && mapping.value) {
-              ticketFieldsRaw[mapping.id] = cbk.getVariable(mapping.value);
+              ticketFieldsRaw[mapping.id] = tryGetVariable(cbk, mapping.value);
             }
           }
           const validatedTicketFields =

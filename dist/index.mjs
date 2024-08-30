@@ -3095,6 +3095,16 @@ var Triage = class {
   }
 };
 
+// blocks/ticket/utils.ts
+var tryGetVariable = (cbk, variableName) => {
+  try {
+    return cbk.getVariable(variableName);
+  } catch (error) {
+    cbk.log(`Error fetching variable ${variableName}:`, error);
+    return null;
+  }
+};
+
 // blocks/ticket/ticket.ts
 var Ticket = class {
   constructor() {
@@ -3395,8 +3405,8 @@ var Ticket = class {
             const ticketLayoutId = cbk.getElementValue("ticket_layout_id");
             const subjectVariable = cbk.getElementValue("subject_variable");
             const messageVariable = cbk.getElementValue("message_variable");
-            const subject = cbk.getVariable(subjectVariable);
-            const message = (messageVariable == null ? void 0 : messageVariable.length) ? cbk.getVariable(messageVariable) : "";
+            const subject = tryGetVariable(cbk, subjectVariable);
+            const message = (messageVariable == null ? void 0 : messageVariable.length) && tryGetVariable(cbk, messageVariable);
             const attachmentVariables = JSON.parse(
               (_a = cbk.getElementValue("attachments")) != null ? _a : "[]"
             );
@@ -3409,7 +3419,7 @@ var Ticket = class {
             const ticketFieldsRaw = {};
             for (const mapping of keyValueMappings) {
               if (mapping.id && mapping.value) {
-                ticketFieldsRaw[mapping.id] = cbk.getVariable(mapping.value);
+                ticketFieldsRaw[mapping.id] = tryGetVariable(cbk, mapping.value);
               }
             }
             const validatedTicketFields = yield ticketingTicketService.validateTicketFieldInputs(

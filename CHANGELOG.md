@@ -1,5 +1,12 @@
 # custom-block-kit
 
+## 1.10.3
+
+### Patch Changes
+
+- 11c7f29: DEV-13671 ticket block non-initialised variables
+- 11c7f29: Create new ticket with N/A values
+
 ## 1.10.2
 
 ### Patch Changes

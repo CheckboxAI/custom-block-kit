@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.4
+
+### Patch Changes
+
+- 2725819: DEV-13671 BackendCBK type addition
+
 ## 1.10.3
 
 ### Patch Changes

@@ -1,4 +1,4 @@
-import { BackendCBK } from "../../base";
+import type { BackendCBK } from "../../base";
 
 export const tryGetVariable = (cbk: BackendCBK, variableName: string) => {
     try {

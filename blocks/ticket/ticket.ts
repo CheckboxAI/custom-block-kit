@@ -150,10 +150,11 @@ export class Ticket {
                       SHORT_TXT: ["TXT"],
                       LONG_TXT: ["TXT"],
                       NUM: ["NUM", "SLDR"],
-                      SEL: ["SEL", "RAD", "CBX", "ACT"],
+                      SEL: ["SEL"],
                       MULTI_SEL: ["LIST", "LP_SIZE", "LP_IND"],
                       UPLOAD: ["FILE", "DOC"],
                       DATE_TIME: ["DATE"],
+                      STATUS: ["TXT", "SEL", "RAD", "CBX", "ACT"],
                     };
 
                   return response
@@ -165,8 +166,9 @@ export class Ticket {
                           (workflowVar) =>
                             !mapping ||
                             mapping?.includes(workflowVar.type) ||
-                            // for single select field, we allow COMP variable
-                            (v.fieldType === "SEL" &&
+                            // for single select and status field, we allow COMP variable
+                            ((v.fieldType === "SEL" ||
+                              v.fieldType === "STATUS") &&
                               /^COMP\d+/.test(workflowVar.label))
                         );
 
@@ -312,7 +314,8 @@ export class Ticket {
           const subjectVariable = cbk.getElementValue("subject_variable");
           const messageVariable = cbk.getElementValue("message_variable");
           const subject = tryGetVariable(cbk, subjectVariable);
-          const message = messageVariable?.length && tryGetVariable(cbk, messageVariable);
+          const message =
+            messageVariable?.length && tryGetVariable(cbk, messageVariable);
           const attachmentVariables = JSON.parse(
             cbk.getElementValue("attachments") ?? "[]"
           );
@@ -371,7 +374,7 @@ export class Ticket {
               isMainThread: true,
             },
             {
-              messageType: 'email',
+              messageType: "email",
               platformType: "workflow",
               ticketId: ticket.id,
               body: message,

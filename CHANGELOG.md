@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.5
+
+### Patch Changes
+
+- 4dad612: Adding Status filtering for WF create ticket
+
 ## 1.10.4
 
 ### Patch Changes

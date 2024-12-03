@@ -3256,14 +3256,15 @@ var Ticket = class {
                       SEL: ["SEL", "RAD", "CBX", "ACT"],
                       MULTI_SEL: ["LIST", "LP_SIZE", "LP_IND"],
                       UPLOAD: ["FILE", "DOC"],
-                      DATE_TIME: ["DATE"]
+                      DATE_TIME: ["DATE"],
+                      STATUS: ["TXT", "SEL", "RAD", "CBX", "ACT"]
                     };
                     return response ? (_b = (_a = response == null ? void 0 : response.result) == null ? void 0 : _a.fields) == null ? void 0 : _b.map((v) => {
                       var _a2;
                       const mapping = ticketingWorkflowVarMapping[v.fieldType];
                       let filteredVars = allWorkflowVars.filter(
-                        (workflowVar) => !mapping || (mapping == null ? void 0 : mapping.includes(workflowVar.type)) || // for single select field, we allow COMP variable
-                        v.fieldType === "SEL" && /^COMP\d+/.test(workflowVar.label)
+                        (workflowVar) => !mapping || (mapping == null ? void 0 : mapping.includes(workflowVar.type)) || // for single select and status field, we allow COMP variable
+                        (v.fieldType === "SEL" || v.fieldType === "STATUS") && /^COMP\d+/.test(workflowVar.label)
                       );
                       return {
                         left: {

@@ -150,7 +150,7 @@ export class Ticket {
                       SHORT_TXT: ["TXT"],
                       LONG_TXT: ["TXT"],
                       NUM: ["NUM", "SLDR"],
-                      SEL: ["SEL"],
+                      SEL: ["SEL", "RAD", "CBX", "ACT"],
                       MULTI_SEL: ["LIST", "LP_SIZE", "LP_IND"],
                       UPLOAD: ["FILE", "DOC"],
                       DATE_TIME: ["DATE"],

@@ -355,18 +355,26 @@ export class Ticket {
             const uploadedFiles = JSON.parse(
               cbk.getVariable(attachmentVar.variable) ?? "[]"
             );
-            for (const uploadedFile of uploadedFiles) {
-              // filter out pdf version of docx file (not display in files tab)
-              if (
-                !uploadedFile.reportName ||
-                uploadedFile.fileName === uploadedFile.reportName
-              ) {
-                attachmentPayload.push({
-                  fileName: uploadedFile.fileName,
-                  s3Id: uploadedFile.fileKey,
-                  ticketId: ticket.id,
-                });
-              }
+            console.log(uploadedFiles, "123123123");
+            // filter out pdf version of docx file (not display in files tab)
+
+            const filteredFiles = uploadedFiles.filter(
+              (item: any, _: any, array: any) =>
+                !(
+                  item.fileName.endsWith(".pdf") &&
+                  array.some(
+                    (otherItem: any) =>
+                      otherItem.documentId === item.documentId &&
+                      !otherItem.fileName.endsWith(".pdf")
+                  )
+                )
+            );
+            for (const uploadedFile of filteredFiles) {
+              attachmentPayload.push({
+                fileName: uploadedFile.fileName,
+                s3Id: uploadedFile.fileKey,
+                ticketId: ticket.id,
+              });
             }
           }
 

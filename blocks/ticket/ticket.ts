@@ -355,7 +355,8 @@ export class Ticket {
             const uploadedFiles = JSON.parse(
               cbk.getVariable(attachmentVar.variable) ?? "[]"
             );
-            // filter out pdf version of docx file (not display in files tab)
+            // when docx file is uploaded, a pdf version is also generated and returned. 
+            // Both will have same documentId, so we filter out the pdf version here
             const filteredFiles = uploadedFiles.filter(
               (item: any, _: any, allFiles: any) =>
                 !(

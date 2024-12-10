@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.6
+
+### Patch Changes
+
+- 077935d: DEV-14250 remove pdf version of docx
+
 ## 1.10.5
 
 ### Patch Changes

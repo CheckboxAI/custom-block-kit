@@ -3440,11 +3440,13 @@ var Ticket = class {
                 (_c = cbk.getVariable(attachmentVar.variable)) != null ? _c : "[]"
               );
               for (const uploadedFile of uploadedFiles) {
-                attachmentPayload.push({
-                  fileName: uploadedFile.fileName,
-                  s3Id: uploadedFile.fileKey,
-                  ticketId: ticket.id
-                });
+                if (!uploadedFile.reportName || uploadedFile.fileName === uploadedFile.reportName) {
+                  attachmentPayload.push({
+                    fileName: uploadedFile.fileName,
+                    s3Id: uploadedFile.fileKey,
+                    ticketId: ticket.id
+                  });
+                }
               }
             }
             const user = cbk.getUser();

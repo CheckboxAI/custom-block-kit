@@ -356,11 +356,17 @@ export class Ticket {
               cbk.getVariable(attachmentVar.variable) ?? "[]"
             );
             for (const uploadedFile of uploadedFiles) {
-              attachmentPayload.push({
-                fileName: uploadedFile.fileName,
-                s3Id: uploadedFile.fileKey,
-                ticketId: ticket.id,
-              });
+              // filter out pdf version of docx file (not display in files tab)
+              if (
+                !uploadedFile.reportName ||
+                uploadedFile.fileName === uploadedFile.reportName
+              ) {
+                attachmentPayload.push({
+                  fileName: uploadedFile.fileName,
+                  s3Id: uploadedFile.fileKey,
+                  ticketId: ticket.id,
+                });
+              }
             }
           }
 

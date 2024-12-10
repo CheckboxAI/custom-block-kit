@@ -3439,7 +3439,12 @@ var Ticket = class {
               const uploadedFiles = JSON.parse(
                 (_c = cbk.getVariable(attachmentVar.variable)) != null ? _c : "[]"
               );
-              for (const uploadedFile of uploadedFiles) {
+              const filteredFiles = uploadedFiles.filter(
+                (item, _, allFiles) => !(item.fileName.endsWith(".pdf") && allFiles.some(
+                  (otherFile) => otherFile.documentId === item.documentId && !otherFile.fileName.endsWith(".pdf")
+                ))
+              );
+              for (const uploadedFile of filteredFiles) {
                 attachmentPayload.push({
                   fileName: uploadedFile.fileName,
                   s3Id: uploadedFile.fileKey,

@@ -355,7 +355,20 @@ export class Ticket {
             const uploadedFiles = JSON.parse(
               cbk.getVariable(attachmentVar.variable) ?? "[]"
             );
-            for (const uploadedFile of uploadedFiles) {
+            // when docx file is uploaded, a pdf version is also generated and returned. 
+            // Both will have same documentId, so we filter out the pdf version here
+            const filteredFiles = uploadedFiles.filter(
+              (item: any, _: any, allFiles: any) =>
+                !(
+                  item.fileName.endsWith(".pdf") &&
+                  allFiles.some(
+                    (otherFile: any) =>
+                      otherFile.documentId === item.documentId &&
+                      !otherFile.fileName.endsWith(".pdf")
+                  )
+                )
+            );
+            for (const uploadedFile of filteredFiles) {
               attachmentPayload.push({
                 fileName: uploadedFile.fileName,
                 s3Id: uploadedFile.fileKey,

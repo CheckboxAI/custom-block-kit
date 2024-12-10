@@ -355,17 +355,15 @@ export class Ticket {
             const uploadedFiles = JSON.parse(
               cbk.getVariable(attachmentVar.variable) ?? "[]"
             );
-            console.log(uploadedFiles, "123123123");
             // filter out pdf version of docx file (not display in files tab)
-
             const filteredFiles = uploadedFiles.filter(
-              (item: any, _: any, array: any) =>
+              (item: any, _: any, allFiles: any) =>
                 !(
                   item.fileName.endsWith(".pdf") &&
-                  array.some(
-                    (otherItem: any) =>
-                      otherItem.documentId === item.documentId &&
-                      !otherItem.fileName.endsWith(".pdf")
+                  allFiles.some(
+                    (otherFile: any) =>
+                      otherFile.documentId === item.documentId &&
+                      !otherFile.fileName.endsWith(".pdf")
                   )
                 )
             );

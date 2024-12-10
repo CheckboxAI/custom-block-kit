@@ -3468,10 +3468,9 @@ var Ticket = class {
               const uploadedFiles = JSON.parse(
                 (_c = cbk.getVariable(attachmentVar.variable)) != null ? _c : "[]"
               );
-              console.log(uploadedFiles, "123123123");
               const filteredFiles = uploadedFiles.filter(
-                (item, _, array) => !(item.fileName.endsWith(".pdf") && array.some(
-                  (otherItem) => otherItem.documentId === item.documentId && !otherItem.fileName.endsWith(".pdf")
+                (item, _, allFiles) => !(item.fileName.endsWith(".pdf") && allFiles.some(
+                  (otherFile) => otherFile.documentId === item.documentId && !otherFile.fileName.endsWith(".pdf")
                 ))
               );
               for (const uploadedFile of filteredFiles) {

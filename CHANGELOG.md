@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.7
+
+### Patch Changes
+
+- 2f1c331: DEV-14503: Fix ticket block empty or optional doc variable
+
 ## 1.10.6
 
 ### Patch Changes

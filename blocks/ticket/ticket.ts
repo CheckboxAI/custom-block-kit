@@ -356,18 +356,38 @@ export class Ticket {
               tryGetVariable(cbk, attachmentVar.variable) ?? "[]"
             );
             // when docx file is uploaded, a pdf version is also generated and returned.
-            // Both will have same documentId, so we filter out the pdf version here
-            const filteredFiles = uploadedFiles.filter(
-              (item: any, _: any, allFiles: any) =>
-                !(
-                  item.fileName.endsWith(".pdf") &&
-                  allFiles.some(
-                    (otherFile: any) =>
-                      otherFile.documentId === item.documentId &&
-                      !otherFile.fileName.endsWith(".pdf")
-                  )
-                )
+            // Both will have same documentId, so we filter out the pdf version here by
+            // only keeping the file that has the same reportName as the fileName.
+            const filteredFiles = uploadedFiles.reduce(
+              (acc: any, file: any) => {
+                const { documentId, reportName, fileName } = file;
+
+                // Check if documentId already exists in acc (duplicate)
+                const existingIndex = acc.findIndex(
+                  (item: any) => item.documentId === documentId
+                );
+
+                if (existingIndex === -1) {
+                  // Add file if documentId is not already present
+                  // This is for files added using "File Upload"
+                  acc.push(file);
+                } else {
+                  // replace existing entry if current one matches reportName === fileName
+                  const existingFile = acc[existingIndex];
+                  if (
+                    reportName === fileName &&
+                    (existingFile.reportName !== existingFile.fileName ||
+                      !existingFile.reportName)
+                  ) {
+                    acc[existingIndex] = file;
+                  }
+                }
+
+                return acc;
+              },
+              []
             );
+
             for (const uploadedFile of filteredFiles) {
               attachmentPayload.push({
                 fileName: uploadedFile.fileName,

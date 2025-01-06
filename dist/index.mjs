@@ -3439,10 +3439,23 @@ var Ticket = class {
               const uploadedFiles = JSON.parse(
                 (_c = tryGetVariable(cbk, attachmentVar.variable)) != null ? _c : "[]"
               );
-              const filteredFiles = uploadedFiles.filter(
-                (item, _, allFiles) => !(item.fileName.endsWith(".pdf") && allFiles.some(
-                  (otherFile) => otherFile.documentId === item.documentId && !otherFile.fileName.endsWith(".pdf")
-                ))
+              const filteredFiles = uploadedFiles.reduce(
+                (acc, file) => {
+                  const { documentId, reportName, fileName } = file;
+                  const existingIndex = acc.findIndex(
+                    (item) => item.documentId === documentId
+                  );
+                  if (existingIndex === -1) {
+                    acc.push(file);
+                  } else {
+                    const existingFile = acc[existingIndex];
+                    if (reportName === fileName && (existingFile.reportName !== existingFile.fileName || !existingFile.reportName)) {
+                      acc[existingIndex] = file;
+                    }
+                  }
+                  return acc;
+                },
+                []
               );
               for (const uploadedFile of filteredFiles) {
                 attachmentPayload.push({

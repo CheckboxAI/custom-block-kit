@@ -3437,7 +3437,7 @@ var Ticket = class {
             let attachmentPayload = [];
             for (const attachmentVar of attachmentVariables) {
               const uploadedFiles = JSON.parse(
-                (_c = cbk.getVariable(attachmentVar.variable)) != null ? _c : "[]"
+                (_c = tryGetVariable(cbk, attachmentVar.variable)) != null ? _c : "[]"
               );
               const filteredFiles = uploadedFiles.filter(
                 (item, _, allFiles) => !(item.fileName.endsWith(".pdf") && allFiles.some(

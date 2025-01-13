@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.8
+
+### Patch Changes
+
+- 9195f37: Hide Duration field from create matter fields in ticketing block
+
 ## 1.10.7
 
 ### Patch Changes

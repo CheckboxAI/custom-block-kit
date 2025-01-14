@@ -158,41 +158,43 @@ export class Ticket {
                     };
 
                   return response
-                    ? response?.result?.fields?.map((v: any) => {
-                        const mapping =
-                          ticketingWorkflowVarMapping[v.fieldType];
+                    ? response?.result?.fields
+                        ?.filter((v: any) => v.fieldType !== "DURATION") // hide duration field
+                        .map((v: any) => {
+                          const mapping =
+                            ticketingWorkflowVarMapping[v.fieldType];
 
-                        let filteredVars = allWorkflowVars.filter(
-                          (workflowVar) =>
-                            !mapping ||
-                            mapping?.includes(workflowVar.type) ||
-                            // for single select and status field, we allow COMP variable
-                            ((v.fieldType === "SEL" ||
-                              v.fieldType === "STATUS") &&
-                              /^COMP\d+/.test(workflowVar.label))
-                        );
+                          let filteredVars = allWorkflowVars.filter(
+                            (workflowVar) =>
+                              !mapping ||
+                              mapping?.includes(workflowVar.type) ||
+                              // for single select and status field, we allow COMP variable
+                              ((v.fieldType === "SEL" ||
+                                v.fieldType === "STATUS") &&
+                                /^COMP\d+/.test(workflowVar.label))
+                          );
 
-                        return {
-                          left: {
-                            ref: "value",
-                            component: "SelectInput",
-                            componentProps: {
-                              options: filteredVars,
-                              allowUnselect: !v.metadata?.isReadOnly,
+                          return {
+                            left: {
+                              ref: "value",
+                              component: "SelectInput",
+                              componentProps: {
+                                options: filteredVars,
+                                allowUnselect: !v.metadata?.isReadOnly,
+                              },
                             },
-                          },
-                          right: {
-                            ref: "id",
-                            component: "TextValueDisplay",
-                            componentProps: {
-                              readOnly: true,
-                              value: v.id,
-                              displayText: v.name,
-                              type: v.fieldType,
+                            right: {
+                              ref: "id",
+                              component: "TextValueDisplay",
+                              componentProps: {
+                                readOnly: true,
+                                value: v.id,
+                                displayText: v.name,
+                                type: v.fieldType,
+                              },
                             },
-                          },
-                        } as KeyValueOptionProp;
-                      })
+                          } as KeyValueOptionProp;
+                        })
                     : [];
                 },
               },

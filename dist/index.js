@@ -3288,7 +3288,7 @@ var Ticket = class {
                       DATE_TIME: ["DATE"],
                       STATUS: ["TXT", "SEL", "RAD", "CBX", "ACT"]
                     };
-                    return response ? (_b = (_a = response == null ? void 0 : response.result) == null ? void 0 : _a.fields) == null ? void 0 : _b.map((v) => {
+                    return response ? (_b = (_a = response == null ? void 0 : response.result) == null ? void 0 : _a.fields) == null ? void 0 : _b.filter((v) => v.fieldType !== "DURATION").map((v) => {
                       var _a2;
                       const mapping = ticketingWorkflowVarMapping[v.fieldType];
                       let filteredVars = allWorkflowVars.filter(

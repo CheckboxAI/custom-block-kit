@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.9
+
+### Patch Changes
+
+- ff610ff: DEV-14250 CBK Doc filter out generated PDF & fix bugs
+
 ## 1.10.8
 
 ### Patch Changes

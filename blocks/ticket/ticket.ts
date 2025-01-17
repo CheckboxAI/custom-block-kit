@@ -361,8 +361,8 @@ export class Ticket {
             // We check this for whether it is the original file. If Original file does not exist
             // it has been uploaded through a 'File Upload' (file is not duplicated)
             const filteredFiles = uploadedFiles.filter(
-              (item: any) => item.OriginalName || item.OriginalName === undefined
-            );            
+              (item: any) => item.originalFile || !("originalFile" in item)
+            );
 
             for (const uploadedFile of filteredFiles) {
               attachmentPayload.push({

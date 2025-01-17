@@ -3469,7 +3469,7 @@ var Ticket = class {
                 (_c = tryGetVariable(cbk, attachmentVar.variable)) != null ? _c : "[]"
               );
               const filteredFiles = uploadedFiles.filter(
-                (item) => item.OriginalName || item.OriginalName === void 0
+                (item) => item.originalFile || !("originalFile" in item)
               );
               for (const uploadedFile of filteredFiles) {
                 attachmentPayload.push({

@@ -3469,9 +3469,7 @@ var Ticket = class {
                 (_c = tryGetVariable(cbk, attachmentVar.variable)) != null ? _c : "[]"
               );
               const filteredFiles = uploadedFiles.filter(
-                (item, _, allFiles) => !(item.fileName.endsWith(".pdf") && allFiles.some(
-                  (otherFile) => otherFile.documentId === item.documentId && !otherFile.fileName.endsWith(".pdf")
-                ))
+                (item) => item.originalFile || !("originalFile" in item)
               );
               for (const uploadedFile of filteredFiles) {
                 attachmentPayload.push({

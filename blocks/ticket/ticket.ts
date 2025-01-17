@@ -358,18 +358,12 @@ export class Ticket {
               tryGetVariable(cbk, attachmentVar.variable) ?? "[]"
             );
             // when docx file is uploaded, a pdf version is also generated and returned.
-            // Both will have same documentId, so we filter out the pdf version here
+            // We check this for whether it is the original file. If Original file does not exist
+            // it has been uploaded through a 'File Upload' (file is not duplicated)
             const filteredFiles = uploadedFiles.filter(
-              (item: any, _: any, allFiles: any) =>
-                !(
-                  item.fileName.endsWith(".pdf") &&
-                  allFiles.some(
-                    (otherFile: any) =>
-                      otherFile.documentId === item.documentId &&
-                      !otherFile.fileName.endsWith(".pdf")
-                  )
-                )
+              (item: any) => item.originalFile || !("originalFile" in item)
             );
+
             for (const uploadedFile of filteredFiles) {
               attachmentPayload.push({
                 fileName: uploadedFile.fileName,

@@ -3402,6 +3402,16 @@ var Ticket = class {
         try {
           const fn = cbk.getElementValue("fn_selector");
           if (fn === "create_new_ticket") {
+            let filterFiles2 = function(files) {
+              if (!Array.isArray(files))
+                return [];
+              const hasOriginalTrue = files.some((f) => f.originalFile === true);
+              if (hasOriginalTrue) {
+                return files.filter((f) => f.originalFile === true);
+              }
+              return files;
+            };
+            var filterFiles = filterFiles2;
             const boardId = cbk.getElementValue("board_id");
             const ticketLayoutId = cbk.getElementValue("ticket_layout_id");
             const subjectVariable = cbk.getElementValue("subject_variable");
@@ -3439,9 +3449,7 @@ var Ticket = class {
               const uploadedFiles = JSON.parse(
                 (_c = tryGetVariable(cbk, attachmentVar.variable)) != null ? _c : "[]"
               );
-              const filteredFiles = uploadedFiles.filter(
-                (item) => item.originalFile || !("originalFile" in item)
-              );
+              const filteredFiles = filterFiles2(uploadedFiles);
               for (const uploadedFile of filteredFiles) {
                 attachmentPayload.push({
                   fileName: uploadedFile.fileName,

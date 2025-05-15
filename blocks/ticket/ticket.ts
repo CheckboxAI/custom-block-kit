@@ -1,4 +1,5 @@
 import type { BaseSchema, KeyValueOptionProp } from "../../base/base";
+import { FileMetadata } from "./types";
 import { tryGetVariable } from "./utils";
 
 export class Ticket {
@@ -353,16 +354,38 @@ export class Ticket {
 
           // build attachment payload
           let attachmentPayload = [];
+
+          function filterFiles(files: FileMetadata[]): FileMetadata[] {
+            if (!Array.isArray(files)) return [];
+
+            // Case 1: User uploads via a Doc input field
+            // These come with metadata, and the original user-uploaded file is marked with `originalFile: true`
+            // We only want to keep the original file and discard any system-generated preview (e.g., .pdf)
+            const hasOriginalTrue = files.some(f => f.originalFile === true);
+            if (hasOriginalTrue) {
+              return files.filter(f => f.originalFile === true);
+            }
+          
+            // For both Case 2 and 3, we return the full list
+
+            // Case 2: User uploads via a File input field
+            // This should only include the original user upload without any generated preview — so we keep them as-is
+
+            // Case 3: System-generated files (e.g., from a Doc Gen block)
+            // These may have `originalFile: false` on the files
+            // DEV-15639 — Since we haven't figured out how to read the Studio configuration for user-selected outputs yet,
+            // We will include all files for the moment (regardless what user has configure)
+
+            // For both case 2 and 3, we return the full list
+            return files;
+          }
+          
           for (const attachmentVar of attachmentVariables) {
             const uploadedFiles = JSON.parse(
               tryGetVariable(cbk, attachmentVar.variable) ?? "[]"
             );
-            // when docx file is uploaded, a pdf version is also generated and returned.
-            // We check this for whether it is the original file. If Original file does not exist
-            // it has been uploaded through a 'File Upload' (file is not duplicated)
-            const filteredFiles = uploadedFiles.filter(
-              (item: any) => item.originalFile || !("originalFile" in item)
-            );
+
+            const filteredFiles = filterFiles(uploadedFiles);
 
             for (const uploadedFile of filteredFiles) {
               attachmentPayload.push({

@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.10
+
+### Patch Changes
+
+- c70bf8c: DEV-15639 Filter files based on upload context before submission
+
 ## 1.10.9
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 import type { BaseSchema, KeyValueOptionProp } from "../../base/base";
-import { FileMetadata } from "./types";
+import type { FileMetadata } from "./types";
 import { tryGetVariable } from "./utils";
 
 export class Ticket {

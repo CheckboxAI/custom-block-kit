@@ -358,28 +358,27 @@ export class Ticket {
           function filterFiles(files: FileMetadata[]): FileMetadata[] {
             if (!Array.isArray(files)) return [];
 
-            // Case 1: User uploads via a Doc input field
-            // These come with metadata, and the original user-uploaded file is marked with `originalFile: true`
-            // We only want to keep the original file and discard any system-generated preview (e.g., .pdf)
-            const hasOriginalTrue = files.some(f => f.originalFile === true);
-            if (hasOriginalTrue) {
-              return files.filter(f => f.originalFile === true);
-            }
-          
-            // For both Case 2 and 3, we return the full list
-
-            // Case 2: User uploads via a File input field
-            // This should only include the original user upload without any generated preview — so we keep them as-is
-
-            // Case 3: System-generated files (e.g., from a Doc Gen block)
-            // These may have `originalFile: false` on the files
-            // DEV-15639 — Since we haven't figured out how to read the Studio configuration for user-selected outputs yet,
-            // We will include all files for the moment (regardless what user has configure)
-
-            // For both case 2 and 3, we return the full list
-            return files;
+            return files.reduce((acc, item) => {
+              // We want to include all user uploaded files:
+              // 1. if it doesn't have `originalFile` attribute (this is likely uploaded by user via the file input field)
+              if (!("originalFile" in item)) {
+                return acc.concat(item);
+              }
+              // 2. or if it has `originalFile` attribute and it is set to `true`
+              if (item.originalFile === true) {
+                return acc.concat(item);
+              }
+              // Temp solution:
+              // For the rest of files (system generated files from e.g. Doc Gen block), we only include the Docx file
+              // Long term:
+              // DEV-15639 Read configuration from each Doc Gen block to determine which files to be included
+              if (item.fileName.toLowerCase().endsWith('.docx')) {
+                return acc.concat(item);
+              }
+              return acc;
+            }, [] as FileMetadata[]);
           }
-          
+
           for (const attachmentVar of attachmentVariables) {
             const uploadedFiles = JSON.parse(
               tryGetVariable(cbk, attachmentVar.variable) ?? "[]"

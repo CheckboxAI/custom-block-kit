@@ -3434,11 +3434,18 @@ var Ticket = class {
             let filterFiles2 = function(files) {
               if (!Array.isArray(files))
                 return [];
-              const hasOriginalTrue = files.some((f) => f.originalFile === true);
-              if (hasOriginalTrue) {
-                return files.filter((f) => f.originalFile === true);
-              }
-              return files;
+              return files.reduce((acc, item) => {
+                if (!("originalFile" in item)) {
+                  return acc.concat(item);
+                }
+                if (item.originalFile === true) {
+                  return acc.concat(item);
+                }
+                if (item.fileName.toLowerCase().endsWith(".docx")) {
+                  return acc.concat(item);
+                }
+                return acc;
+              }, []);
             };
             var filterFiles = filterFiles2;
             const boardId = cbk.getElementValue("board_id");

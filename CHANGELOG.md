@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.11
+
+### Patch Changes
+
+- c129020: Process only Docx file for Doc Gen block
+
 ## 1.10.10
 
 ### Patch Changes

@@ -3134,6 +3134,27 @@ var tryGetVariable = (cbk, variableName) => {
   }
 };
 
+// blocks/ticket/fileUtils.ts
+function filterFiles(files) {
+  if (!Array.isArray(files))
+    return [];
+  if (files.length === 2) {
+    const originalFiles = files.filter((file) => file.originalFile === true);
+    if (originalFiles.length === 1) {
+      return originalFiles;
+    }
+  }
+  return files.reduce((acc, file) => {
+    if (!("originalFile" in file)) {
+      return acc.concat(file);
+    }
+    if (file.fileName.toLowerCase().endsWith(".docx")) {
+      return acc.concat(file);
+    }
+    return acc;
+  }, []);
+}
+
 // blocks/ticket/ticket.ts
 var Ticket = class {
   constructor() {
@@ -3431,23 +3452,6 @@ var Ticket = class {
         try {
           const fn = cbk.getElementValue("fn_selector");
           if (fn === "create_new_ticket") {
-            let filterFiles2 = function(files) {
-              if (!Array.isArray(files))
-                return [];
-              return files.reduce((acc, item) => {
-                if (!("originalFile" in item)) {
-                  return acc.concat(item);
-                }
-                if (item.originalFile === true) {
-                  return acc.concat(item);
-                }
-                if (item.fileName.toLowerCase().endsWith(".docx")) {
-                  return acc.concat(item);
-                }
-                return acc;
-              }, []);
-            };
-            var filterFiles = filterFiles2;
             const boardId = cbk.getElementValue("board_id");
             const ticketLayoutId = cbk.getElementValue("ticket_layout_id");
             const subjectVariable = cbk.getElementValue("subject_variable");
@@ -3485,7 +3489,7 @@ var Ticket = class {
               const uploadedFiles = JSON.parse(
                 (_c = tryGetVariable(cbk, attachmentVar.variable)) != null ? _c : "[]"
               );
-              const filteredFiles = filterFiles2(uploadedFiles);
+              const filteredFiles = filterFiles(uploadedFiles);
               for (const uploadedFile of filteredFiles) {
                 attachmentPayload.push({
                   fileName: uploadedFile.fileName,

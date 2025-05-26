@@ -1,6 +1,6 @@
 import type { BaseSchema, KeyValueOptionProp } from "../../base/base";
-import type { FileMetadata } from "./types";
 import { tryGetVariable } from "./utils";
+import { filterFiles } from "./fileUtils";
 
 export class Ticket {
   schema: BaseSchema = {
@@ -354,30 +354,6 @@ export class Ticket {
 
           // build attachment payload
           let attachmentPayload = [];
-
-          function filterFiles(files: FileMetadata[]): FileMetadata[] {
-            if (!Array.isArray(files)) return [];
-
-            return files.reduce((acc, item) => {
-              // We want to include all user uploaded files:
-              // 1. if it doesn't have `originalFile` attribute (this is likely uploaded by user via the file input field)
-              if (!("originalFile" in item)) {
-                return acc.concat(item);
-              }
-              // 2. or if it has `originalFile` attribute and it is set to `true`
-              if (item.originalFile === true) {
-                return acc.concat(item);
-              }
-              // Temp solution:
-              // For the rest of files (system generated files from e.g. Doc Gen block), we only include the Docx file
-              // Long term:
-              // DEV-15639 Read configuration from each Doc Gen block to determine which files to be included
-              if (item.fileName.toLowerCase().endsWith('.docx')) {
-                return acc.concat(item);
-              }
-              return acc;
-            }, [] as FileMetadata[]);
-          }
 
           for (const attachmentVar of attachmentVariables) {
             const uploadedFiles = JSON.parse(

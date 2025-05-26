@@ -7,12 +7,12 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
-    "importsNotUsedAsValues": "error",
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": true,
     "noEmit": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": ["jest", "node"]
   },
   "lib": ["es2015"]
 }

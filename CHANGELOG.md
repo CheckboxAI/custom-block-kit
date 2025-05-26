@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.10.12
+
+### Patch Changes
+
+- 6141a3f: DEV-15732 Fixed PDF upload scenario via Doc input field
+
 ## 1.10.11
 
 ### Patch Changes

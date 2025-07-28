@@ -99,7 +99,7 @@ export class Ticket {
                 isSearchable: true,
                 options: async (cbk) => {
                   const response = await cbk.api.get<any>(
-                    "/ticketing/ticket-layouts?offset=0&limit=100000&status=live"
+                    "/ticketing/ticket-layouts?offset=0&limit=100000&status=live&excludeIronclad=true"
                   );
                   return response?.result?.payload?.data
                     ? response.result.payload.data.map(

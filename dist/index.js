@@ -3233,7 +3233,7 @@ var Ticket = class {
                   options: (cbk) => __async(this, null, function* () {
                     var _a, _b;
                     const response = yield cbk.api.get(
-                      "/ticketing/ticket-layouts?offset=0&limit=100000&status=live"
+                      "/ticketing/ticket-layouts?offset=0&limit=100000&status=live&excludeIronclad=true"
                     );
                     return ((_b = (_a = response == null ? void 0 : response.result) == null ? void 0 : _a.payload) == null ? void 0 : _b.data) ? response.result.payload.data.map(
                       ({ id, name }) => ({

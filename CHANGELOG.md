@@ -1,5 +1,11 @@
 # custom-block-kit
 
+## 1.11.0
+
+### Minor Changes
+
+- 874bfe6: Exclude Ironclad workflow layouts from matter layout options
+
 ## 1.10.12
 
 ### Patch Changes
